@@ -11,11 +11,15 @@ public class KuroBase extends JavaPlugin {
 
     public static boolean DEBUG;
     private static KuroDiscord kurodiscord;
+    private static KuroBase instance;
 
     public static KuroDiscord getDiscord() { return kurodiscord; }
+    public static KuroBase getPlugin() { return instance; }
 
     @Override
     public void onEnable() {
+        instance = this;
+
         // language setup
         Language.load("UTF-8");
         getLogger().info(Language.translate("plugin.setup.language"));
