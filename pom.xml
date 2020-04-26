@@ -30,6 +30,13 @@
             <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>host.kuro</groupId>
+            <artifactId>KuroDiscord</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/KuroDiscord.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
