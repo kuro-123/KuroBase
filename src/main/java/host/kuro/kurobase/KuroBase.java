@@ -1,8 +1,8 @@
 package host.kuro.kurobase;
 
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.listeners.PlayerLister;
 import host.kuro.kurodiscord.KuroDiscord;
-import host.kuro.kurodiscord.listeners.PlayerLister;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,7 +34,7 @@ public class KuroBase extends JavaPlugin {
         DEBUG = this.getConfig().getBoolean("debug", false);
 
         // regist event listener
-        getLogger().info(host.kuro.kurodiscord.lang.Language.translate("plugin.setup.event"));
+        getLogger().info(Language.translate("plugin.setup.event"));
         this.getServer().getPluginManager().registerEvents(new PlayerLister(), this);
 
         // load plugin
