@@ -16,6 +16,50 @@
         <maven.compiler.target>14</maven.compiler.target>
     </properties>
 
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+                <targetPath>.</targetPath>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.postgresql</pattern>
+                                    <shadedPattern>org.postgresql</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>${project.name}</finalName>
+    </build>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -31,6 +75,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>host.kuro</groupId>
             <artifactId>KuroDiscord</artifactId>
             <version>1.0</version>
@@ -38,27 +88,4 @@
             <systemPath>${basedir}/lib/KuroDiscord.jar</systemPath>
         </dependency>
     </dependencies>
-
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <finalName>${project.name}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>13</source>
-                    <target>13</target>
-                </configuration>
-            </plugin>
-        </plugins>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <resources>
-            <resource>
-                <targetPath>.</targetPath>
-                <filtering>true</filtering>
-                <directory>src/main/resources/</directory>
-            </resource>
-        </resources>
-    </build>
 </project>

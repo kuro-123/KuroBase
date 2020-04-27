@@ -1,6 +1,7 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.ChatColor;
@@ -14,8 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import java.util.UUID;
+import java.util.ArrayList;
 
 public class PlayerLister implements Listener {
 
@@ -63,11 +63,25 @@ public class PlayerLister implements Listener {
 		if (dm != null) {
 			dm.SendDiscordGrayMessage(message);
 		}
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.QUIT.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
 	}
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.DEATH.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
 
 		String killername = "";
 		String killitem = "";
@@ -75,14 +89,19 @@ public class PlayerLister implements Listener {
 
 		Player killer = e.getEntity().getKiller();
 		if (killer != null) {
-			if (killer instanceof Player) {
-				killername = ((Player)killer).getDisplayName();
-				PlayerInventory inv = ((Player)killer).getInventory();
-				if (inv != null) {
-					ItemStack item = inv.getItemInMainHand();
-					if (item != null) {
-						killitem = item.getItemMeta().getDisplayName();
-					}
+			// UPDATE
+			ArrayList<DatabaseArgs> kargs = new ArrayList<DatabaseArgs>();
+			kargs.add(new DatabaseArgs("c", killer.getUniqueId().toString())); // UUID
+			ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.KILL.UPDATE.PLAYER"), kargs);
+			kargs.clear();
+			kargs = null;
+
+			killername = ((Player)killer).getDisplayName();
+			PlayerInventory inv = ((Player)killer).getInventory();
+			if (inv != null) {
+				ItemStack item = inv.getItemInMainHand();
+				if (item != null) {
+					killitem = item.getItemMeta().getDisplayName();
 				}
 			}
 		}
@@ -152,25 +171,97 @@ public class PlayerLister implements Listener {
 
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
+		Player player = e.getPlayer();
+
 		String message = e.getLeaveMessage();
 		DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
 		if (dm != null) {
 			dm.SendDiscordYellowMessage(message);
 		}
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.KICK.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
+	}
+
+	@EventHandler
+	public void onChat(PlayerChatEvent e) {
+		Player player = e.getPlayer();
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHAT.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
 	}
 
 	@EventHandler
 	public void onLogin(PlayerLoginEvent e) {
-		/*
 		Player player = e.getPlayer();
-		UUID a = player.getUniqueId();
-		float exp = player.getExp();
-		int level = player.getLevel();
-		int etol = player.getExpToLevel();
-		String addr = e.getAddress().toString();
-		String host = e.getHostname();
-		String realaddr = e.getRealAddress().toString();
-		String realhost = e.getRealAddress().getHostName();
-		 */
+
+		// INSERT
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		args.add(new DatabaseArgs("c", player.getName())); // name
+		args.add(new DatabaseArgs("i", ""+0)); // rank
+		args.add(new DatabaseArgs("c", e.getAddress().toString())); // ip
+		args.add(new DatabaseArgs("c", e.getHostname())); // host
+		args.add(new DatabaseArgs("c", e.getRealAddress().toString())); // rip
+		args.add(new DatabaseArgs("c", e.getRealAddress().getHostName())); // rhost
+		args.add(new DatabaseArgs("i", ""+player.getTotalExperience())); // totalexp
+		args.add(new DatabaseArgs("d", ""+player.getExp())); // exp
+		args.add(new DatabaseArgs("i", ""+player.getExpToLevel())); // exptolevel
+		args.add(new DatabaseArgs("i", ""+player.getLevel())); // level
+		args.add(new DatabaseArgs("c", ""+player.getLocation().getWorld().getName())); // world
+		args.add(new DatabaseArgs("d", ""+player.getLocation().getX())); // x
+		args.add(new DatabaseArgs("d", ""+player.getLocation().getY())); // y
+		args.add(new DatabaseArgs("d", ""+player.getLocation().getZ())); // z
+		args.add(new DatabaseArgs("i", ""+0)); // login
+		args.add(new DatabaseArgs("i", ""+0)); // break
+		args.add(new DatabaseArgs("i", ""+0)); // place
+		args.add(new DatabaseArgs("i", ""+0)); // kill
+		args.add(new DatabaseArgs("i", ""+0)); // death
+		args.add(new DatabaseArgs("i", ""+0)); // kick
+		args.add(new DatabaseArgs("i", ""+0)); // chat
+		args.add(new DatabaseArgs("i", ""+0)); // cmd
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.LOGIN.INSERT.PLAYER"), args);
+		args.clear();
+		args = null;
+
+		// UPDATE
+		ArrayList<DatabaseArgs> uargs = new ArrayList<DatabaseArgs>();
+		uargs.add(new DatabaseArgs("c", e.getAddress().toString())); // ip
+		uargs.add(new DatabaseArgs("c", e.getHostname())); // host
+		uargs.add(new DatabaseArgs("c", e.getRealAddress().toString())); // rip
+		uargs.add(new DatabaseArgs("c", e.getRealAddress().getHostName())); // rhost
+		uargs.add(new DatabaseArgs("i", ""+player.getTotalExperience())); // totalexp
+		uargs.add(new DatabaseArgs("d", ""+player.getExp())); // exp
+		uargs.add(new DatabaseArgs("i", ""+player.getExpToLevel())); // exptolevel
+		uargs.add(new DatabaseArgs("i", ""+player.getLevel())); // level
+		uargs.add(new DatabaseArgs("c", ""+player.getLocation().getWorld().getName())); // world
+		uargs.add(new DatabaseArgs("d", ""+player.getLocation().getX())); // x
+		uargs.add(new DatabaseArgs("d", ""+player.getLocation().getY())); // y
+		uargs.add(new DatabaseArgs("d", ""+player.getLocation().getZ())); // z
+		uargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.LOGIN.UPDATE.PLAYER"), uargs);
+		uargs.clear();
+		uargs = null;
+	}
+
+	@EventHandler
+	public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
+		Player player = e.getPlayer();
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CMD.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
 	}
 }

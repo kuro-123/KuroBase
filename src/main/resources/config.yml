@@ -4,3 +4,12 @@
 
 # DEBUG MODE
 debug: false
+
+# DATABASE SETTING
+Database:
+  Jdbc: "postgresql"
+  Host: ""
+  Port: 5432
+  Database: ""
+  User: ""
+  Pass: ""
