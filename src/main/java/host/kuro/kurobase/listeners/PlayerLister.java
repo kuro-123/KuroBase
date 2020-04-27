@@ -1,18 +1,29 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.lang.Language;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.UUID;
+
 public class PlayerLister implements Listener {
+
+	KuroBase plugin = null;
+
+	public PlayerLister(KuroBase plugin) {
+		this.plugin = plugin;
+	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
@@ -81,47 +92,54 @@ public class PlayerLister implements Listener {
 			EntityDamageEvent.DamageCause cause = damage.getCause();
 			if (cause != null) {
 				switch (cause) {
-					case BLOCK_EXPLOSION	: cause_name = KuroBase.getPlugin().getConfig().getString("death.BLOCK_EXPLOSION", ""); break;
-					case CONTACT			: cause_name = KuroBase.getPlugin().getConfig().getString("death.CONTACT", ""); break;
-					case CRAMMING			: cause_name = KuroBase.getPlugin().getConfig().getString("death.CRAMMING", ""); break;
-					case CUSTOM				: cause_name = KuroBase.getPlugin().getConfig().getString("death.CUSTOM", ""); break;
-					case DRAGON_BREATH		: cause_name = KuroBase.getPlugin().getConfig().getString("death.DRAGON_BREATH", ""); break;
-					case DROWNING			: cause_name = KuroBase.getPlugin().getConfig().getString("death.DROWNING", ""); break;
-					case DRYOUT				: cause_name = KuroBase.getPlugin().getConfig().getString("death.DRYOUT", ""); break;
-					case ENTITY_ATTACK		: cause_name = KuroBase.getPlugin().getConfig().getString("death.ENTITY_ATTACK", ""); break;
-					case ENTITY_EXPLOSION	: cause_name = KuroBase.getPlugin().getConfig().getString("death.ENTITY_EXPLOSION", ""); break;
-					case ENTITY_SWEEP_ATTACK: cause_name = KuroBase.getPlugin().getConfig().getString("death.ENTITY_SWEEP_ATTACK", ""); break;
-					case FALL				: cause_name = KuroBase.getPlugin().getConfig().getString("death.FALL", ""); break;
-					case FALLING_BLOCK		: cause_name = KuroBase.getPlugin().getConfig().getString("death.FALLING_BLOCK", ""); break;
-					case FIRE				: cause_name = KuroBase.getPlugin().getConfig().getString("death.FIRE", ""); break;
-					case FIRE_TICK			: cause_name = KuroBase.getPlugin().getConfig().getString("death.FIRE_TICK", ""); break;
-					case FLY_INTO_WALL		: cause_name = KuroBase.getPlugin().getConfig().getString("death.FLY_INTO_WALL", ""); break;
-					case HOT_FLOOR			: cause_name = KuroBase.getPlugin().getConfig().getString("death.HOT_FLOOR", ""); break;
-					case LAVA				: cause_name = KuroBase.getPlugin().getConfig().getString("death.LAVA", ""); break;
-					case LIGHTNING			: cause_name = KuroBase.getPlugin().getConfig().getString("death.LIGHTNING", ""); break;
-					case MAGIC				: cause_name = KuroBase.getPlugin().getConfig().getString("death.MAGIC", ""); break;
-					case MELTING			: cause_name = KuroBase.getPlugin().getConfig().getString("death.MELTING", ""); break;
-					case POISON				: cause_name = KuroBase.getPlugin().getConfig().getString("death.POISON", ""); break;
-					case PROJECTILE			: cause_name = KuroBase.getPlugin().getConfig().getString("death.PROJECTILE", ""); break;
-					case STARVATION			: cause_name = KuroBase.getPlugin().getConfig().getString("death.STARVATION", ""); break;
-					case SUFFOCATION		: cause_name = KuroBase.getPlugin().getConfig().getString("death.SUFFOCATION", ""); break;
-					case SUICIDE			: cause_name = KuroBase.getPlugin().getConfig().getString("death.SUICIDE", ""); break;
-					case THORNS				: cause_name = KuroBase.getPlugin().getConfig().getString("death.THORNS", ""); break;
-					case VOID				: cause_name = KuroBase.getPlugin().getConfig().getString("death.VOID", ""); break;
-					case WITHER				: cause_name = KuroBase.getPlugin().getConfig().getString("death.WITHER", ""); break;
+					case BLOCK_EXPLOSION	: cause_name = Language.translate("death.BLOCK_EXPLOSION"); break;
+					case CONTACT			: cause_name = Language.translate("death.CONTACT"); break;
+					case CRAMMING			: cause_name = Language.translate("death.CRAMMING"); break;
+					case CUSTOM				: cause_name = Language.translate("death.CUSTOM"); break;
+					case DRAGON_BREATH		: cause_name = Language.translate("death.DRAGON_BREATH"); break;
+					case DROWNING			: cause_name = Language.translate("death.DROWNING"); break;
+					case DRYOUT				: cause_name = Language.translate("death.DRYOUT"); break;
+					case ENTITY_ATTACK		: cause_name = Language.translate("death.ENTITY_ATTACK"); break;
+					case ENTITY_EXPLOSION	: cause_name = Language.translate("death.ENTITY_EXPLOSION"); break;
+					case ENTITY_SWEEP_ATTACK: cause_name = Language.translate("death.ENTITY_SWEEP_ATTACK"); break;
+					case FALL				: cause_name = Language.translate("death.FALL"); break;
+					case FALLING_BLOCK		: cause_name = Language.translate("death.FALLING_BLOCK"); break;
+					case FIRE				: cause_name = Language.translate("death.FIRE"); break;
+					case FIRE_TICK			: cause_name = Language.translate("death.FIRE_TICK"); break;
+					case FLY_INTO_WALL		: cause_name = Language.translate("death.FLY_INTO_WALL"); break;
+					case HOT_FLOOR			: cause_name = Language.translate("death.HOT_FLOOR"); break;
+					case LAVA				: cause_name = Language.translate("death.LAVA"); break;
+					case LIGHTNING			: cause_name = Language.translate("death.LIGHTNING"); break;
+					case MAGIC				: cause_name = Language.translate("death.MAGIC"); break;
+					case MELTING			: cause_name = Language.translate("death.MELTING"); break;
+					case POISON				: cause_name = Language.translate("death.POISON"); break;
+					case PROJECTILE			: cause_name = Language.translate("death.PROJECTILE"); break;
+					case STARVATION			: cause_name = Language.translate("death.STARVATION"); break;
+					case SUFFOCATION		: cause_name = Language.translate("death.SUFFOCATION"); break;
+					case SUICIDE			: cause_name = Language.translate("death.SUICIDE"); break;
+					case THORNS				: cause_name = Language.translate("death.THORNS"); break;
+					case VOID				: cause_name = Language.translate("death.VOID"); break;
+					case WITHER				: cause_name = Language.translate("death.WITHER"); break;
 				}
+			}
+			Entity damager = ((EntityDamageByEntityEvent) damage).getDamager();
+			if (damager != null && killer == null) {
+				killername = damager.getName();
 			}
 		}
 
+		String fmt;
 		StringBuilder sb = new StringBuilder();
 		sb.append(ChatColor.YELLOW);
 		if (killername.length() > 0) {
 			if (killitem.length() <= 0) {
 				killitem = "不明";
 			}
-			sb.append(String.format(KuroBase.getPlugin().getConfig().getString("death.MESSAGE_ATTACK", ""), player.getDisplayName(), cause_name, killername, killitem));
+			fmt = Language.translate("death.MESSAGE_ATTACK");
+			sb.append(String.format(fmt, player.getDisplayName(), cause_name, killername, killitem));
 		} else {
-			sb.append(String.format(KuroBase.getPlugin().getConfig().getString("death.MESSAGE_NORMAL", ""), player.getDisplayName(), cause_name));
+			fmt = Language.translate("death.MESSAGE_NORMAL");
+			sb.append(String.format(fmt, player.getDisplayName(), cause_name));
 		}
 		String message = new String(sb);
 		e.setDeathMessage(message);
@@ -139,5 +157,20 @@ public class PlayerLister implements Listener {
 		if (dm != null) {
 			dm.SendDiscordYellowMessage(message);
 		}
+	}
+
+	@EventHandler
+	public void onLogin(PlayerLoginEvent e) {
+		/*
+		Player player = e.getPlayer();
+		UUID a = player.getUniqueId();
+		float exp = player.getExp();
+		int level = player.getLevel();
+		int etol = player.getExpToLevel();
+		String addr = e.getAddress().toString();
+		String host = e.getHostname();
+		String realaddr = e.getRealAddress().toString();
+		String realhost = e.getRealAddress().getHostName();
+		 */
 	}
 }

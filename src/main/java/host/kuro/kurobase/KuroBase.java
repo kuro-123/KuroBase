@@ -4,22 +4,20 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.PlayerLister;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class KuroBase extends JavaPlugin {
 
     public static boolean DEBUG;
+
     private static KuroDiscord kurodiscord;
-    private static KuroBase instance;
 
     public static KuroDiscord getDiscord() { return kurodiscord; }
-    public static KuroBase getPlugin() { return instance; }
 
     @Override
     public void onEnable() {
-        instance = this;
-
         // language setup
         Language.load("UTF-8");
         getLogger().info(Language.translate("plugin.setup.language"));
@@ -35,7 +33,7 @@ public class KuroBase extends JavaPlugin {
 
         // regist event listener
         getLogger().info(Language.translate("plugin.setup.event"));
-        this.getServer().getPluginManager().registerEvents(new PlayerLister(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerLister(this), this);
 
         // load plugin
         if (!LoadDependPlugin()) {
