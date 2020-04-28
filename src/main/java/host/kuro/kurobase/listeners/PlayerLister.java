@@ -257,7 +257,7 @@ public class PlayerLister implements Listener {
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
 		Player player = e.getPlayer();
 
-		// UPDATE
+		// UPDATEex
 		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
 		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CMD.UPDATE.PLAYER"), args);

@@ -66,6 +66,16 @@ public class KuroBase extends JavaPlugin {
     private void InitTables() {
         // player
         db.ExecuteUpdate(Language.translate("SQL.CREATE.PLAYER"), null);
+        // log_err
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.ERROR"), null);
+        // log_mat
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.MATERIAL"), null);
+        // log_cmd
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.COMMAND"), null);
+        // log_sign
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.SIGN"), null);
+        // log_pay
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.PAY"), null);
         // UPDATE
         int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
     }
