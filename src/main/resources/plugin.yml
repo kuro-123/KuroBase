@@ -10,3 +10,10 @@ description: Base plugin for 123 server culture spigot
 website: http://kuro.host/wordpress/
 depend:
   - KuroDiscord
+
+commands:
+  list:
+    description: オンラインプレイヤーをリスト表示します
+    usage: /list
+    aliases:
+      - li

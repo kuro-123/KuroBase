@@ -1,9 +1,11 @@
 package host.kuro.kurobase;
 
+import host.kuro.kurobase.commands.ListCommand;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
 import host.kuro.kurobase.listeners.PlayerLister;
+import host.kuro.kurodiscord.DiscordMessage;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -39,6 +41,10 @@ public class KuroBase extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerLister(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 
+        // regist command
+        getLogger().info(Language.translate("plugin.setup.command"));
+        getCommand("list").setExecutor(new ListCommand(this));
+
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
         db = new DatabaseManager(this);
@@ -46,6 +52,7 @@ public class KuroBase extends JavaPlugin {
             disablePlugin();
             return;
         }
+
         // table initialize
         getLogger().info(Language.translate("plugin.setup.table"));
         InitTables();
@@ -55,7 +62,8 @@ public class KuroBase extends JavaPlugin {
             disablePlugin();
             return;
         }
-        kurodiscord = (KuroDiscord) getServer().getPluginManager().getPlugin("KuroDiscord");
+        kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
+        kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
         getLogger().info(Language.translate("plugin.loaded"));
     }
 
