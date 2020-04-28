@@ -65,7 +65,7 @@
       <artifactId>KuroDiscord</artifactId>
       <version>1.0</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/KuroDiscord.jar</systemPath>
+      <systemPath>${basedir}/KuroDiscord.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

@@ -1,26 +1,22 @@
 package host.kuro.kurobase;
 
-import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
 import host.kuro.kurobase.listeners.PlayerLister;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
 
 public class KuroBase extends JavaPlugin {
 
     public static boolean DEBUG;
 
-    private static DatabaseManager db;
+    private static DatabaseManager db = null;
     public static DatabaseManager getDB() { return db; }
 
-    private static KuroDiscord kurodiscord;
+    private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
 
     @Override

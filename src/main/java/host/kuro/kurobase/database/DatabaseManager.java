@@ -2,6 +2,7 @@ package host.kuro.kurobase.database;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.ErrorUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,11 +40,12 @@ public class DatabaseManager {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:" + sJdbc + "://" + shost + ":" + sPort + "/" + sDb, sUser, sPass);
         }
-        catch (SQLException e){
-            e.printStackTrace();
+        catch (SQLException ex) {
+            ErrorUtils.GetErrorMessage(ex);
             return false;
         }
-        catch (Exception e){
+        catch (Exception ex2){
+            ErrorUtils.GetErrorMessage(ex2);
             return false;
         }
         plugin.getLogger().info(Language.translate("plugin.db.connect"));
@@ -57,8 +59,8 @@ public class DatabaseManager {
                 conn = null;
             }
         }
-        catch (SQLException e){
-            e.printStackTrace();
+        catch (SQLException ex){
+            ErrorUtils.GetErrorMessage(ex);
             return false;
         }
         plugin.getLogger().info(Language.translate("plugin.db.disconnect"));
@@ -102,32 +104,32 @@ public class DatabaseManager {
             }
             num = ps.executeUpdate();
             conn.commit();
-        } catch (SQLException e) {
-            if (e.getSQLState().equalsIgnoreCase("23505")) {
+        } catch (SQLException ex) {
+            if (ex.getSQLState().equalsIgnoreCase("23505")) {
                 // 重複エラー
                 num = DUPLICATE;
             } else {
                 plugin.getLogger().warning(Language.translate("plugin.db.error"));
                 org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
                 plugin.getLogger().warning("SQL : " + stmt.toString());
-                plugin.getLogger().warning("ERR_CD : " + e.getSQLState());
-                plugin.getLogger().warning("ERR : " + e.getMessage());
-                e.printStackTrace();
+                plugin.getLogger().warning("ERR_CD : " + ex.getSQLState());
+                plugin.getLogger().warning("ERR : " + ex.getMessage());
+                ErrorUtils.GetErrorMessage(ex);
             }
             try {
                 conn.rollback();
-            } catch (Exception e2) {
-                e2.printStackTrace();
+            } catch (Exception ex2) {
+                ErrorUtils.GetErrorMessage(ex2);
             }
-        } catch (Exception e) {
+        } catch (Exception ex3) {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
             org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
             plugin.getLogger().warning("SQL : " + stmt.toString());
-            e.printStackTrace();
+            ErrorUtils.GetErrorMessage(ex3);
             try {
                 conn.rollback();
-            } catch (Exception e2) {
-                e2.printStackTrace();
+            } catch (Exception ex4) {
+                ErrorUtils.GetErrorMessage(ex4);
             }
         } finally {
             try {
@@ -135,8 +137,8 @@ public class DatabaseManager {
                     ps.close();
                     ps = null;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ErrorUtils.GetErrorMessage(ex);
             }
         }
         return num;
@@ -175,19 +177,19 @@ public class DatabaseManager {
                 }
             }
             rs = ps.executeQuery();
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
             org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
             plugin.getLogger().warning("SQL : " + stmt.toString());
-            plugin.getLogger().warning("ERR_CD : " + e.getSQLState());
-            plugin.getLogger().warning("ERR : " + e.getMessage());
-            e.printStackTrace();
+            plugin.getLogger().warning("ERR_CD : " + ex.getSQLState());
+            plugin.getLogger().warning("ERR : " + ex.getMessage());
+            ErrorUtils.GetErrorMessage(ex);
             return null;
-        } catch (Exception e) {
+        } catch (Exception ex2) {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
             org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
             plugin.getLogger().warning("SQL : " + stmt.toString());
-            e.printStackTrace();
+            ErrorUtils.GetErrorMessage(ex2);
             return null;
         }
         return rs;

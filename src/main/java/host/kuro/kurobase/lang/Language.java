@@ -1,5 +1,6 @@
 package host.kuro.kurobase.lang;
 
+import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.FileUtils;
 import org.bukkit.Bukkit;
 
@@ -64,8 +65,8 @@ public class Language {
                 d.put(key, value);
             }
             return d;
-        } catch (IOException e) {
-            Bukkit.getLogger().warning(e.getMessage());
+        } catch (IOException ex) {
+            ErrorUtils.GetErrorMessage(ex);
             return null;
         }
     }
