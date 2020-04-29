@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 public class PlayerLister implements Listener {
 
@@ -250,23 +251,6 @@ public class PlayerLister implements Listener {
 	}
 
 	@EventHandler
-	public void onChat(PlayerChatEvent e) {
-		try {
-			Player player = e.getPlayer();
-
-			// UPDATE
-			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-			args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-			int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHAT.UPDATE.PLAYER"), args);
-			args.clear();
-			args = null;
-
-		} catch (Exception ex) {
-			ErrorUtils.GetErrorMessage(ex);
-		}
-	}
-
-	@EventHandler
 	public void onLogin(PlayerLoginEvent e) {
 		try {
 			Player player = e.getPlayer();
@@ -389,5 +373,55 @@ public class PlayerLister implements Listener {
 		} catch (Exception ex) {
 			ErrorUtils.GetErrorMessage(ex);
 		}
+	}
+
+	@EventHandler
+	public void onChat(final AsyncPlayerChatEvent e) {
+		Player player = e.getPlayer();
+		String message = e.getMessage();
+		if(e.isAsynchronous()) {
+			plugin.getServer().getScheduler().callSyncMethod(plugin, new CallableOnChat(plugin, player, message));
+		} else {
+			try {
+				// UPDATE
+				ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+				args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+				int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHAT.UPDATE.PLAYER"), args);
+				args.clear();
+				args = null;
+
+			} catch (Exception ex) {
+				ErrorUtils.GetErrorMessage(ex);
+			}
+		}
+	}
+}
+
+class CallableOnChat implements Callable<Object>
+{
+	private KuroBase plugin;
+	private Player player;
+	private String message;
+
+	CallableOnChat(KuroBase plugin, Player player, String message) {
+		this.plugin = plugin;
+		this.player = player;
+		this.message = message;
+	}
+
+	@Override
+	public Object call() throws Exception {
+		try {
+			// UPDATE
+			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+			args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+			int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHAT.UPDATE.PLAYER"), args);
+			args.clear();
+			args = null;
+
+		} catch (Exception ex) {
+			ErrorUtils.GetErrorMessage(ex);
+		}
+		return null;
 	}
 }

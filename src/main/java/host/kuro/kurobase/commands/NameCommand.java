@@ -70,8 +70,7 @@ public class NameCommand implements CommandExecutor {
                     return;
                 }
 
-                String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
-                player.setDisplayName(disp_name);
+                player.setDisplayName(target);
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(ChatColor.DARK_GREEN);
@@ -99,8 +98,7 @@ public class NameCommand implements CommandExecutor {
                     return;
                 }
 
-                String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
-                player.setDisplayName(disp_name);
+                player.setDisplayName(player.getName());
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(ChatColor.DARK_GREEN);

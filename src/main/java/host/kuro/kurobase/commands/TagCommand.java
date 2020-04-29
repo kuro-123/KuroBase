@@ -57,9 +57,6 @@ public class TagCommand implements CommandExecutor {
                     return;
                 }
 
-                String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
-                player.setDisplayName(disp_name);
-
                 StringBuilder sb = new StringBuilder();
                 sb.append(ChatColor.DARK_GREEN);
                 sb.append(Language.translate("commands.tag.msg.success"));
@@ -85,9 +82,6 @@ public class TagCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
                     return;
                 }
-
-                String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
-                player.setDisplayName(disp_name);
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(ChatColor.DARK_GREEN);

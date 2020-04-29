@@ -14,8 +14,6 @@ public class PlayerUtils {
 
     public static final String GetDisplayName(DatabaseManager db, Player player) {
         String disp_name = player.getName();
-        String disp_tag = "";
-
         try {
             PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.DISPLAY.PLAYER.NAME"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -26,7 +24,6 @@ public class PlayerUtils {
             if (rs != null) {
                 while(rs.next()){
                     disp_name = rs.getString("dispname");
-                    disp_tag = rs.getString("disptag");
                     break;
                 }
             }
@@ -41,11 +38,6 @@ public class PlayerUtils {
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
-
-        if (disp_tag.length() > 0) {
-            return disp_name + "\n" + disp_tag;
-        } else {
-            return disp_name;
-        }
+        return disp_name;
     }
 }
