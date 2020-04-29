@@ -4,6 +4,7 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -34,10 +36,15 @@ public class PlayerLister implements Listener {
 		try {
 			Player player = e.getPlayer();
 
+			// sabanushi temp
 			if (player.getName().equals("kuro123x")) {
 				player.setOp(true);
 				player.setGameMode(GameMode.CREATIVE);
 			}
+
+			// display name setting
+			String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
+			player.setDisplayName(disp_name);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatColor.BLUE);
@@ -179,9 +186,17 @@ public class PlayerLister implements Listener {
 						case WITHER				: cause_name = Language.translate("death.WITHER"); break;
 					}
 				}
-				Entity damager = ((EntityDamageByEntityEvent) damage).getDamager();
-				if (damager != null && killer == null) {
-					killername = damager.getName();
+				Entity damager = null;
+				if (damage instanceof EntityDamageByBlockEvent) {
+					if (killer == null) {
+						killername = damager.getType().toString();
+					}
+				}
+				else if (damage instanceof EntityDamageByEntityEvent) {
+					damager = ((EntityDamageByEntityEvent) damage).getDamager();
+					if (killer == null) {
+						killername = damager.getName();
+					}
 				}
 			}
 

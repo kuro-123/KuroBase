@@ -33,12 +33,12 @@ public class ListCommand implements CommandExecutor {
                 int cnt=0;
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     sb.append("\n");
-                    sb.append(ChatColor.GREEN);
+                    sb.append(ChatColor.DARK_GREEN);
                     sb.append(String.format("[ %s ワールド: %s 位置: %d,%d,%d ]", player.getName(), player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ()));
                     cnt++;
                 }
                 sb.append("\n");
-                sb.append(ChatColor.GREEN);
+                sb.append(ChatColor.DARK_GREEN);
                 sb.append(String.format("オンライン : %d人\n", cnt));
                 player.sendMessage(new String(sb));
             }

@@ -15,5 +15,12 @@ commands:
   list:
     description: オンラインプレイヤーをリスト表示します
     usage: /list
-    aliases:
-      - li
+    aliases: [li]
+  name:
+    description: ニックネーム登録ができます
+    usage: /name [付けたい名前:指定なしの場合は削除]
+    aliases: [nm]
+  tag:
+    description: タグ登録ができます
+    usage: /tag [付けたいタグ:指定なしの場合は削除]
+    aliases: [tg]

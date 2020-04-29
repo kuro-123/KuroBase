@@ -1,6 +1,8 @@
 package host.kuro.kurobase;
 
 import host.kuro.kurobase.commands.ListCommand;
+import host.kuro.kurobase.commands.NameCommand;
+import host.kuro.kurobase.commands.TagCommand;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
@@ -44,6 +46,8 @@ public class KuroBase extends JavaPlugin {
         // regist command
         getLogger().info(Language.translate("plugin.setup.command"));
         getCommand("list").setExecutor(new ListCommand(this));
+        getCommand("name").setExecutor(new NameCommand(this));
+        getCommand("tag").setExecutor(new TagCommand(this));
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -63,7 +67,12 @@ public class KuroBase extends JavaPlugin {
             return;
         }
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
-        kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.toLowerCase().indexOf("windows") >= 0) {
+            kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
+        } else {
+            kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
+        }
         getLogger().info(Language.translate("plugin.loaded"));
     }
 
