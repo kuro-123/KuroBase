@@ -2,6 +2,7 @@ package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -43,6 +44,8 @@ public class ListCommand implements CommandExecutor {
                 sb.append(ChatColor.DARK_GREEN);
                 sb.append(String.format("オンライン : %d人\n", cnt));
                 player.sendMessage(new String(sb));
+                SoundUtils.PlaySound(player,"switch1");
+
             }
         }.runTaskAsynchronously(plugin);
         return true;

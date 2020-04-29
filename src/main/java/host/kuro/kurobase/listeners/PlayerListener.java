@@ -5,9 +5,11 @@ import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
+import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,11 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class PlayerLister implements Listener {
+public class PlayerListener implements Listener {
 
 	KuroBase plugin = null;
 
-	public PlayerLister(KuroBase plugin) {
+	public PlayerListener(KuroBase plugin) {
 		this.plugin = plugin;
 	}
 	private static HashMap<Player, Long> play_time = new HashMap<Player, Long>();
@@ -36,6 +38,8 @@ public class PlayerLister implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		try {
 			Player player = e.getPlayer();
+
+			SoundUtils.BroadcastSound("door-wood-knock1");
 
 			// sabanushi temp
 			if (player.getName().equals("kuro123x")) {
@@ -74,6 +78,8 @@ public class PlayerLister implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		try {
 			Player player = e.getPlayer();
+
+			SoundUtils.BroadcastSound("door-close2");
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatColor.GRAY);
@@ -121,6 +127,8 @@ public class PlayerLister implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		try {
 			Player player = e.getEntity();
+
+			SoundUtils.BroadcastSound("don-1");
 
 			// UPDATE
 			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();

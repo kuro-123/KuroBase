@@ -6,7 +6,8 @@ import host.kuro.kurobase.commands.TagCommand;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
-import host.kuro.kurobase.listeners.PlayerLister;
+import host.kuro.kurobase.listeners.EntityListener;
+import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurodiscord.DiscordMessage;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
@@ -40,8 +41,9 @@ public class KuroBase extends JavaPlugin {
 
         // regist event listener
         getLogger().info(Language.translate("plugin.setup.event"));
-        this.getServer().getPluginManager().registerEvents(new PlayerLister(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 
         // regist command
         getLogger().info(Language.translate("plugin.setup.command"));
