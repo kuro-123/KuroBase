@@ -384,6 +384,16 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
+	public void onBedEnter(final PlayerBedEnterEvent e) {
+		SoundUtils.PlaySound(e.getPlayer(), "goodnight");
+	}
+
+	@EventHandler
+	public void onBedLeave(final PlayerBedLeaveEvent e) {
+		SoundUtils.PlaySound(e.getPlayer(), "goodmorning");
+	}
+
+	@EventHandler
 	public void onChat(final AsyncPlayerChatEvent e) {
 		Player player = e.getPlayer();
 		String message = e.getMessage();
