@@ -37,6 +37,18 @@
             <configuration>
               <relocations>
                 <relocation>
+                  <pattern>com.ibm.icu</pattern>
+                  <shadedPattern>com.ibm.icu</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.google.code.gson</pattern>
+                  <shadedPattern>com.google.code.gson</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.commons</pattern>
+                  <shadedPattern>org.apache.commons</shadedPattern>
+                </relocation>
+                <relocation>
                   <pattern>org.postgresql</pattern>
                   <shadedPattern>org.postgresql</shadedPattern>
                 </relocation>
