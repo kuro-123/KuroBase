@@ -21,7 +21,18 @@ public class StringUtils {
         return Pattern.matches("^[0-9a-zA-Z]+$", target);
     }
 
+    public static Boolean isHankakuEisuKigo(String value) {
+        if ( value == null || value.length() == 0 )
+            return true;
+        int len = value.length();
+        byte[] bytes = value.getBytes();
+        if ( len != bytes.length )
+            return false;
+        return true;
+    }
+
     public static final String GetJapanese(String target) {
+        if (!(isHankakuEisuKigo(target))) return "";
         String buff = Zen2Han(target);
         buff = Roma2Hira(buff);
         buff = Hira2Kanji(buff);

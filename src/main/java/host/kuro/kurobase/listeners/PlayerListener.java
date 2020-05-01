@@ -398,26 +398,27 @@ public class PlayerListener implements Listener {
 	public void onChat(final AsyncPlayerChatEvent e) {
 		Player player = e.getPlayer();
 		String message = e.getMessage();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(message);
+		String buff = StringUtils.GetJapanese(message);
+		if (buff.length() > 0) {
+			sb.append(" (");
+			sb.append(buff);
+			sb.append(")");
+		}
+		message = new String(sb);
+		e.setMessage(message);
+
 		if(e.isAsynchronous()) {
-			plugin.getServer().getScheduler().callSyncMethod(plugin, new CallableOnChat(plugin, e, player, message));
+			plugin.getServer().getScheduler().callSyncMethod(plugin, new CallableOnChat(plugin, player, message));
 		} else {
 			try {
-				String buff = StringUtils.GetJapanese(message);
-
-				StringBuilder sb = new StringBuilder();
-				sb.append(message);
-				sb.append(" (");
-				sb.append(buff);
-				sb.append(")");
-				buff = new String(sb);
-				e.setMessage(buff);
-
 				// discord
 				DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
 				if (dm != null) {
-					dm.SendDiscordMessage(player, buff);
+					dm.SendDiscordMessage(player, message);
 				}
-
 				// UPDATE
 				ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 				args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -437,32 +438,20 @@ class CallableOnChat implements Callable<Object>
 	private KuroBase plugin;
 	private Player player;
 	private String message;
-	private AsyncPlayerChatEvent event;
 
-	CallableOnChat(KuroBase plugin, AsyncPlayerChatEvent event, Player player, String message) {
+	CallableOnChat(KuroBase plugin, Player player, String message) {
 		this.plugin = plugin;
 		this.player = player;
 		this.message = message;
-		this.event = event;
 	}
 
 	@Override
 	public Object call() throws Exception {
 		try {
-			String buff = StringUtils.GetJapanese(message);
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(message);
-			sb.append(" (");
-			sb.append(buff);
-			sb.append(")");
-			buff = new String(sb);
-			event.setMessage(buff);
-
 			// discord
 			DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
 			if (dm != null) {
-				dm.SendDiscordMessage(player, buff);
+				dm.SendDiscordMessage(player, message);
 			}
 
 			// UPDATE
