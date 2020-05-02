@@ -24,6 +24,9 @@ public class KuroBase extends JavaPlugin {
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
 
+    private boolean linux = true;
+    public boolean IsLinux() { return linux; }
+
     @Override
     public void onEnable() {
         // language setup
@@ -71,6 +74,7 @@ public class KuroBase extends JavaPlugin {
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
         String os = System.getProperty("os.name").toLowerCase();
         if (os.toLowerCase().indexOf("windows") >= 0) {
+            linux = false;
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
         } else {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));

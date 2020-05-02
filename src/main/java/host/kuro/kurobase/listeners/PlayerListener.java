@@ -1,13 +1,18 @@
 package host.kuro.kurobase.listeners;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
+import host.kuro.kurobase.database.SkinData;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.PlayerUtils;
-import host.kuro.kurobase.utils.SoundUtils;
-import host.kuro.kurobase.utils.StringUtils;
+import host.kuro.kurobase.tasks.SkinTask;
+import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -22,6 +27,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -41,6 +51,13 @@ public class PlayerListener implements Listener {
 			Player player = e.getPlayer();
 
 			SoundUtils.BroadcastSound("door-wood-knock1");
+
+			// check skin make
+			//int days = plugin.getConfig().getInt("Skin.cooldays", 3);
+			//if (PlayerUtils.GetElapsedDays(KuroBase.getDB(), player) >= days) {
+				SkinTask task = new SkinTask(plugin, player);
+				task.runTaskLater(plugin, 20);
+			//}
 
 			// sabanushi temp
 			if (player.getName().equals("kuro123x")) {

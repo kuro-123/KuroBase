@@ -52,6 +52,10 @@
                   <pattern>org.postgresql</pattern>
                   <shadedPattern>org.postgresql</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>com.mojang</pattern>
+                  <shadedPattern>com.mojang</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -63,6 +67,11 @@
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>mojang</id>
+      <name>Mojang's Repository</name>
+      <url>https://libraries.minecraft.net/</url>
     </repository>
   </repositories>
   <dependencies>
