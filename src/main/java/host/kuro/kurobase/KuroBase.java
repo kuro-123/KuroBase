@@ -85,7 +85,7 @@ public class KuroBase extends JavaPlugin {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
         } else {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
-            kurodiscord.getDiscordMessage().SendDiscordYellowMessage(Language.translate("plugin.information"));
+            kurodiscord.getDiscordMessage().SendDiscordYellowMessage(Language.translate("plugin.information.discord"));
         }
         getLogger().info(Language.translate("plugin.loaded"));
     }
