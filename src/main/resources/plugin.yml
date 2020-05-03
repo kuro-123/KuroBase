@@ -28,3 +28,7 @@ commands:
     description: チェスト操作コマンド
     usage: /chest <lock> (チェストを開ける事でロック/アンロック)
     aliases: [ch]
+  price:
+    description: 価格設定コマンド
+    usage: /price <価格> (設定したいアイテムをメインハンドに持って)
+    aliases: [pr]

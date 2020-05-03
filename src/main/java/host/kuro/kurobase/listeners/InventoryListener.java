@@ -142,11 +142,46 @@ public class InventoryListener implements Listener {
     }
 
     private boolean ActionChestLock(InventoryOpenEvent event, Player player, Chest left, Chest right, String mode) {
-        String type = SetLocation(left, right);
+        try {
+            String type = SetLocation(left, right);
 
-        if (chest_owner.length() <= 0) {
-            // INSERT
+            if (chest_owner.length() <= 0) {
+                // INSERT
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getLocation().getWorld().getName()));
+                args.add(new DatabaseArgs("i", ""+cX1));
+                args.add(new DatabaseArgs("i", ""+cY1));
+                args.add(new DatabaseArgs("i", ""+cZ1));
+                args.add(new DatabaseArgs("i", ""+cX2));
+                args.add(new DatabaseArgs("i", ""+cY2));
+                args.add(new DatabaseArgs("i", ""+cZ2));
+                args.add(new DatabaseArgs("c", type)); // type
+                args.add(new DatabaseArgs("c", mode)); // mode
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
+                args.add(new DatabaseArgs("c", player.getName())); // updater
+                int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHEST.INSERT"), args);
+                args.clear();
+                args = null;
+                if (ret != 1) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
+                    SoundUtils.PlaySound(player,"cancel5");
+                    return false;
+                }
+                player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock." + mode));
+                SoundUtils.PlaySound(player,"switch1");
+
+            } else {
+                if (!IsSelf(player)) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.chest.lock.perm.other") + ChatColor.YELLOW + " [ " + chest_owner + " ]");
+                    SoundUtils.PlaySound(player, "cancel5");
+                    event.setCancelled(true);
+                    return true;
+                }
+            }
+
+            // UPDATE
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", mode)); // mode
             args.add(new DatabaseArgs("c", player.getLocation().getWorld().getName()));
             args.add(new DatabaseArgs("i", ""+cX1));
             args.add(new DatabaseArgs("i", ""+cY1));
@@ -154,11 +189,7 @@ public class InventoryListener implements Listener {
             args.add(new DatabaseArgs("i", ""+cX2));
             args.add(new DatabaseArgs("i", ""+cY2));
             args.add(new DatabaseArgs("i", ""+cZ2));
-            args.add(new DatabaseArgs("c", type)); // type
-            args.add(new DatabaseArgs("c", mode)); // mode
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
-            args.add(new DatabaseArgs("c", player.getName())); // updater
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHEST.INSERT"), args);
+            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHEST.UPDATE.MODE"), args);
             args.clear();
             args = null;
             if (ret != 1) {
@@ -166,40 +197,15 @@ public class InventoryListener implements Listener {
                 SoundUtils.PlaySound(player,"cancel5");
                 return false;
             }
+
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock." + mode));
             SoundUtils.PlaySound(player,"switch1");
+            return true;
 
-        } else {
-            if (!IsSelf(player)) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.chest.lock.perm.other") + ChatColor.YELLOW + " [ " + chest_owner + " ]");
-                SoundUtils.PlaySound(player, "cancel5");
-                event.setCancelled(true);
-                return true;
-            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
-
-        // UPDATE
-        ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-        args.add(new DatabaseArgs("c", mode)); // mode
-        args.add(new DatabaseArgs("c", player.getLocation().getWorld().getName()));
-        args.add(new DatabaseArgs("i", ""+cX1));
-        args.add(new DatabaseArgs("i", ""+cY1));
-        args.add(new DatabaseArgs("i", ""+cZ1));
-        args.add(new DatabaseArgs("i", ""+cX2));
-        args.add(new DatabaseArgs("i", ""+cY2));
-        args.add(new DatabaseArgs("i", ""+cZ2));
-        int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.CHEST.UPDATE.MODE"), args);
-        args.clear();
-        args = null;
-        if (ret != 1) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-            SoundUtils.PlaySound(player,"cancel5");
-            return false;
-        }
-
-        player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock." + mode));
-        SoundUtils.PlaySound(player,"switch1");
-        return true;
+        return false;
     }
 
     private boolean GetChestInfo(Player player, Chest left, Chest right) {

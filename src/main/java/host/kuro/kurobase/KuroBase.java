@@ -1,9 +1,10 @@
 package host.kuro.kurobase;
 
-import host.kuro.kurobase.commands.ChestCommand;
-import host.kuro.kurobase.commands.ListCommand;
-import host.kuro.kurobase.commands.NameCommand;
-import host.kuro.kurobase.commands.TagCommand;
+import host.kuro.kurobase.commands.*;
+import host.kuro.kurobase.commands.Completers.ChestTabCompleter;
+import host.kuro.kurobase.commands.Completers.NameTabCompleter;
+import host.kuro.kurobase.commands.Completers.PriceTabCompleter;
+import host.kuro.kurobase.commands.Completers.TagTabCompleter;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
@@ -58,8 +59,13 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.command"));
         getCommand("list").setExecutor(new ListCommand(this));
         getCommand("name").setExecutor(new NameCommand(this));
+        getCommand("name").setTabCompleter(new NameTabCompleter());
         getCommand("tag").setExecutor(new TagCommand(this));
+        getCommand("tag").setTabCompleter(new TagTabCompleter());
         getCommand("chest").setExecutor(new ChestCommand(this));
+        getCommand("chest").setTabCompleter(new ChestTabCompleter());
+        getCommand("price").setExecutor(new PriceCommand(this));
+        getCommand("price").setTabCompleter(new PriceTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -105,6 +111,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.PAY"), null);
         // chest
         db.ExecuteUpdate(Language.translate("SQL.CREATE.CHEST"), null);
+        // price
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.PRICE"), null);
         // UPDATE
         int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
     }

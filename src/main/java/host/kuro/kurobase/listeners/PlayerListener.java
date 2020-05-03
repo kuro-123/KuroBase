@@ -56,6 +56,13 @@ public class PlayerListener implements Listener {
 			if (rank >= PlayerUtils.RANK_KANRI) {
 				player.setOp(true);
 				player.setGameMode(GameMode.CREATIVE);
+				if (rank == PlayerUtils.RANK_KANRI) {
+					SoundUtils.BroadcastSound("kanri");
+				}
+				else if (rank == PlayerUtils.RANK_NUSHI) {
+					SoundUtils.BroadcastSound("kuro");
+				}
+
 			} else {
 				player.setOp(false);
 				player.setGameMode(GameMode.SURVIVAL);

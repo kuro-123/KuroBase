@@ -23,3 +23,7 @@ Skin:
 
 Perm:
   chestlock: 5000
+
+Price:
+  min: 0
+  max: 1000
