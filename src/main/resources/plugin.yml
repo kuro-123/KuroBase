@@ -36,3 +36,8 @@ commands:
     description: 123鯖情報を開く
     usage: /info (URLが出るのでクリックしてください)
     aliases: [if]
+  shutdown:
+    description: シャットダウンコマンド(コンソール専用)
+    usage: /shutdown
+    aliases: [sd]
+
