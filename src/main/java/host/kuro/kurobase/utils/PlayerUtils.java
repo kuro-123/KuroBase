@@ -6,6 +6,8 @@ import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.database.SkinData;
 import host.kuro.kurobase.lang.Language;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,6 +20,11 @@ import java.util.UUID;
 
 import com.mojang.authlib.*;
 public class PlayerUtils {
+    // rank number
+    public static final int RANK_MINARAI = 0;
+    public static final int RANK_JYUMIN  = 1;
+    public static final int RANK_KANRI = 2;
+    public static final int RANK_NUSHI = 3;
 
     static Class<?> craftPlayer = PlayerUtils.getCBClass("entity.CraftPlayer");
     static Class<?> entityPlayer = PlayerUtils.getNMSClass("EntityPlayer");
@@ -140,4 +147,67 @@ public class PlayerUtils {
         return ret;
     }
 
+    public static final int GetBreakPlace(DatabaseManager db, Player player) {
+        int ret = 0;
+        try {
+            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.CHEST.LOCK.PERM"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = db.ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    ret = rs.getInt("cnt");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
+    public static final int GetRank(DatabaseManager db, Player player) {
+        int ret = RANK_MINARAI;
+        try {
+            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.PLAYER.RANK"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = db.ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    ret = rs.getInt("rank");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
+    public static void SendActionBar(Player player, String message) {
+        TextComponent component = new TextComponent();
+        component.setText(message);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
+    }
 }

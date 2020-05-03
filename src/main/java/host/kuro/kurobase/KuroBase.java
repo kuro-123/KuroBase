@@ -1,5 +1,6 @@
 package host.kuro.kurobase;
 
+import host.kuro.kurobase.commands.ChestCommand;
 import host.kuro.kurobase.commands.ListCommand;
 import host.kuro.kurobase.commands.NameCommand;
 import host.kuro.kurobase.commands.TagCommand;
@@ -7,12 +8,15 @@ import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
 import host.kuro.kurobase.listeners.EntityListener;
+import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
-import host.kuro.kurodiscord.DiscordMessage;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
 
 public class KuroBase extends JavaPlugin {
 
@@ -20,12 +24,13 @@ public class KuroBase extends JavaPlugin {
 
     private static DatabaseManager db = null;
     public static DatabaseManager getDB() { return db; }
-
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
-
     private boolean linux = true;
     public boolean IsLinux() { return linux; }
+
+    private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
+    public HashMap<Player, String> GetClickMode() { return click_mode; }
 
     @Override
     public void onEnable() {
@@ -47,12 +52,14 @@ public class KuroBase extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 
         // regist command
         getLogger().info(Language.translate("plugin.setup.command"));
         getCommand("list").setExecutor(new ListCommand(this));
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("tag").setExecutor(new TagCommand(this));
+        getCommand("chest").setExecutor(new ChestCommand(this));
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -95,6 +102,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.SIGN"), null);
         // log_pay
         db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.PAY"), null);
+        // chest
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.CHEST"), null);
         // UPDATE
         int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
     }

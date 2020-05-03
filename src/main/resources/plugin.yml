@@ -24,3 +24,7 @@ commands:
     description: タグ登録ができます
     usage: /tag [付けたいタグ:指定なしの場合は削除]
     aliases: [tg]
+  chest:
+    description: チェスト操作コマンド
+    usage: /chest <lock> (チェストを開ける事でロック/アンロック)
+    aliases: [ch]

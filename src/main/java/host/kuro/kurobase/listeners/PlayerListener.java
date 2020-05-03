@@ -39,11 +39,10 @@ import java.util.concurrent.Callable;
 public class PlayerListener implements Listener {
 
 	KuroBase plugin = null;
-
+	private static HashMap<Player, Long> play_time = new HashMap<Player, Long>();
 	public PlayerListener(KuroBase plugin) {
 		this.plugin = plugin;
 	}
-	private static HashMap<Player, Long> play_time = new HashMap<Player, Long>();
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
@@ -52,18 +51,22 @@ public class PlayerListener implements Listener {
 
 			SoundUtils.BroadcastSound("door-wood-knock1");
 
+			// setting rank
+			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+			if (rank >= PlayerUtils.RANK_KANRI) {
+				player.setOp(true);
+				player.setGameMode(GameMode.CREATIVE);
+			} else {
+				player.setOp(false);
+				player.setGameMode(GameMode.SURVIVAL);
+			}
+
 			// check skin make
 			//int days = plugin.getConfig().getInt("Skin.cooldays", 3);
 			//if (PlayerUtils.GetElapsedDays(KuroBase.getDB(), player) >= days) {
 				SkinTask task = new SkinTask(plugin, player);
 				task.runTaskLater(plugin, 20);
 			//}
-
-			// sabanushi temp
-			if (player.getName().equals("kuro123x")) {
-				player.setOp(true);
-				player.setGameMode(GameMode.CREATIVE);
-			}
 
 			// display name setting
 			String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
@@ -114,9 +117,10 @@ public class PlayerListener implements Listener {
 				dm.SendDiscordGrayMessage(message);
 			}
 
-			// UPDATE
+			// memory clear
+			plugin.GetClickMode().remove(player);
 
-			// 計測開始
+			// 計測終了
 			int elapse = 0;
 			if (play_time.containsKey(player)) {
 				long ptime = play_time.get(player);
