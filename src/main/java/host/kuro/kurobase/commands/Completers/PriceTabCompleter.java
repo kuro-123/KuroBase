@@ -21,7 +21,7 @@ public class PriceTabCompleter implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
             case 2:
                 cmds.add("価格を入力(0-1000)");
-                return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
+                return StringUtil.copyPartialMatches(args[1], cmds, new ArrayList<String>());
         }
         return null;
     }
