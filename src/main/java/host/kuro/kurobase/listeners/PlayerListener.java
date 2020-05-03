@@ -1,21 +1,13 @@
 package host.kuro.kurobase.listeners;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
-import host.kuro.kurobase.database.SkinData;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
 import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,11 +19,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -52,28 +39,29 @@ public class PlayerListener implements Listener {
 			SoundUtils.BroadcastSound("door-wood-knock1");
 
 			// setting rank
+			player.setOp(true);
 			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
 			if (rank >= PlayerUtils.RANK_KANRI) {
-				player.setOp(true);
-				player.setGameMode(GameMode.CREATIVE);
 				if (rank == PlayerUtils.RANK_KANRI) {
 					SoundUtils.BroadcastSound("kanri");
 				}
 				else if (rank == PlayerUtils.RANK_NUSHI) {
+					player.setGameMode(GameMode.CREATIVE);
 					SoundUtils.BroadcastSound("kuro");
 				}
-
 			} else {
-				player.setOp(false);
+				if (rank == PlayerUtils.RANK_MINARAI) {
+					player.setOp(false);
+				}
 				player.setGameMode(GameMode.SURVIVAL);
 			}
 
 			// check skin make
-			//int days = plugin.getConfig().getInt("Skin.cooldays", 3);
-			//if (PlayerUtils.GetElapsedDays(KuroBase.getDB(), player) >= days) {
+			int days = plugin.getConfig().getInt("Skin.cooldays", 3);
+			if (PlayerUtils.GetElapsedDays(KuroBase.getDB(), player) >= days) {
 				SkinTask task = new SkinTask(plugin, player);
 				task.runTaskLater(plugin, 20);
-			//}
+			}
 
 			// display name setting
 			String disp_name = PlayerUtils.GetDisplayName(plugin.getDB(), player);
@@ -389,6 +377,13 @@ public class PlayerListener implements Listener {
 				}
 			}
 
+			// check exec rank
+			if (!PlayerUtils.CheckCommandRank(plugin.getDB(), player, cmd)) {
+				e.setCancelled(true);
+				return;
+			}
+
+			// log cmd
 			ArrayList<DatabaseArgs> cargs = new ArrayList<DatabaseArgs>();
 			cargs.add(new DatabaseArgs("c", player.getLocation().getWorld().getName())); // world
 			cargs.add(new DatabaseArgs("i", ""+player.getLocation().getBlockX())); // x

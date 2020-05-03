@@ -117,6 +117,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.CHEST"), null);
         // price
         db.ExecuteUpdate(Language.translate("SQL.CREATE.PRICE"), null);
+        // command
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
         // UPDATE
         int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
     }

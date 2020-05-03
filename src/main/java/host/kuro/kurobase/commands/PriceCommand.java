@@ -46,14 +46,6 @@ public class PriceCommand implements CommandExecutor {
         }
 
         try {
-            int rank = PlayerUtils.GetRank(plugin.getDB(), player);
-            if (rank < PlayerUtils.RANK_KANRI) {
-                // check rank
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.rank"));
-                SoundUtils.PlaySound(player,"cancel5");
-                return false;
-            }
-
             // check price
             int min = plugin.getConfig().getInt("Price.min", 0);
             int max = plugin.getConfig().getInt("Price.max", 1000);

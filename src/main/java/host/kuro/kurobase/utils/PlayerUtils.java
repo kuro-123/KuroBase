@@ -9,6 +9,7 @@ import host.kuro.kurobase.lang.Language;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -203,6 +204,47 @@ public class PlayerUtils {
             ErrorUtils.GetErrorMessage(ex);
         }
         return ret;
+    }
+
+    public static final boolean CheckCommandRank(DatabaseManager db, Player player, String cmd) {
+        int data_rank = 9;
+        String usage = "";
+        try {
+            cmd = cmd.trim().replace("/", "").toLowerCase();
+            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.COMMAND.CHECKRANK"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", cmd));
+            ResultSet rs = db.ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    usage = rs.getString("useage");
+                    data_rank = rs.getInt("rank");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            return false;
+        }
+
+        int rank = GetRank(db, player);
+        if (rank >= data_rank) {
+            return true;
+        }
+        player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.rank"));
+        player.sendMessage(ChatColor.YELLOW + usage);
+        SoundUtils.PlaySound(player,"cancel5");
+        return false;
     }
 
     public static void SendActionBar(Player player, String message) {
