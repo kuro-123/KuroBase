@@ -15,8 +15,8 @@ Database:
   Pass: ""
 
 Web:
-  skinpath: "/var/www/html/spigot/skin/data"
-  skinmake: "http://kuro.host/spigot/skindisp.php"
+  skinpath: ""
+  skinmake: ""
 
 Skin:
   cooldays: 3
@@ -29,4 +29,5 @@ Price:
   max: 1000
 
 Url:
-  info: "http://kuro.host/wordpress/?page_id=98"
+  info: ""
+  map: ""

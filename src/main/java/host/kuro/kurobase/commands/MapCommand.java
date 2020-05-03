@@ -9,11 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class InfoCommand implements CommandExecutor {
+public class MapCommand implements CommandExecutor {
 
     private final KuroBase plugin;
 
-    public InfoCommand(KuroBase plugin) {
+    public MapCommand(KuroBase plugin) {
         this.plugin = plugin;
     }
 
@@ -25,8 +25,8 @@ public class InfoCommand implements CommandExecutor {
             return false;
         }
         final Player player = (Player)sender;
-        player.sendMessage(ChatColor.DARK_GREEN + plugin.getConfig().getString("Url.info"));
-        player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.info.message"));
+        player.sendMessage(ChatColor.DARK_GREEN + plugin.getConfig().getString("Url.map"));
+        player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.map.message"));
         SoundUtils.PlaySound(player,"switch1");
         return true;
     }
