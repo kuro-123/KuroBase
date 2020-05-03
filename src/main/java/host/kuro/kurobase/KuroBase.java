@@ -58,6 +58,8 @@ public class KuroBase extends JavaPlugin {
         // regist command
         getLogger().info(Language.translate("plugin.setup.command"));
         getCommand("list").setExecutor(new ListCommand(this));
+        getCommand("info").setExecutor(new InfoCommand(this));
+
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());
         getCommand("tag").setExecutor(new TagCommand(this));

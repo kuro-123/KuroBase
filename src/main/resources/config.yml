@@ -27,3 +27,6 @@ Perm:
 Price:
   min: 0
   max: 1000
+
+Url:
+  info: "http://kuro.host/wordpress/?page_id=98"
