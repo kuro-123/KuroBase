@@ -87,7 +87,9 @@ public class PlayerListener implements Listener {
 				dm.SendDiscordBlueMessage(message);
 			}
 
-			// 計測開始
+			player.sendMessage(ChatColor.GOLD + Language.translate("plugin.information"));
+
+			// time start
 			play_time.put(player, System.currentTimeMillis());
 
 		} catch (Exception ex) {
