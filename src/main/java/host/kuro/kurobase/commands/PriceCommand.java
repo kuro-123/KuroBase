@@ -38,7 +38,7 @@ public class PriceCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
-        if (args.length != 1) {
+        if (args.length != 2) {
             // check args
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
             SoundUtils.PlaySound(player,"cancel5");
@@ -46,12 +46,14 @@ public class PriceCommand implements CommandExecutor {
         }
 
         try {
+            String item_name = args[0].toLowerCase();
+
             // check price
             int min = plugin.getConfig().getInt("Price.min", 0);
             int max = plugin.getConfig().getInt("Price.max", 1000);
             int price = 0;
             try {
-                price = Integer.parseInt(args[0]);
+                price = Integer.parseInt(args[1]);
             } catch (Exception ex) {
                 price = -1;
             }
@@ -70,7 +72,6 @@ public class PriceCommand implements CommandExecutor {
             }
 
             // UPDATE
-            String item_name = main_item.getType().toString().toLowerCase();
             if (item_name.equals("air")) {
                 // check air
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.price.error.itemnone"));
