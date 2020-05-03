@@ -11,6 +11,7 @@ import host.kuro.kurobase.listeners.BlockListener;
 import host.kuro.kurobase.listeners.EntityListener;
 import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
+import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -54,6 +55,7 @@ public class KuroBase extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new GuiShopHandler(), this);
 
         // regist command
         getLogger().info(Language.translate("plugin.setup.command"));

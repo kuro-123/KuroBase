@@ -30,7 +30,7 @@ commands:
     aliases: [ch]
   price:
     description: 価格設定コマンド
-    usage: /price <価格> (設定したいアイテムをメインハンドに持って)
+    usage: /price <アイテム名> <価格>
     aliases: [pr]
   info:
     description: 123鯖情報を開く
