@@ -3,6 +3,7 @@ package host.kuro.kurobase.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.Transliterator;
 
 import java.io.BufferedReader;
@@ -15,6 +16,8 @@ import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 public class StringUtils {
+
+    public static NumberFormat numFmt = NumberFormat.getNumberInstance();
 
     public static final boolean isHankakuEisu(String target) {
         target.replace("_", "");

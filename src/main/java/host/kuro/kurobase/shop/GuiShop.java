@@ -1,6 +1,8 @@
 package host.kuro.kurobase.shop;
 
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,63 +60,68 @@ public class GuiShop implements IGuiScreen {
     }
 
     public void open() {
-        Inventory inv = Bukkit.createInventory(this.player, 9 * size, ChatColor.WHITE + Language.translate("shop.title"));
-        ShopItem[] item = ShopHandler.getShopItems();
-        ItemStack[] toAdd = new ItemStack[item.length];
-        items = new GuiItem[this.size * 9];
+        try {
+            Inventory inv = Bukkit.createInventory(this.player, 9 * size, ChatColor.WHITE + Language.translate("shop.title"));
+            ShopItem[] item = ShopHandler.getShopItems();
+            ItemStack[] toAdd = new ItemStack[item.length];
+            items = new GuiItem[this.size * 9];
 
-        int start = this.page * ((this.size - 1) * 9);
-        int listSize = Math.min(9 * (this.size - 1), item.length - start);
-        for(int num = 0; num < listSize; num ++) {
-            ShopItem currentShopItem = item[start + num];
-            toAdd[start + num] = currentShopItem.getStack().clone();
+            int start = this.page * ((this.size - 1) * 9);
+            int listSize = Math.min(9 * (this.size - 1), item.length - start);
+            for(int num = 0; num < listSize; num ++) {
+                ShopItem currentShopItem = item[start + num];
+                toAdd[start + num] = currentShopItem.getStack().clone();
 
-            List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.WHITE+Language.translate("shop.title.buy") + ": " + currentShopItem.getBuyPrice() + "p");
-            lore.add(ChatColor.GREEN+Language.translate("shop.title.sell") + ": " + currentShopItem.getSellPrice() + "p");
-            loreItemStack(toAdd[start + num], lore);
+                List<String> lore = new ArrayList<String>();
+                lore.add(ChatColor.WHITE+Language.translate("shop.title.buy") + ": " + StringUtils.numFmt.format(currentShopItem.getBuyPrice()) + "p");
+                lore.add(ChatColor.GREEN+Language.translate("shop.title.sell") + ": " + StringUtils.numFmt.format(currentShopItem.getSellPrice()) + "p");
+                loreItemStack(toAdd[start + num], lore);
 
-            items[num] = new GuiItem(toAdd[start + num], (type) -> {
-                ItemStack toBuy = currentShopItem.getStack().clone();
-                toBuy.setAmount((type.isShiftClick()) ? 64 : 1);
-                if(type.isLeftClick()) {
-                    ShopHandler.buyItem(this.player, toBuy, toBuy.getAmount() * currentShopItem.getBuyPrice());
-                } else if(type.isRightClick()) {
-                    ShopHandler.sellItem(this.player, toBuy, toBuy.getAmount() * currentShopItem.getSellPrice());
-                }
-            });
-        }
-
-        for(int i = 0; i < items.length; i ++) {
-            GuiItem igi = items[i];
-            if(igi != null) {
-                inv.setItem(i, igi.getStack());
+                items[num] = new GuiItem(toAdd[start + num], (type) -> {
+                    ItemStack toBuy = currentShopItem.getStack().clone();
+                    toBuy.setAmount((type.isShiftClick()) ? 64 : 1);
+                    if(type.isLeftClick()) {
+                        ShopHandler.buyItem(this.player, toBuy, toBuy.getAmount() * currentShopItem.getBuyPrice());
+                    } else if(type.isRightClick()) {
+                        ShopHandler.sellItem(this.player, toBuy, toBuy.getAmount() * currentShopItem.getSellPrice());
+                    }
+                });
             }
+
+            for(int i = 0; i < items.length; i ++) {
+                GuiItem igi = items[i];
+                if(igi != null) {
+                    inv.setItem(i, igi.getStack());
+                }
+            }
+
+            ItemStack backStack = fromString("BARRIER");
+            ItemStack nextStack = fromString("ARROW");
+
+            nameItemStack(backStack, Language.translate("shop.title.pageprev"));
+            nameItemStack(nextStack, Language.translate("shop.title.pagenext"));
+
+            GuiItem back = new GuiItem(backStack, (type) -> {
+                GuiHandler.close(this.player);
+                GuiHandler.open(this.player, new GuiShop(this.player, this.page - 1));
+            });
+
+            GuiItem forw = new GuiItem(nextStack, (type) -> {
+                GuiHandler.close(this.player);
+                GuiHandler.open(this.player, new GuiShop(this.player, this.page + 1));
+            });
+
+            items[items.length - 3] = back;
+            items[items.length - 2] = forw;
+
+            if(this.page > 0) inv.setItem(45, backStack);
+            if(this.page < this.numberOfPages()) inv.setItem(53, nextStack);
+
+            player.openInventory(inv);
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
-
-        ItemStack backStack = fromString("BARRIER");
-        ItemStack nextStack = fromString("ARROW");
-
-        nameItemStack(backStack, Language.translate("shop.title.pageprev"));
-        nameItemStack(nextStack, Language.translate("shop.title.pagenext"));
-
-        GuiItem back = new GuiItem(backStack, (type) -> {
-            GuiHandler.close(this.player);
-            GuiHandler.open(this.player, new GuiShop(this.player, this.page - 1));
-        });
-
-        GuiItem forw = new GuiItem(nextStack, (type) -> {
-            GuiHandler.close(this.player);
-            GuiHandler.open(this.player, new GuiShop(this.player, this.page + 1));
-        });
-
-        items[items.length - 3] = back;
-        items[items.length - 2] = forw;
-
-        if(this.page > 0) inv.setItem(45, backStack);
-        if(this.page < this.numberOfPages()) inv.setItem(53, nextStack);
-
-        player.openInventory(inv);
     }
 
     public int numberOfPages() {
@@ -122,13 +129,17 @@ public class GuiShop implements IGuiScreen {
     }
 
     public void click(InventoryClickEvent event) {
-        event.setCancelled(true);
-        ItemStack stahck = event.getCurrentItem();
-        for(GuiItem item : items) {
-            if(item != null && item.getStack().equals(stahck)) {
-                item.click(event.getClick());
-                return;
+        try {
+            event.setCancelled(true);
+            ItemStack stahck = event.getCurrentItem();
+            for(GuiItem item : items) {
+                if(item != null && item.getStack().equals(stahck)) {
+                    item.click(event.getClick());
+                    return;
+                }
             }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
     }
 

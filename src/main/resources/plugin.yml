@@ -44,4 +44,8 @@ commands:
     description: シャットダウンコマンド(コンソール専用)
     usage: /shutdown
     aliases: [sd]
+  shop:
+    description: ショップコマンド
+    usage: /shop [あいまい検索キーワード]
+    aliases: [sh]
 

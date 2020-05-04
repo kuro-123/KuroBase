@@ -206,6 +206,64 @@ public class PlayerUtils {
         return ret;
     }
 
+    public static final int GetMoney(DatabaseManager db, Player player) {
+        int ret = RANK_MINARAI;
+        try {
+            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.PLAYER.MONEY"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = db.ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    ret = rs.getInt("money");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
+    public static final int PayMoney(DatabaseManager db, Player player, int pay) {
+        int ret = 0;
+        try {
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("i", ""+pay));
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.PAYMODEY"), args);
+            args.clear();
+            args = null;
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+    public static final int AddMoney(DatabaseManager db, Player player, int pay) {
+        int ret = 0;
+        try {
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("i", ""+pay));
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.ADDMODEY"), args);
+            args.clear();
+            args = null;
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
     public static final boolean CheckCommandRank(DatabaseManager db, Player player, String cmd) {
         int data_rank = 9;
         String usage = "";

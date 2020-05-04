@@ -1,10 +1,7 @@
 package host.kuro.kurobase;
 
 import host.kuro.kurobase.commands.*;
-import host.kuro.kurobase.commands.Completers.ChestTabCompleter;
-import host.kuro.kurobase.commands.Completers.NameTabCompleter;
-import host.kuro.kurobase.commands.Completers.PriceTabCompleter;
-import host.kuro.kurobase.commands.Completers.TagTabCompleter;
+import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
@@ -72,6 +69,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("chest").setTabCompleter(new ChestTabCompleter());
         getCommand("price").setExecutor(new PriceCommand(this));
         getCommand("price").setTabCompleter(new PriceTabCompleter());
+        getCommand("shop").setExecutor(new ShopCommand(this));
+        getCommand("shop").setTabCompleter(new ShopTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));

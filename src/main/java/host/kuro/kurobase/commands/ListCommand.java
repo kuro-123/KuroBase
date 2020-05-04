@@ -50,11 +50,6 @@ public class ListCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"switch1");
             }
         }.runTaskAsynchronously(plugin);
-
-        // TEST
-        ShopHandler.loadShop();
-        GuiHandler.open(player, new GuiShop(player, 0));
-
         return true;
     }
 }

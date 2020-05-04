@@ -5,11 +5,11 @@ import org.bukkit.inventory.ItemStack;
 public class ShopItem {
 
     private ItemStack stack;
-    private double buy;
-    private double sell;
+    private int buy;
+    private int sell;
     private boolean init = false;
 
-    public ShopItem(ItemStack stack, double buyPrice, double sellPrice) {
+    public ShopItem(ItemStack stack, int buyPrice, int sellPrice) {
         this.stack = stack;
         this.stack.setAmount(1);
         if(this.stack != null) {
@@ -20,7 +20,7 @@ public class ShopItem {
     }
 
     public ItemStack getStack() { return this.stack; }
-    public double getBuyPrice() { return this.buy; }
-    public double getSellPrice() { return this.sell; }
+    public int getBuyPrice() { return this.buy; }
+    public int getSellPrice() { return this.sell; }
     public boolean init() { return this.init; }
 }
