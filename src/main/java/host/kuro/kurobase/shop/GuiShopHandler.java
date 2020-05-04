@@ -1,5 +1,6 @@
 package host.kuro.kurobase.shop;
 
+import host.kuro.kurobase.utils.ErrorUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,16 +12,28 @@ public class GuiShopHandler implements Listener {
 
     @EventHandler
     public void click(InventoryClickEvent e) {
-        Inventory inv = e.getInventory();
-        GuiShop shop = GuiHandler.get((Player) e.getWhoClicked());
-        shop.click(e);
+        try {
+            Inventory inv = e.getInventory();
+            GuiShop shop = GuiHandler.get((Player) e.getWhoClicked());
+            if (shop != null && e != null) {
+                shop.click(e);
+            }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
     }
 
     @EventHandler
     public void close(InventoryCloseEvent e) {
-        Player p = (Player) e.getPlayer();
-        if(GuiHandler.isOpen(p)) {
-            GuiHandler.close(p);
+        try {
+            Player p = (Player) e.getPlayer();
+            if(GuiHandler.isOpen(p)) {
+                GuiHandler.close(p);
+            }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
     }
 }
