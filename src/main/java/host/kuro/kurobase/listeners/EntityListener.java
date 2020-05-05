@@ -378,6 +378,9 @@ public class EntityListener implements Listener {
 
             // battle sound stop check
             if (sound_battle.containsKey(player)) {
+                sound_battle.remove(player);
+                SoundUtils.StopSoundAll(player);
+
                 double distance = 99999.0D;
                 for(Entity ent : player.getWorld().getEntities()) {
                     if (entity instanceof Monster) {
@@ -389,9 +392,7 @@ public class EntityListener implements Listener {
                         }
                     }
                 }
-                if (distance >= 100) {
-                    SoundUtils.StopSoundAll(player);
-                    sound_battle.remove(player);
+                if (distance >= 225) {
                     SoundUtils.PlaySound(player, "complete", true);
                 }
             }
