@@ -131,6 +131,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.SIGN"), null);
         // log_pay
         db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.PAY"), null);
+        // log_mob
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.LOG.MOB"), null);
         // chest
         db.ExecuteUpdate(Language.translate("SQL.CREATE.CHEST"), null);
         // price

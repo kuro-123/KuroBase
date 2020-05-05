@@ -380,6 +380,15 @@ public class EntityListener implements Listener {
             args.clear();
             args = null;
 
+            // log insert
+            ArrayList<DatabaseArgs> margs = new ArrayList<DatabaseArgs>();
+            margs.add(new DatabaseArgs("c", player.getName())); // src
+            margs.add(new DatabaseArgs("c", entity.getName())); // dst
+            margs.add(new DatabaseArgs("i", ""+xp)); // xp
+            ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.LOG.MOB"), margs);
+            margs.clear();
+            margs = null;
+
             // battle sound stop check
             if (sound_battle.containsKey(player)) {
                 sound_battle.remove(player);
