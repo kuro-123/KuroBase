@@ -38,14 +38,6 @@ public class MinutesTask extends BukkitRunnable {
                         // afk kick
                         String message = Language.translate("plugin.kick.afk");
                         player.kickPlayer(message);
-
-                        message += String.format(" [ %sさん ]", player.getDisplayName());
-
-                        PlayerUtils.BroadcastMessage(ChatColor.YELLOW + message);
-                        DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-                        if (dm != null) {
-                            dm.SendDiscordYellowMessage(message);
-                        }
                     }
                 }
             }

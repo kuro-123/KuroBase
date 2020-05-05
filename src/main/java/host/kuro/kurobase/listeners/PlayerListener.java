@@ -264,6 +264,7 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getPlayer();
 
+			e.setLeaveMessage(String.format("[ %sさんはキックされました 理由: %s]", player.getDisplayName(), e.getReason()));
 			String message = e.getLeaveMessage();
 			DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
 			if (dm != null) {
