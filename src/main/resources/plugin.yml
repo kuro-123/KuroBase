@@ -48,4 +48,8 @@ commands:
     description: ショップコマンド
     usage: /shop [あいまい検索キーワード]
     aliases: [sh]
+  Bi:
+    description: ブロック情報クリックコマンド
+    usage: /bi
+
 

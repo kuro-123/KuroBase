@@ -9,6 +9,7 @@ import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -491,6 +492,31 @@ public class PlayerListener implements Listener {
 	public void onInteract(final PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+
+		// click mode
+		if (plugin.GetClickMode().containsKey(player)) {
+			String click_mode = plugin.GetClickMode().get(player);
+			if (click_mode.equals("blockid")) {
+				Block block = e.getClickedBlock();
+				if (block != null) {
+					StringBuilder sb = new StringBuilder();
+					sb.append(ChatColor.GREEN);
+					sb.append(block.getBlockData().getMaterial().toString() + "  ");
+					sb.append(ChatColor.YELLOW);
+					sb.append(block.getLocation().getWorld().getName());
+					sb.append(" (");
+					sb.append(block.getLocation().getBlockX());
+					sb.append(", ");
+					sb.append(block.getLocation().getBlockY());
+					sb.append(", ");
+					sb.append(block.getLocation().getBlockZ());
+					sb.append(")");
+					PlayerUtils.SendActionBar(player, new String(sb));
+					e.setCancelled(true);
+					return;
+				}
+			}
+		}
 	}
 
 	@EventHandler
