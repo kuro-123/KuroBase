@@ -42,6 +42,7 @@ public class SoundUtils {
         for (Sound snd : SOUNDS) {
             player.stopSound(snd);
         }
+        player.stopSound("battle"); // test
     }
     public static void BroadcastStopSoundAll() {
         final Sound[] SOUNDS = Sound.values();
@@ -49,6 +50,7 @@ public class SoundUtils {
             for (Sound snd : SOUNDS) {
                 player.stopSound(snd);
             }
+            player.stopSound("battle"); // test
         }
     }
 }
