@@ -447,6 +447,19 @@ public class PlayerListener implements Listener {
 		int newlevel = e.getNewLevel();
 		int oldlevel = e.getOldLevel();
 
+		ChatColor color;
+		String kbn;
+		String sound;
+		if (newlevel > oldlevel) {
+			kbn = "レベルアップ";
+			color = ChatColor.GOLD;
+			sound = "shine3";
+		} else {
+			kbn = "レベルダウン";
+			color = ChatColor.DARK_PURPLE;
+			sound = "sceneswitch2";
+		}
+
 		// UPDATE
 		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 		args.add(new DatabaseArgs("i", ""+newlevel)); // level
@@ -456,8 +469,9 @@ public class PlayerListener implements Listener {
 		args = null;
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(ChatColor.GOLD);
-		sb.append("[レベルアップ] ");
+
+		sb.append(color);
+		sb.append("[" + kbn + "] ");
 		sb.append(ChatColor.WHITE);
 		sb.append("<");
 		sb.append(player.getDisplayName());
@@ -465,16 +479,16 @@ public class PlayerListener implements Listener {
 		sb.append("[ Lv");
 		sb.append(oldlevel);
 		sb.append(" → ");
-		sb.append(ChatColor.GOLD);
+		sb.append(color);
 		sb.append("Lv");
 		sb.append(newlevel);
 		sb.append(ChatColor.WHITE);
 		sb.append(" ]");
 		String message = new String(sb);
 		// broadcast chat
-		PlayerUtils.BroadcastMessage(message);
+		PlayerUtils.BroadcastActionBar(message);
 		// broadcast sound
-		SoundUtils.BroadcastSound("shine3", false);
+		SoundUtils.BroadcastSound(sound, false);
 		// discord
 		DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
 		if (dm != null) {

@@ -332,6 +332,11 @@ public class PlayerUtils {
             player.sendMessage(message);
         }
     }
+    public static void BroadcastActionBar(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            SendActionBar(player, message);
+        }
+    }
 
     public static void UpdateJyumin(KuroBase plugin, DatabaseManager db, Player player) {
         int play_time = 0;
