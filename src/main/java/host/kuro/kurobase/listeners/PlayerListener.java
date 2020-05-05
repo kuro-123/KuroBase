@@ -330,14 +330,6 @@ public class PlayerListener implements Listener {
 			uargs.add(new DatabaseArgs("c", e.getHostname())); // host
 			uargs.add(new DatabaseArgs("c", e.getRealAddress().toString())); // rip
 			uargs.add(new DatabaseArgs("c", e.getRealAddress().getHostName())); // rhost
-			uargs.add(new DatabaseArgs("i", ""+player.getTotalExperience())); // totalexp
-			uargs.add(new DatabaseArgs("d", ""+player.getExp())); // exp
-			uargs.add(new DatabaseArgs("i", ""+player.getExpToLevel())); // exptolevel
-			uargs.add(new DatabaseArgs("i", ""+player.getLevel())); // level
-			uargs.add(new DatabaseArgs("c", ""+player.getLocation().getWorld().getName())); // world
-			uargs.add(new DatabaseArgs("d", ""+player.getLocation().getX())); // x
-			uargs.add(new DatabaseArgs("d", ""+player.getLocation().getY())); // y
-			uargs.add(new DatabaseArgs("d", ""+player.getLocation().getZ())); // z
 			uargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
 			ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.LOGIN.UPDATE.PLAYER"), uargs);
 			uargs.clear();
