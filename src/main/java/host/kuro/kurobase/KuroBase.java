@@ -41,6 +41,9 @@ public class KuroBase extends JavaPlugin {
     private static HashMap<Player, Long> afk_status = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetAfkStatus() { return afk_status; }
 
+    private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();
+    public HashMap<Player, Long> GetSoundBattle() { return sound_battle; }
+
     @Override
     public void onEnable() {
         // language setup

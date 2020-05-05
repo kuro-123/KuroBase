@@ -156,6 +156,12 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getEntity();
 
+			int value = plugin.getConfig().getInt("Game.death", 200);
+			int newExp = (player.getTotalExperience()-value);
+			if (newExp < 0) newExp = 0;
+			player.setExp(newExp);
+			e.setKeepLevel(true);
+
 			SoundUtils.BroadcastSound("don-1", false);
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk

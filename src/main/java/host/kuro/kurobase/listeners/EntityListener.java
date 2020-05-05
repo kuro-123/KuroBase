@@ -32,7 +32,6 @@ public class EntityListener implements Listener {
     public EntityListener(KuroBase plugin) {
         this.plugin = plugin;
     }
-    private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
@@ -43,17 +42,17 @@ public class EntityListener implements Listener {
                 if (cause != null) {
                     if (cause == ENTITY_ATTACK || cause == PROJECTILE) {
                         Player player = (Player)entity;
-                        if (!sound_battle.containsKey(player)) {
+                        if (!plugin.GetSoundBattle().containsKey(player)) {
                             SoundUtils.PlaySound(player, "battle", true);
-                            sound_battle.put(player, System.currentTimeMillis());
+                            plugin.GetSoundBattle().put(player, System.currentTimeMillis());
                         } else {
-                            long before = sound_battle.get(player);
+                            long before = plugin.GetSoundBattle().get(player);
                             long after = System.currentTimeMillis();
                             long elapse = after - before;
                             elapse = elapse / 1000;
                             if (elapse >= 240) {
                                 SoundUtils.PlaySound(player, "battle", true);
-                                sound_battle.put(player, System.currentTimeMillis());
+                                plugin.GetSoundBattle().put(player, System.currentTimeMillis());
                             }
                         }
                     }
@@ -390,24 +389,10 @@ public class EntityListener implements Listener {
             margs = null;
 
             // battle sound stop check
-            if (sound_battle.containsKey(player)) {
-                sound_battle.remove(player);
+            if (plugin.GetSoundBattle().containsKey(player)) {
+                plugin.GetSoundBattle().remove(player);
                 SoundUtils.StopSoundAll(player);
-
-                double distance = 99999.0D;
-                for(Entity ent : player.getWorld().getEntities()) {
-                    if (entity instanceof Monster) {
-                        double dis = PlayerUtils.getDistance(player, ent);
-                        if (dis > 0) {
-                            if (distance > dis) {
-                                distance = dis;
-                            }
-                        }
-                    }
-                }
-                if (distance >= 225) {
-                    SoundUtils.PlaySound(player, "complete", true);
-                }
+                SoundUtils.PlaySound(player, "complete", true);
             }
 
         } catch (Exception ex) {
