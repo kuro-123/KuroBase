@@ -72,6 +72,7 @@ public class SkinTask extends BukkitRunnable {
                 if (plugin.IsLinux()) {
                     new File(this.path).mkdirs();
                     saveFile = new File( this.path + "/" + player.getName().toLowerCase() + ".png");
+                    ImageIO.write(bi, "png", saveFile);
 
                     // 2D skin make
                     if (makepath.length() > 0) {
@@ -105,8 +106,8 @@ public class SkinTask extends BukkitRunnable {
                 } else {
                     new File(plugin.getDataFolder() + "/skin/data/").mkdirs();
                     saveFile = new File( plugin.getDataFolder() + "/skin/data/" + player.getName() + ".png");
+                    ImageIO.write(bi, "png", saveFile);
                 }
-                ImageIO.write(bi, "png", saveFile);
 
             } catch (URISyntaxException ex) {
                 plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
