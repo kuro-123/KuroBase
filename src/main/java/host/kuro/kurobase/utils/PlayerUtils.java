@@ -2,10 +2,12 @@ package host.kuro.kurobase.utils;
 
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.database.SkinData;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurodiscord.DiscordMessage;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -209,7 +211,7 @@ public class PlayerUtils {
     }
 
     public static final int GetMoney(DatabaseManager db, Player player) {
-        int ret = RANK_MINARAI;
+        int ret = -1;
         try {
             PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.PLAYER.MONEY"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -329,5 +331,67 @@ public class PlayerUtils {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(message);
         }
+    }
+
+    public static void UpdateJyumin(KuroBase plugin, DatabaseManager db, Player player) {
+        int play_time = 0;
+        int rank = 99;
+        try {
+            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.PLAYER.TIME"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = db.ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    rank = rs.getInt("rank");
+                    play_time = rs.getInt("play_time");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+
+            int rank_time = plugin.getConfig().getInt("Game.rank", 7200);
+            if (rank == 0 && play_time >= rank_time) {
+                // UPDATE
+                ArrayList<DatabaseArgs> rargs = new ArrayList<DatabaseArgs>();
+                rargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLAYER.UPDATE.JYUMIN"), rargs);
+                rargs.clear();
+                rargs = null;
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(ChatColor.GOLD);
+                sb.append("[ランクアップ] ");
+                sb.append(ChatColor.WHITE);
+                sb.append("<");
+                sb.append(player.getDisplayName());
+                sb.append("さん> ");
+                sb.append(ChatColor.GOLD);
+                sb.append("が住民ランクへと昇格しました！昇格者はリログで反映されます！");
+                String message = new String(sb);
+                // broadcast chat
+                PlayerUtils.BroadcastMessage(message);
+                // broadcast sound
+                SoundUtils.BroadcastSound("shine3", false);
+                // discord
+                DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
+                if (dm != null) {
+                    dm.SendDiscordYellowMessage(message);
+                }
+            }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return;
     }
 }

@@ -37,8 +37,13 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getPlayer();
 
+			// knock sound
 			SoundUtils.BroadcastSound("door-wood-knock1", false);
+
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+
+			// minarai check update
+			PlayerUtils.UpdateJyumin(plugin, KuroBase.getDB(), player);
 
 			// setting rank
 			player.setOp(true);

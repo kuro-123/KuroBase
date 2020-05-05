@@ -24,7 +24,6 @@ public class MinutesTask extends BukkitRunnable {
     @Override
     public void run() {
         CheckAfk();
-        CheckRank();
     }
 
     private void CheckAfk() {
@@ -46,13 +45,4 @@ public class MinutesTask extends BukkitRunnable {
             plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
         }
     }
-
-    private void CheckRank() {
-        try {
-
-        } catch (Exception ex) {
-            plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
-        }
-    }
-
 }
