@@ -38,6 +38,9 @@ public class MinutesTask extends BukkitRunnable {
                         // afk kick
                         String message = Language.translate("plugin.kick.afk");
                         player.kickPlayer(message);
+
+                        message += String.format(" [ %sさん ]", player.getDisplayName());
+
                         PlayerUtils.BroadcastMessage(ChatColor.YELLOW + message);
                         DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
                         if (dm != null) {
@@ -54,24 +57,6 @@ public class MinutesTask extends BukkitRunnable {
 
     private void CheckRank() {
         try {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (plugin.GetAfkStatus().containsKey(player)) {
-                    long lastTime = plugin.GetAfkStatus().get(player);
-                    long nowTime = System.currentTimeMillis();
-                    long elapse = nowTime - lastTime;
-                    if (elapse >= max_time) {
-                        // afk kick
-                        String message = Language.translate("plugin.kick.afk");
-                        player.kickPlayer(message);
-                        message += String.format(" [ %sさん ]", player.getDisplayName());
-                        PlayerUtils.BroadcastMessage(ChatColor.YELLOW + message);
-                        DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-                        if (dm != null) {
-                            dm.SendDiscordYellowMessage(message);
-                        }
-                    }
-                }
-            }
 
         } catch (Exception ex) {
             plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
