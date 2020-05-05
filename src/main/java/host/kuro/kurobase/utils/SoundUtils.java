@@ -42,7 +42,7 @@ public class SoundUtils {
         for (Sound snd : SOUNDS) {
             player.stopSound(snd);
         }
-        player.stopSound("battle"); // test
+        StopOriginalLongSounds(player);
     }
     public static void BroadcastStopSoundAll() {
         final Sound[] SOUNDS = Sound.values();
@@ -50,7 +50,14 @@ public class SoundUtils {
             for (Sound snd : SOUNDS) {
                 player.stopSound(snd);
             }
-            player.stopSound("battle"); // test
+            StopOriginalLongSounds(player);
         }
+    }
+    // test code
+    private static void StopOriginalLongSounds(Player player) {
+        player.stopSound("battle");
+        player.stopSound("complete");
+        player.stopSound("goodmorning");
+        player.stopSound("goodnight");
     }
 }
