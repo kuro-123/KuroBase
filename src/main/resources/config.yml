@@ -23,11 +23,15 @@ Skin:
 
 Perm:
   chestlock: 5000
+  shop: 3000
 
 Price:
   min: 0
-  max: 1000
+  max: 5000
 
 Url:
   info: ""
   map: ""
+
+Game:
+  afk: 600000

@@ -9,6 +9,8 @@ import host.kuro.kurobase.listeners.EntityListener;
 import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurobase.shop.GuiShopHandler;
+import host.kuro.kurobase.tasks.AfkTask;
+import host.kuro.kurobase.tasks.ShutdownTask;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
@@ -36,6 +38,9 @@ public class KuroBase extends JavaPlugin {
 
     private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
     public HashMap<Player, String> GetClickMode() { return click_mode; }
+
+    private static HashMap<Player, Long> afk_status = new HashMap<Player, Long>();
+    public HashMap<Player, Long> GetAfkStatus() { return afk_status; }
 
     @Override
     public void onEnable() {
@@ -90,6 +95,11 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.table"));
         InitTables();
 
+        // task open
+        getLogger().info(Language.translate("plugin.setup.task"));
+        AfkTask afk_task = new AfkTask(this);
+        afk_task.runTaskTimer(this, 200, 1200);
+
         // load plugin
         if (!LoadDependPlugin()) {
             disablePlugin();
@@ -104,6 +114,7 @@ public class KuroBase extends JavaPlugin {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
             kurodiscord.getDiscordMessage().SendDiscordYellowMessage(Language.translate("plugin.information.discord"));
         }
+
         getLogger().info(Language.translate("plugin.loaded"));
     }
 

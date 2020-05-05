@@ -324,4 +324,10 @@ public class PlayerUtils {
             return -1;
         }
     }
+
+    public static void BroadcastMessage(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
+    }
 }

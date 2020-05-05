@@ -38,6 +38,7 @@ public class PlayerListener implements Listener {
 			Player player = e.getPlayer();
 
 			SoundUtils.BroadcastSound("door-wood-knock1", false);
+			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
 			// setting rank
 			player.setOp(true);
@@ -117,6 +118,7 @@ public class PlayerListener implements Listener {
 
 			// memory clear
 			plugin.GetClickMode().remove(player);
+			plugin.GetAfkStatus().remove(player);
 
 			// 計測終了
 			int elapse = 0;
@@ -149,6 +151,8 @@ public class PlayerListener implements Listener {
 			Player player = e.getEntity();
 
 			SoundUtils.BroadcastSound("don-1", false);
+
+			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
 			// UPDATE
 			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -343,6 +347,8 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getPlayer();
 
+			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+
 			// UPDATE
 			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 			args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -412,12 +418,28 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onBedEnter(final PlayerBedEnterEvent e) {
+		plugin.GetAfkStatus().put(e.getPlayer(), System.currentTimeMillis()); // afk
 		SoundUtils.PlaySound(e.getPlayer(), "goodnight", true);
 	}
 
 	@EventHandler
 	public void onBedLeave(final PlayerBedLeaveEvent e) {
+		plugin.GetAfkStatus().put(e.getPlayer(), System.currentTimeMillis()); // afk
 		SoundUtils.PlaySound(e.getPlayer(), "goodmorning", true);
+	}
+
+	@EventHandler
+	public void onExpChange(final PlayerExpChangeEvent e) {
+		Player player = e.getPlayer();
+		int totalexp = player.getTotalExperience();
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("i", ""+totalexp)); // totalexp
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.EXP.UPDATE.PLAYER"), args);
+		args.clear();
+		args = null;
 	}
 
 	@EventHandler
@@ -451,9 +473,7 @@ public class PlayerListener implements Listener {
 		sb.append(" ]");
 		String message = new String(sb);
 		// broadcast chat
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.sendMessage(message);
-		}
+		PlayerUtils.BroadcastMessage(message);
 		// broadcast sound
 		SoundUtils.BroadcastSound("shine3", false);
 		// discord
@@ -464,9 +484,23 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
+	public void onMove(final PlayerMoveEvent e) {
+		Player player = e.getPlayer();
+		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+	}
+
+	@EventHandler
+	public void onInteract(final PlayerInteractEvent e) {
+		Player player = e.getPlayer();
+		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+	}
+
+	@EventHandler
 	public void onChat(final AsyncPlayerChatEvent e) {
 		Player player = e.getPlayer();
 		String message = e.getMessage();
+
+		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(message);

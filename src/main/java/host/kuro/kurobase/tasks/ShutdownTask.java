@@ -2,6 +2,7 @@ package host.kuro.kurobase.tasks;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.Bukkit;
@@ -40,9 +41,7 @@ public class ShutdownTask extends BukkitRunnable {
                     break;
             }
             if (message.length() > 0) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(ChatColor.RED + message);
-                }
+                PlayerUtils.BroadcastMessage(ChatColor.RED + message);
                 SoundUtils.BroadcastSound("shock5", true);
                 if (plugin.IsLinux()) {
                     dm.SendDiscordRedMessage(message);

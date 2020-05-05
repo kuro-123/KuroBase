@@ -375,7 +375,6 @@ public class EntityListener implements Listener {
 
             // UPDATE
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("i", ""+xp)); // exp
             args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
             int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.MOBKILL.UPDATE.PLAYER"), args);
             args.clear();
