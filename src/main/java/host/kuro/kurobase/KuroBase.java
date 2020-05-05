@@ -9,8 +9,7 @@ import host.kuro.kurobase.listeners.EntityListener;
 import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurobase.shop.GuiShopHandler;
-import host.kuro.kurobase.tasks.AfkTask;
-import host.kuro.kurobase.tasks.ShutdownTask;
+import host.kuro.kurobase.tasks.MinutesTask;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
@@ -97,8 +96,8 @@ public class KuroBase extends JavaPlugin {
 
         // task open
         getLogger().info(Language.translate("plugin.setup.task"));
-        AfkTask afk_task = new AfkTask(this);
-        afk_task.runTaskTimer(this, 200, 1200);
+        MinutesTask minutes_task = new MinutesTask(this);
+        minutes_task.runTaskTimer(this, 200, 1200);
 
         // load plugin
         if (!LoadDependPlugin()) {
