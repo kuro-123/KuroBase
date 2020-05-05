@@ -8,6 +8,7 @@ import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -59,6 +61,26 @@ public class EntityListener implements Listener {
                     }
                 }
             }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        try {
+            Entity entity = e.getEntity();
+            if (!(entity instanceof Monster)) return;
+            Player player = e.getEntity().getKiller();
+            if (player == null) return;
+
+            // UPDATE
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.MOBKILL.UPDATE.PLAYER"), args);
+            args.clear();
+            args = null;
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
