@@ -6,6 +6,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
 import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -36,18 +37,18 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getPlayer();
 
-			SoundUtils.BroadcastSound("door-wood-knock1");
+			SoundUtils.BroadcastSound("door-wood-knock1", false);
 
 			// setting rank
 			player.setOp(true);
 			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
 			if (rank >= PlayerUtils.RANK_KANRI) {
 				if (rank == PlayerUtils.RANK_KANRI) {
-					SoundUtils.BroadcastSound("kanri");
+					SoundUtils.BroadcastSound("kanri", true);
 				}
 				else if (rank == PlayerUtils.RANK_NUSHI) {
 					player.setGameMode(GameMode.CREATIVE);
-					SoundUtils.BroadcastSound("kuro");
+					SoundUtils.BroadcastSound("kuro", true);
 				}
 			} else {
 				if (rank == PlayerUtils.RANK_MINARAI) {
@@ -97,7 +98,7 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getPlayer();
 
-			SoundUtils.BroadcastSound("door-close2");
+			SoundUtils.BroadcastSound("door-close2", false);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatColor.GRAY);
@@ -147,7 +148,7 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getEntity();
 
-			SoundUtils.BroadcastSound("don-1");
+			SoundUtils.BroadcastSound("don-1", false);
 
 			// UPDATE
 			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -411,12 +412,55 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onBedEnter(final PlayerBedEnterEvent e) {
-		SoundUtils.PlaySound(e.getPlayer(), "goodnight");
+		SoundUtils.PlaySound(e.getPlayer(), "goodnight", true);
 	}
 
 	@EventHandler
 	public void onBedLeave(final PlayerBedLeaveEvent e) {
-		SoundUtils.PlaySound(e.getPlayer(), "goodmorning");
+		SoundUtils.PlaySound(e.getPlayer(), "goodmorning", true);
+	}
+
+	@EventHandler
+	public void onLevelChange(final PlayerLevelChangeEvent e) {
+		Player player = e.getPlayer();
+		int newlevel = e.getNewLevel();
+		int oldlevel = e.getOldLevel();
+
+		// UPDATE
+		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+		args.add(new DatabaseArgs("i", ""+newlevel)); // level
+		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+		int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLAYER.UPDATE.LEVEL"), args);
+		args.clear();
+		args = null;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(ChatColor.GOLD);
+		sb.append("[レベルアップ] ");
+		sb.append(ChatColor.WHITE);
+		sb.append("<");
+		sb.append(player.getDisplayName());
+		sb.append("さん> ");
+		sb.append("[ Lv");
+		sb.append(oldlevel);
+		sb.append(" → ");
+		sb.append(ChatColor.GOLD);
+		sb.append("Lv");
+		sb.append(newlevel);
+		sb.append(ChatColor.WHITE);
+		sb.append(" ]");
+		String message = new String(sb);
+		// broadcast chat
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			p.sendMessage(message);
+		}
+		// broadcast sound
+		SoundUtils.BroadcastSound("shine3", false);
+		// discord
+		DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
+		if (dm != null) {
+			dm.SendDiscordYellowMessage(message);
+		}
 	}
 
 	@EventHandler

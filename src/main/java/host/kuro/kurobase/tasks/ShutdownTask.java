@@ -43,7 +43,7 @@ public class ShutdownTask extends BukkitRunnable {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.sendMessage(ChatColor.RED + message);
                 }
-                SoundUtils.BroadcastSound("shock5");
+                SoundUtils.BroadcastSound("shock5", true);
                 if (plugin.IsLinux()) {
                     dm.SendDiscordRedMessage(message);
                 }

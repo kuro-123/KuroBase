@@ -83,7 +83,7 @@ public class InventoryListener implements Listener {
             return;
         }
         player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.chest.lock.perm.other") + ChatColor.YELLOW + " [ " + chest_owner + " ]");
-        SoundUtils.PlaySound(player, "cancel5");
+        SoundUtils.PlaySound(player, "cancel5", false);
         event.setCancelled(true);
     }
 
@@ -164,16 +164,16 @@ public class InventoryListener implements Listener {
                 args = null;
                 if (ret != 1) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-                    SoundUtils.PlaySound(player,"cancel5");
+                    SoundUtils.PlaySound(player,"cancel5", false);
                     return false;
                 }
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock." + mode));
-                SoundUtils.PlaySound(player,"switch1");
+                SoundUtils.PlaySound(player,"switch1", false);
 
             } else {
                 if (!IsSelf(player)) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.chest.lock.perm.other") + ChatColor.YELLOW + " [ " + chest_owner + " ]");
-                    SoundUtils.PlaySound(player, "cancel5");
+                    SoundUtils.PlaySound(player, "cancel5", false);
                     event.setCancelled(true);
                     return true;
                 }
@@ -194,12 +194,12 @@ public class InventoryListener implements Listener {
             args = null;
             if (ret != 1) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-                SoundUtils.PlaySound(player,"cancel5");
+                SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock." + mode));
-            SoundUtils.PlaySound(player,"switch1");
+            SoundUtils.PlaySound(player,"switch1", false);
             return true;
 
         } catch (Exception ex) {

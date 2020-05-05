@@ -47,7 +47,7 @@ public class ListCommand implements CommandExecutor {
                 sb.append(ChatColor.DARK_GREEN);
                 sb.append(String.format("オンライン : %d人\n", cnt));
                 player.sendMessage(new String(sb));
-                SoundUtils.PlaySound(player,"switch1");
+                SoundUtils.PlaySound(player,"switch1", false);
             }
         }.runTaskAsynchronously(plugin);
         return true;

@@ -41,7 +41,7 @@ public class PriceCommand implements CommandExecutor {
         if (args.length != 2) {
             // check args
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-            SoundUtils.PlaySound(player,"cancel5");
+            SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
 
@@ -59,7 +59,7 @@ public class PriceCommand implements CommandExecutor {
             }
             if (!(min<= price && price <= max)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.price.error.price") + ChatColor.YELLOW + "[ " + min + "p～" + max + "p ]");
-                SoundUtils.PlaySound(player,"cancel5");
+                SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
@@ -67,7 +67,7 @@ public class PriceCommand implements CommandExecutor {
             ItemStack main_item = player.getInventory().getItemInMainHand();
             if (main_item == null) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.price.error.itemnone"));
-                SoundUtils.PlaySound(player,"cancel5");
+                SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
@@ -75,7 +75,7 @@ public class PriceCommand implements CommandExecutor {
             if (item_name.equals("air")) {
                 // check air
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.price.error.itemnone"));
-                SoundUtils.PlaySound(player,"cancel5");
+                SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
             ArrayList<DatabaseArgs> pargs = new ArrayList<DatabaseArgs>();
@@ -88,7 +88,7 @@ public class PriceCommand implements CommandExecutor {
             pargs = null;
             if (ret != 1) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-                SoundUtils.PlaySound(player,"cancel5");
+                SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
@@ -114,7 +114,7 @@ public class PriceCommand implements CommandExecutor {
                     dm.SendDiscordGreenMessage(message);
                 }
             }
-            SoundUtils.BroadcastSound("piano-single1");
+            SoundUtils.BroadcastSound("piano-single1", false);
             return true;
 
         } catch (Exception ex) {

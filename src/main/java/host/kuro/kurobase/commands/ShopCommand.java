@@ -33,7 +33,7 @@ public class ShopCommand implements CommandExecutor {
         if (!(args.length == 0 || args.length == 1)) {
             // check args
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-            SoundUtils.PlaySound(player,"cancel5");
+            SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
 
@@ -49,7 +49,7 @@ public class ShopCommand implements CommandExecutor {
                     sb.append(Language.translate("shop.perm"));
                     sb.append(String.format(Language.translate("commands.chest.lock.perm.rank"), perm));
                     player.sendMessage(new String(sb));
-                    SoundUtils.PlaySound(player,"cancel5");
+                    SoundUtils.PlaySound(player,"cancel5", false);
                     return false;
                 }
             }

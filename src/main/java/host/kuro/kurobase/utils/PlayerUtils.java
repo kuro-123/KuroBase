@@ -10,6 +10,8 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -301,7 +303,7 @@ public class PlayerUtils {
         }
         player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.rank"));
         player.sendMessage(ChatColor.YELLOW + usage);
-        SoundUtils.PlaySound(player,"cancel5");
+        SoundUtils.PlaySound(player,"cancel5", false);
         return false;
     }
 
@@ -309,5 +311,17 @@ public class PlayerUtils {
         TextComponent component = new TextComponent();
         component.setText(message);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
+    }
+
+    public static double getDistance(Player player, Entity entity) {
+        try {
+            Location ploc = player.getLocation().clone();
+            Location eloc = entity.getLocation().clone();
+            return ploc.distance(eloc);
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            return -1;
+        }
     }
 }

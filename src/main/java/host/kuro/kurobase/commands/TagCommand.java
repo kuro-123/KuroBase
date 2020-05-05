@@ -32,7 +32,7 @@ public class TagCommand implements CommandExecutor {
         if (args.length > 1) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-            SoundUtils.PlaySound(player,"cancel5");
+            SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
         if (args.length == 0) {
@@ -41,7 +41,7 @@ public class TagCommand implements CommandExecutor {
         final String target = args[0];
         if (!IsLength(target)) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.len"));
-            SoundUtils.PlaySound(player,"cancel5");
+            SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
 
@@ -57,7 +57,7 @@ public class TagCommand implements CommandExecutor {
                 args = null;
                 if (ret != 1) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-                    SoundUtils.PlaySound(player,"cancel5");
+                    SoundUtils.PlaySound(player,"cancel5", false);
                     return;
                 }
 
@@ -67,7 +67,7 @@ public class TagCommand implements CommandExecutor {
                 sb.append(ChatColor.YELLOW);
                 sb.append(String.format(" [ %s ]", target));
                 player.sendMessage(new String(sb));
-                SoundUtils.PlaySound(player,"switch1");
+                SoundUtils.PlaySound(player,"switch1", false);
 
             }
         }.runTaskAsynchronously(plugin);
@@ -86,7 +86,7 @@ public class TagCommand implements CommandExecutor {
                 args = null;
                 if (ret != 1) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.update"));
-                    SoundUtils.PlaySound(player,"cancel5");
+                    SoundUtils.PlaySound(player,"cancel5", false);
                     return;
                 }
 
@@ -94,7 +94,7 @@ public class TagCommand implements CommandExecutor {
                 sb.append(ChatColor.DARK_GREEN);
                 sb.append(Language.translate("commands.tag.msg.deleted"));
                 player.sendMessage(new String(sb));
-                SoundUtils.PlaySound(player,"switch1");
+                SoundUtils.PlaySound(player,"switch1", false);
 
             }
         }.runTaskAsynchronously(plugin);

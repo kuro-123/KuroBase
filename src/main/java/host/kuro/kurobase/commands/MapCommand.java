@@ -27,7 +27,7 @@ public class MapCommand implements CommandExecutor {
         final Player player = (Player)sender;
         player.sendMessage(ChatColor.DARK_GREEN + plugin.getConfig().getString("Url.map"));
         player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.map.message"));
-        SoundUtils.PlaySound(player,"switch1");
+        SoundUtils.PlaySound(player,"switch1", false);
         return true;
     }
 }

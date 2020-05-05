@@ -31,7 +31,7 @@ public class ChestCommand implements CommandExecutor {
         if (args.length < 1) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-            SoundUtils.PlaySound(player,"cancel5");
+            SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
         if (args.length == 1) {
@@ -62,7 +62,7 @@ public class ChestCommand implements CommandExecutor {
                     sb.append(Language.translate("commands.chest.lock.perm"));
                     sb.append(String.format(Language.translate("commands.chest.lock.perm.rank"), perm));
                     player.sendMessage(new String(sb));
-                    SoundUtils.PlaySound(player,"cancel5");
+                    SoundUtils.PlaySound(player,"cancel5", false);
                     return false;
                 }
             }
@@ -72,17 +72,17 @@ public class ChestCommand implements CommandExecutor {
                 if (click_mode.equals("chestlock")) {
                     plugin.GetClickMode().remove(player);
                     player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock.modeoff"));
-                    SoundUtils.PlaySound(player,"switch1");
+                    SoundUtils.PlaySound(player,"switch1", false);
                 } else {
                     plugin.GetClickMode().remove(player);
                     player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock.modeon"));
-                    SoundUtils.PlaySound(player,"switch1");
+                    SoundUtils.PlaySound(player,"switch1", false);
                     plugin.GetClickMode().put(player, "chestlock");
                 }
             } else {
                 plugin.GetClickMode().remove(player);
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.chest.lock.modeon"));
-                SoundUtils.PlaySound(player,"switch1");
+                SoundUtils.PlaySound(player,"switch1", false);
                 plugin.GetClickMode().put(player, "chestlock");
             }
 

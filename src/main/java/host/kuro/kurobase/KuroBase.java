@@ -9,6 +9,7 @@ import host.kuro.kurobase.listeners.EntityListener;
 import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurobase.shop.GuiShopHandler;
+import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -23,10 +24,15 @@ public class KuroBase extends JavaPlugin {
 
     private static DatabaseManager db = null;
     public static DatabaseManager getDB() { return db; }
+
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
+
     private boolean linux = true;
     public boolean IsLinux() { return linux; }
+
+    private static MtRand random = new MtRand(System.currentTimeMillis());
+    public static MtRand getRand() { return random; }
 
     private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
     public HashMap<Player, String> GetClickMode() { return click_mode; }

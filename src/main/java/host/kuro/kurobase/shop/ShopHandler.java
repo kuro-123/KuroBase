@@ -120,14 +120,14 @@ public class ShopHandler {
             int price = cost * suryo;
             if (money < price) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("shop.error.shortage"));
-                SoundUtils.PlaySound(player,"incorrect2");
+                SoundUtils.PlaySound(player,"incorrect2", false);
                 return false;
             }
             // pay
             int ret = PlayerUtils.PayMoney(KuroBase.getDB(), player, price);
             if (ret != 1) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("shop.buy.fail"));
-                SoundUtils.PlaySound(player,"incorrect2");
+                SoundUtils.PlaySound(player,"incorrect2", false);
                 return false;
             }
             AddLogPay(player, "BUY", 0-price, stack.getType().name());
@@ -138,7 +138,7 @@ public class ShopHandler {
             String str_zankin = StringUtils.numFmt.format(money-price);
             String message = String.format(Language.translate("shop.buy.success"), stack.getType().name(), str_suryo, str_zankin);
             player.sendMessage(ChatColor.BLUE + message);
-            SoundUtils.PlaySound(player,"amount-display1");
+            SoundUtils.PlaySound(player,"amount-display1", false);
 
         } catch(Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
@@ -184,7 +184,7 @@ public class ShopHandler {
             }
             if (total_price <= 0) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("shop.sell.none"));
-                SoundUtils.PlaySound(player,"incorrect2");
+                SoundUtils.PlaySound(player,"incorrect2", false);
                 return false;
             }
             AddLogPay(player, "SELL", total_price, search);
@@ -194,7 +194,7 @@ public class ShopHandler {
             String str_zankin = StringUtils.numFmt.format(money+total_price);
             String message = String.format(Language.translate("shop.sell.success"), search, str_suryo, str_price, str_zankin);
             player.sendMessage(ChatColor.BLUE + message);
-            SoundUtils.PlaySound(player,"amount-display1");
+            SoundUtils.PlaySound(player,"amount-display1", false);
 
         } catch(Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
