@@ -219,6 +219,14 @@ public class EntityListener implements Listener {
                         minxp = 2;
                         maxxp = 3;
                         break;
+                    case SLIME:
+                        minxp = 2;
+                        maxxp = 3;
+                        break;
+                    case MAGMA_CUBE:
+                        minxp = 2;
+                        maxxp = 3;
+                        break;
 
                     case ZOMBIE:
                         minxp = 5;
@@ -295,9 +303,6 @@ public class EntityListener implements Listener {
                         minxp = 10;
                         maxxp = 20;
                         break;
-
-                    case SLIME: //size  Big 4 xp*, Small 2 xp*, Tiny 1xp* (Up to 28 xp in total if you kill a big slime and all its smaller forms)
-                    case MAGMA_CUBE: //Magma Cube (various sizes) - 4, 2 or 1
 
                     case WITHER:
                         minxp = 50;
