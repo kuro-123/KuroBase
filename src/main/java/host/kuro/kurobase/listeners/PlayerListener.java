@@ -631,6 +631,8 @@ public class PlayerListener implements Listener {
 										message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました [現在の所持金: %s p]", area.name, StringUtils.numFmt.format(money-price));
 										player.sendMessage(message);
 										SoundUtils.PlaySound(player, "kotsudumi1", false);
+										// pay log
+										PlayerUtils.AddLogAreaPay(player, "AREA", price);
 										// data reseup
 										AreaUtils.SetupProtectData();
 									}

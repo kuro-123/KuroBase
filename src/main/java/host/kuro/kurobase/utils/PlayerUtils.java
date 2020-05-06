@@ -424,4 +424,22 @@ public class PlayerUtils {
         }
         return ret;
     }
+
+    public static final int AddLogAreaPay(Player player, String kind, int pay) {
+        int ret = 0;
+        try {
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getName())); // src
+            args.add(new DatabaseArgs("c", "PROTECT")); // dst
+            args.add(new DatabaseArgs("c", kind)); // kind
+            args.add(new DatabaseArgs("i", ""+pay)); // price
+            args.add(new DatabaseArgs("c", "")); // result
+            ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.LOG.PAY"), args);
+            args.clear();
+            args = null;
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
 }
