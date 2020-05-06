@@ -85,6 +85,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("price").setTabCompleter(new PriceTabCompleter());
         getCommand("shop").setExecutor(new ShopCommand(this));
         getCommand("shop").setTabCompleter(new ShopTabCompleter());
+        getCommand("pay").setExecutor(new PayCommand(this));
+        getCommand("pay").setTabCompleter(new PayTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));

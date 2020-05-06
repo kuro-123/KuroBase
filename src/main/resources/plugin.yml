@@ -48,8 +48,12 @@ commands:
     description: ショップコマンド
     usage: /shop [あいまい検索キーワード]
     aliases: [sh]
-  Bi:
+  bi:
     description: ブロック情報クリックコマンド
     usage: /bi
+  pay:
+    description: 支払コマンド
+    usage: /pay <対象プレイヤー> <支払金額>
+
 
 

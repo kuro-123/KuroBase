@@ -242,12 +242,15 @@ public class PlayerUtils {
     public static final int PayMoney(DatabaseManager db, Player player, int pay) {
         int ret = 0;
         try {
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("i", ""+pay));
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
-            ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.PAYMODEY"), args);
-            args.clear();
-            args = null;
+            String uuid = player.getUniqueId().toString();
+            if (uuid.length() > 0) {
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("i", ""+pay));
+                args.add(new DatabaseArgs("c", uuid));
+                ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.PAYMODEY"), args);
+                args.clear();
+                args = null;
+            }
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
@@ -256,12 +259,15 @@ public class PlayerUtils {
     public static final int AddMoney(DatabaseManager db, Player player, int pay) {
         int ret = 0;
         try {
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("i", ""+pay));
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
-            ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.ADDMODEY"), args);
-            args.clear();
-            args = null;
+            String uuid = player.getUniqueId().toString();
+            if (uuid.length() > 0) {
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("i", ""+pay));
+                args.add(new DatabaseArgs("c", uuid));
+                ret = db.ExecuteUpdate(Language.translate("SQL.PLAYER.ADDMODEY"), args);
+                args.clear();
+                args = null;
+            }
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
@@ -398,5 +404,23 @@ public class PlayerUtils {
             ErrorUtils.GetErrorMessage(ex);
         }
         return;
+    }
+
+    public static final int AddLogPlayerPay(Player player, String kind, int pay, Player target) {
+        int ret = 0;
+        try {
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getName())); // src
+            args.add(new DatabaseArgs("c", target.getName())); // dst
+            args.add(new DatabaseArgs("c", kind)); // kind
+            args.add(new DatabaseArgs("i", ""+pay)); // price
+            args.add(new DatabaseArgs("c", "")); // result
+            ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.LOG.PAY"), args);
+            args.clear();
+            args = null;
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
     }
 }
