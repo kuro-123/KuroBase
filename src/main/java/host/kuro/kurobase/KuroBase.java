@@ -11,6 +11,7 @@ import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
+import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KuroBase extends JavaPlugin {
@@ -46,8 +48,14 @@ public class KuroBase extends JavaPlugin {
     private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetSoundBattle() { return sound_battle; }
 
+    private static HashMap<Player, Long> move_message = new HashMap<Player, Long>();
+    public HashMap<Player, Long> GetMoveMessage() { return move_message; }
+
     private static HashMap<Player, AreaData> area_data = new HashMap<Player, AreaData>();
     public HashMap<Player, AreaData> GetAreaData() { return area_data; }
+
+    private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
+    public static ArrayList<AreaData> GetProtect() { return protect; }
 
     @Override
     public void onEnable() {
@@ -125,6 +133,10 @@ public class KuroBase extends JavaPlugin {
             getLogger().info(Language.translate("plugin.setup.worlddata"));
             DataUtils.RefreshChestData(db);
         }
+
+        // setup protect data
+        getLogger().info(Language.translate("plugin.setup.protectdata"));
+        AreaUtils.SetupProtectData();
 
         // load plugin
         if (!LoadDependPlugin()) {

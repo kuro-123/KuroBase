@@ -62,7 +62,7 @@ commands:
     usage: /rand <最小値> <最大値>
     aliases: [ra]
   area:
-    description: エリア保護コマンド（1マス:4p）
+    description: エリア保護コマンド（1マス:1p）
     usage: /area <action(add|del)> <名前> ※指定なしの場合はキャンセル
     aliases: [ar]
 

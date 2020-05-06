@@ -1,10 +1,14 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -39,6 +43,16 @@ public class BlockListener implements Listener {
             args = null;
 
             Block block = e.getBlock();
+
+            // check area
+            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+            if (area != null) {
+                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                return;
+            }
+
             StringBuilder sb = new StringBuilder();
             String name;
             for (ItemStack itemstack: block.getDrops()) {
@@ -91,6 +105,15 @@ public class BlockListener implements Listener {
 
             Block block = e.getBlock();
 
+            // check area
+            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+            if (area != null) {
+                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                return;
+            }
+
             // INSERT
             ArrayList<DatabaseArgs> bargs = new ArrayList<DatabaseArgs>();
             bargs.add(new DatabaseArgs("c", block.getLocation().getWorld().getName())); // world
@@ -113,6 +136,18 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onSignChange(SignChangeEvent e) {
         try {
+            Block block = e.getBlock();
+            Player player = e.getPlayer();
+
+            // check area
+            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+            if (area != null) {
+                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                return;
+            }
+
             String[] lines = e.getLines();
             String line1 = "";
             String line2 = "";
@@ -131,9 +166,8 @@ public class BlockListener implements Listener {
                 }
                 i++;
             }
+
             // UPDATE
-            Player player = e.getPlayer();
-            Block block = e.getBlock();
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
             args.add(new DatabaseArgs("c", block.getLocation().getWorld().getName())); // world
             args.add(new DatabaseArgs("i", ""+block.getLocation().getBlockX())); // x

@@ -4,14 +4,19 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.AreaUtils;
+import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class AreaCommand implements CommandExecutor {
@@ -68,22 +73,23 @@ public class AreaCommand implements CommandExecutor {
                     plugin.GetClickMode().remove(player);
                     player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.modeoff"));
                     RemoveAreaData(player);
-                    SoundUtils.PlaySound(player,"switch1", false);
+                    SoundUtils.PlaySound(player, "switch1", false);
                 } else {
-                    plugin.GetClickMode().remove(player);
                     player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.modeon"));
                     MakeAreaData(player, name);
-                    SoundUtils.PlaySound(player,"switch1", false);
+                    SoundUtils.PlaySound(player, "switch1", false);
                     plugin.GetClickMode().put(player, "area");
                 }
             } else {
-                plugin.GetClickMode().remove(player);
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.modeon"));
                 MakeAreaData(player, name);
-                SoundUtils.PlaySound(player,"switch1", false);
+                SoundUtils.PlaySound(player, "switch1", false);
                 plugin.GetClickMode().put(player, "area");
             }
         } else {
+            plugin.GetClickMode().remove(player);
+            RemoveAreaData(player);
+
             // DELETE
             ArrayList<DatabaseArgs> dargs = new ArrayList<DatabaseArgs>();
             dargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -93,12 +99,14 @@ public class AreaCommand implements CommandExecutor {
             dargs = null;
             if (ret != 1) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.area.delete.error"));
-                SoundUtils.PlaySound(player,"cancel5", false);
+                SoundUtils.PlaySound(player, "cancel5", false);
                 return false;
             }
+            AreaUtils.DeleteAreaData(player.getName(), name);
+
             String message = String.format("保護エリア [ %s ] を削除しました", name);
             player.sendMessage(ChatColor.YELLOW + message);
-            SoundUtils.PlaySound(player,"switch1", false);
+            SoundUtils.PlaySound(player, "switch1", false);
         }
         return true;
     }

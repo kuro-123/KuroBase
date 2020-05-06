@@ -7,10 +7,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
 import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,8 +20,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -131,6 +126,7 @@ public class PlayerListener implements Listener {
 			plugin.GetAfkStatus().remove(player);
 			plugin.GetSoundBattle().remove(player);
 			plugin.GetAreaData().remove(player);
+			plugin.GetMoveMessage().remove(player);
 
 			// 計測終了
 			int elapse = 0;
@@ -517,6 +513,24 @@ public class PlayerListener implements Listener {
 	public void onMove(final PlayerMoveEvent e) {
 		Player player = e.getPlayer();
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
+
+		if (!plugin.GetMoveMessage().containsKey(player)) {
+			SendMoveMessage(player);
+			plugin.GetMoveMessage().put(player, System.currentTimeMillis());
+		} else {
+			long before = plugin.GetMoveMessage().get(player);
+			long after = System.currentTimeMillis();
+			if ((after-before) > 3000) {
+				SendMoveMessage(player);
+				plugin.GetMoveMessage().put(player, System.currentTimeMillis());
+			}
+		}
+	}
+	private void SendMoveMessage(Player player) {
+		AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+		if (area != null) {
+			PlayerUtils.SendActionBar(player, ChatColor.YELLOW + String.format("[ 敷地:%s <by %s> ]", area.name, area.owner));
+		}
 	}
 
 	@EventHandler
@@ -551,66 +565,80 @@ public class PlayerListener implements Listener {
 			else if (click_mode.equals("area")) {
 				if (plugin.GetAreaData().containsKey(player)) {
 					String message;
+					AreaData result = null;
 					AreaData area = plugin.GetAreaData().get(player);
 					switch (area.status) {
 					case 0: // first point
 						area.x1 = block.getLocation().getBlockX();
 						area.y1 = block.getLocation().getBlockY();
 						area.z1 = block.getLocation().getBlockZ();
-						area.status = 1;
-						plugin.GetAreaData().put(player, area);
-						message = String.format("1点目を設定しました！ [ %d,%d,%d ]", area.x1, area.y1, area.z1);
-						player.sendMessage(message);
-						SoundUtils.PlaySound(player, "kotsudumi1", false);
+						result = AreaUtils.CheckInsideProtect(null, area.x1, area.y1, area.z1);
+						if (result == null) {
+							area.status = 1;
+							plugin.GetAreaData().put(player, area);
+							message = String.format("1点目を設定しました！ [ %d,%d,%d ]", area.x1, area.y1, area.z1);
+							player.sendMessage(message);
+							SoundUtils.PlaySound(player, "kotsudumi1", false);
+						} else {
+							player.sendMessage(ChatColor.RED + String.format("指定したポイントは [ %s さん ] の保護 [ %s ] の範囲内でした", result.owner, result.name));
+							SoundUtils.PlaySound(player, "cancel5", false);
+							plugin.GetAreaData().remove(player);
+							plugin.GetClickMode().remove(player);
+						}
 						break;
 					case 1: // second point
 						area.x2 = block.getLocation().getBlockX();
 						area.y2 = block.getLocation().getBlockY();
 						area.z2 = block.getLocation().getBlockZ();
-						area.status = 2;
-						plugin.GetAreaData().put(player, area);
-						message = String.format("2点目を設定しました！ [ %d,%d,%d ]", area.x1, area.y1, area.z1);
-						player.sendMessage(message);
-
-						int tempX1 = Math.min(area.x1, area.x2);
-						int tempY1 = Math.min(area.y1, area.y2);
-						int tempZ1 = Math.min(area.z1, area.z2);
-						int tempX2 = Math.max(area.x1, area.x2);
-						int tempY2 = Math.max(area.y1, area.y2);
-						int tempZ2 = Math.max(area.z1, area.z2);
-						area.x1 = tempX1;
-						area.y1 = tempY1;
-						area.z1 = tempZ1;
-						area.x2 = tempX2;
-						area.y2 = tempY2;
-						area.z2 = tempZ2;
-
-						// check area coligion
-
-						// check money
-
-						// INSERT
-						ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-						args.add(new DatabaseArgs("c", player.getWorld().getName())); // world
-						args.add(new DatabaseArgs("i", "" + area.x1)); // x1
-						args.add(new DatabaseArgs("i", "" + area.y1)); // y1
-						args.add(new DatabaseArgs("i", "" + area.z1)); // z1
-						args.add(new DatabaseArgs("i", "" + area.x2)); // x2
-						args.add(new DatabaseArgs("i", "" + area.y2)); // y2
-						args.add(new DatabaseArgs("i", "" + area.z2)); // z2
-						args.add(new DatabaseArgs("c", area.name)); // name
-						args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
-						args.add(new DatabaseArgs("c", player.getName())); // owner
-						int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.AREA.INSERT"), args);
-						args.clear();
-						args = null;
-						if (ret != 1) {
-							player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
-							SoundUtils.PlaySound(player, "cancel5", false);
+						result = AreaUtils.CheckInsideProtect(null, area.x2, area.y2, area.z2);
+						if (result == null) {
+							area.status = 2;
+							plugin.GetAreaData().put(player, area);
+							area = AreaUtils.ReplacePos(area);
+							// check money
+							int count = AreaUtils.GetAreaCount(area);
+							if (count < 512) {
+								player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.minimum.error"));
+								SoundUtils.PlaySound(player, "cancel5", false);
+							} else {
+								int price = count * 2;
+								int money = PlayerUtils.GetMoney(KuroBase.getDB(), player);
+								if (money < price) {
+									player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pay.monerror"));
+									SoundUtils.PlaySound(player, "cancel5", false);
+								} else {
+									// INSERT
+									ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+									args.add(new DatabaseArgs("c", player.getWorld().getName())); // world
+									args.add(new DatabaseArgs("i", "" + area.x1)); // x1
+									args.add(new DatabaseArgs("i", "" + area.y1)); // y1
+									args.add(new DatabaseArgs("i", "" + area.z1)); // z1
+									args.add(new DatabaseArgs("i", "" + area.x2)); // x2
+									args.add(new DatabaseArgs("i", "" + area.y2)); // y2
+									args.add(new DatabaseArgs("i", "" + area.z2)); // z2
+									args.add(new DatabaseArgs("c", area.name)); // name
+									args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
+									args.add(new DatabaseArgs("c", player.getName())); // owner
+									int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.AREA.INSERT"), args);
+									args.clear();
+									args = null;
+									if (ret != 1) {
+										player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
+										SoundUtils.PlaySound(player, "cancel5", false);
+									} else {
+										new Location(player.getWorld(), area.x1, area.y1, area.z1).getBlock().setType(Material.BLUE_TERRACOTTA);
+										new Location(player.getWorld(), area.x2, area.y2, area.z2).getBlock().setType(Material.BLUE_TERRACOTTA);
+										message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました [現在の所持金: %s p]", area.name, StringUtils.numFmt.format(money-price));
+										player.sendMessage(message);
+										SoundUtils.PlaySound(player, "kotsudumi1", false);
+										// data reseup
+										AreaUtils.SetupProtectData();
+									}
+								}
+							}
 						} else {
-							message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました", area.name);
-							player.sendMessage(message);
-							SoundUtils.PlaySound(player, "kotsudumi1", false);
+							player.sendMessage(ChatColor.RED + String.format("指定したポイントは [ %s さん ] の保護 [ %s ] の範囲内でした", result.owner, result.name));
+							SoundUtils.PlaySound(player, "cancel5", false);
 						}
 						plugin.GetAreaData().remove(player);
 						plugin.GetClickMode().remove(player);

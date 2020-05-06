@@ -28,6 +28,7 @@ public class AreaTabCompleter implements TabCompleter {
             case 1:
                 cmds.add("add");
                 cmds.add("del");
+                cmds.add("list");
                 return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
             case 2:
                 if (args[0].toLowerCase().equals("del")) {
