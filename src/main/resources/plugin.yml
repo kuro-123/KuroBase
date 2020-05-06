@@ -54,6 +54,9 @@ commands:
   pay:
     description: 支払コマンド
     usage: /pay <対象プレイヤー> <支払金額>
+  ri:
+    description: インベントリ消去コマンド
+    usage: /ri
 
 
 

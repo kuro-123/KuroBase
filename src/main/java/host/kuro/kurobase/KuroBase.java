@@ -74,6 +74,7 @@ public class KuroBase extends JavaPlugin {
         getCommand("map").setExecutor(new MapCommand(this));
         getCommand("shutdown").setExecutor(new ShutdownCommand(this));
         getCommand("bi").setExecutor(new BiCommand(this));
+        getCommand("ri").setExecutor(new BiCommand(this));
 
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());
