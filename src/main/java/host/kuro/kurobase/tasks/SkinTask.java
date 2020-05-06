@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.database.SkinData;
+import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -15,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class SkinTask extends BukkitRunnable {
 
@@ -108,6 +111,13 @@ public class SkinTask extends BukkitRunnable {
                     saveFile = new File( plugin.getDataFolder() + "/skin/data/" + player.getName() + ".png");
                     ImageIO.write(bi, "png", saveFile);
                 }
+
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.SKIN.UPDATE"), args);
+                args.clear();
+                args = null;
 
             } catch (URISyntaxException ex) {
                 plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
