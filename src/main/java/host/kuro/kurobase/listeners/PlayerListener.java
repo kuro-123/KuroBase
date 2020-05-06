@@ -9,6 +9,7 @@ import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -162,6 +163,7 @@ public class PlayerListener implements Listener {
 			player.setExp(newExp);
 			e.setKeepLevel(true);
 
+			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
 			SoundUtils.BroadcastSound("don-1", false);
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk

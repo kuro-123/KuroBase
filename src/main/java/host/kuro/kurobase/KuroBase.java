@@ -47,6 +47,11 @@ public class KuroBase extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.toLowerCase().indexOf("windows") >= 0) {
+            linux = false;
+        }
+
         // language setup
         Language.load("UTF-8");
         getLogger().info(Language.translate("plugin.setup.language"));
@@ -110,8 +115,10 @@ public class KuroBase extends JavaPlugin {
         minutes_task.runTaskTimer(this, 200, 1200);
 
         // check world data
-        getLogger().info(Language.translate("plugin.setup.worlddata"));
-        DataUtils.RefreshChestData(db);
+        if (IsLinux()) {
+            getLogger().info(Language.translate("plugin.setup.worlddata"));
+            DataUtils.RefreshChestData(db);
+        }
 
         // load plugin
         if (!LoadDependPlugin()) {
@@ -119,15 +126,12 @@ public class KuroBase extends JavaPlugin {
             return;
         }
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.toLowerCase().indexOf("windows") >= 0) {
-            linux = false;
+        if (!linux) {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
         } else {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
             kurodiscord.getDiscordMessage().SendDiscordYellowMessage(Language.translate("plugin.information.discord"));
         }
-
         getLogger().info(Language.translate("plugin.loaded"));
     }
 
@@ -153,7 +157,9 @@ public class KuroBase extends JavaPlugin {
         // command
         db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
         // UPDATE
-        int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
+        if (IsLinux()) {
+            int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
+        }
     }
 
     private boolean LoadDependPlugin() {

@@ -2,13 +2,11 @@ package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.shop.GuiHandler;
-import host.kuro.kurobase.shop.GuiShop;
-import host.kuro.kurobase.shop.ShopHandler;
+import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ListCommand implements CommandExecutor {
 
     private KuroBase plugin;
-
     public ListCommand(KuroBase plugin) {
         this.plugin = plugin;
     }
