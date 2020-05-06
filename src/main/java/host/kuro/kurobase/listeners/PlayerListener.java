@@ -534,6 +534,45 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
+	public void onBucketEmpty(final PlayerBucketEmptyEvent e) {
+		Player player = e.getPlayer();
+		Block block = e.getBlock();
+		// check area
+		AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+		if (area != null) {
+			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+			SoundUtils.PlaySound(player,"cancel5", false);
+			e.setCancelled(true);
+			return;
+		}
+		int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+		if (rank < PlayerUtils.RANK_KANRI) {
+			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
+			SoundUtils.PlaySound(player, "cancel5", false);
+			e.setCancelled(true);
+		}
+	}
+	@EventHandler
+	public void onBucketFill(final PlayerBucketFillEvent e) {
+		Player player = e.getPlayer();
+		Block block = e.getBlock();
+		// check area
+		AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+		if (area != null) {
+			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+			SoundUtils.PlaySound(player,"cancel5", false);
+			e.setCancelled(true);
+			return;
+		}
+		int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+		if (rank < PlayerUtils.RANK_KANRI) {
+			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
+			SoundUtils.PlaySound(player, "cancel5", false);
+			e.setCancelled(true);
+		}
+	}
+
+	@EventHandler
 	public void onInteract(final PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
