@@ -665,15 +665,18 @@ public class PlayerListener implements Listener {
 										player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
 										SoundUtils.PlaySound(player, "cancel5", false);
 									} else {
+										// pay
+										PlayerUtils.PayMoney(KuroBase.getDB(), player, price);
+										// pay log
+										PlayerUtils.AddLogAreaPay(player, "AREA", price);
+										// data reseup
+										AreaUtils.SetupProtectData();
+
 										new Location(player.getWorld(), area.x1, area.y1, area.z1).getBlock().setType(Material.BLUE_TERRACOTTA);
 										new Location(player.getWorld(), area.x2, area.y2, area.z2).getBlock().setType(Material.BLUE_TERRACOTTA);
 										message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました [現在の所持金: %s p]", area.name, StringUtils.numFmt.format(money-price));
 										player.sendMessage(message);
 										SoundUtils.PlaySound(player, "kotsudumi1", false);
-										// pay log
-										PlayerUtils.AddLogAreaPay(player, "AREA", price);
-										// data reseup
-										AreaUtils.SetupProtectData();
 									}
 								}
 							}
