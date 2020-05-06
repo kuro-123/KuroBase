@@ -4,8 +4,10 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -394,6 +396,9 @@ public class EntityListener implements Listener {
                 SoundUtils.StopSoundAll(player);
                 SoundUtils.PlaySound(player, "complete", true);
             }
+
+            ParticleUtils.PartyParticle(player, Particle.LAVA, 50); // particle
+            SoundUtils.BroadcastSound("don-1", false);
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
