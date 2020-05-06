@@ -50,7 +50,7 @@ commands:
     aliases: [sh]
   bi:
     description: ブロック情報クリックコマンド
-    usage: /bi
+    usage: /bi (モードON|OFF)
   pay:
     description: 支払コマンド
     usage: /pay <対象プレイヤー> <支払金額>
@@ -61,6 +61,10 @@ commands:
     description: ランダム値表示コマンド
     usage: /rand <最小値> <最大値>
     aliases: [ra]
+  area:
+    description: エリア保護コマンド（1マス:4p）
+    usage: /area <action(add|del)> <名前> ※指定なしの場合はキャンセル
+    aliases: [ar]
 
 
 

@@ -397,8 +397,7 @@ public class EntityListener implements Listener {
                 SoundUtils.PlaySound(player, "complete", true);
             }
 
-            ParticleUtils.PartyParticle(player, Particle.LAVA, 50); // particle
-            SoundUtils.BroadcastSound("don-1", false);
+            SoundUtils.BroadcastSound("sceneswitch2", false);
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);

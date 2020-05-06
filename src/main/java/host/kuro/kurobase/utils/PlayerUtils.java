@@ -398,6 +398,7 @@ public class PlayerUtils {
                 if (dm != null) {
                     dm.SendDiscordYellowMessage(message);
                 }
+                player.kickPlayer(message);
             }
 
         } catch (Exception ex) {

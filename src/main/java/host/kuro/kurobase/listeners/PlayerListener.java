@@ -1,6 +1,7 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
@@ -22,6 +23,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -126,6 +129,8 @@ public class PlayerListener implements Listener {
 			// memory clear
 			plugin.GetClickMode().remove(player);
 			plugin.GetAfkStatus().remove(player);
+			plugin.GetSoundBattle().remove(player);
+			plugin.GetAreaData().remove(player);
 
 			// 計測終了
 			int elapse = 0;
@@ -164,7 +169,7 @@ public class PlayerListener implements Listener {
 			e.setKeepLevel(true);
 
 			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
-			SoundUtils.PlaySound(player,"sceneswitch2", false);
+			SoundUtils.PlaySound(player,"don-1", false);
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
@@ -519,11 +524,12 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
+		Block block = e.getClickedBlock();
+
 		// click mode
 		if (plugin.GetClickMode().containsKey(player)) {
 			String click_mode = plugin.GetClickMode().get(player);
 			if (click_mode.equals("blockid")) {
-				Block block = e.getClickedBlock();
 				if (block != null) {
 					StringBuilder sb = new StringBuilder();
 					sb.append(ChatColor.GREEN);
@@ -541,6 +547,78 @@ public class PlayerListener implements Listener {
 					e.setCancelled(true);
 					return;
 				}
+			}
+			else if (click_mode.equals("area")) {
+				if (plugin.GetAreaData().containsKey(player)) {
+					String message;
+					AreaData area = plugin.GetAreaData().get(player);
+					switch (area.status) {
+					case 0: // first point
+						area.x1 = block.getLocation().getBlockX();
+						area.y1 = block.getLocation().getBlockY();
+						area.z1 = block.getLocation().getBlockZ();
+						area.status = 1;
+						plugin.GetAreaData().put(player, area);
+						message = String.format("1点目を設定しました！ [ %d,%d,%d ]", area.x1, area.y1, area.z1);
+						player.sendMessage(message);
+						SoundUtils.PlaySound(player, "kotsudumi1", false);
+						break;
+					case 1: // second point
+						area.x2 = block.getLocation().getBlockX();
+						area.y2 = block.getLocation().getBlockY();
+						area.z2 = block.getLocation().getBlockZ();
+						area.status = 2;
+						plugin.GetAreaData().put(player, area);
+						message = String.format("2点目を設定しました！ [ %d,%d,%d ]", area.x1, area.y1, area.z1);
+						player.sendMessage(message);
+
+						int tempX1 = Math.min(area.x1, area.x2);
+						int tempY1 = Math.min(area.y1, area.y2);
+						int tempZ1 = Math.min(area.z1, area.z2);
+						int tempX2 = Math.max(area.x1, area.x2);
+						int tempY2 = Math.max(area.y1, area.y2);
+						int tempZ2 = Math.max(area.z1, area.z2);
+						area.x1 = tempX1;
+						area.y1 = tempY1;
+						area.z1 = tempZ1;
+						area.x2 = tempX2;
+						area.y2 = tempY2;
+						area.z2 = tempZ2;
+
+						// check area coligion
+
+						// check money
+
+						// INSERT
+						ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+						args.add(new DatabaseArgs("c", player.getWorld().getName())); // world
+						args.add(new DatabaseArgs("i", "" + area.x1)); // x1
+						args.add(new DatabaseArgs("i", "" + area.y1)); // y1
+						args.add(new DatabaseArgs("i", "" + area.z1)); // z1
+						args.add(new DatabaseArgs("i", "" + area.x2)); // x2
+						args.add(new DatabaseArgs("i", "" + area.y2)); // y2
+						args.add(new DatabaseArgs("i", "" + area.z2)); // z2
+						args.add(new DatabaseArgs("c", area.name)); // name
+						args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
+						args.add(new DatabaseArgs("c", player.getName())); // owner
+						int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.AREA.INSERT"), args);
+						args.clear();
+						args = null;
+						if (ret != 1) {
+							player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
+							SoundUtils.PlaySound(player, "cancel5", false);
+						} else {
+							message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました", area.name);
+							player.sendMessage(message);
+							SoundUtils.PlaySound(player, "kotsudumi1", false);
+						}
+						plugin.GetAreaData().remove(player);
+						plugin.GetClickMode().remove(player);
+						break;
+					}
+				}
+				e.setCancelled(true);
+				return;
 			}
 		}
 	}

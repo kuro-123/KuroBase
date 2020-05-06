@@ -2,6 +2,7 @@ package host.kuro.kurobase;
 
 import host.kuro.kurobase.commands.*;
 import host.kuro.kurobase.commands.Completers.*;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.BlockListener;
@@ -44,6 +45,9 @@ public class KuroBase extends JavaPlugin {
 
     private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetSoundBattle() { return sound_battle; }
+
+    private static HashMap<Player, AreaData> area_data = new HashMap<Player, AreaData>();
+    public HashMap<Player, AreaData> GetAreaData() { return area_data; }
 
     @Override
     public void onEnable() {
@@ -96,6 +100,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("pay").setTabCompleter(new PayTabCompleter());
         getCommand("rand").setExecutor(new RandCommand(this));
         getCommand("rand").setTabCompleter(new RandTabCompleter());
+        getCommand("area").setExecutor(new AreaCommand(this));
+        getCommand("area").setTabCompleter(new AreaTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -156,6 +162,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.PRICE"), null);
         // command
         db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
+        // area
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.AREA"), null);
         // UPDATE
         if (IsLinux()) {
             int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
