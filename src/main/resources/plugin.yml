@@ -57,6 +57,10 @@ commands:
   ri:
     description: インベントリ消去コマンド
     usage: /ri
+  rand:
+    description: ランダム値表示コマンド
+    usage: /rand <最小値> <最大値>
+    aliases: [ra]
 
 
 

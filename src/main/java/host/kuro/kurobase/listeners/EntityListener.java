@@ -368,7 +368,7 @@ public class EntityListener implements Listener {
             if (minxp == maxxp) {
                 xp = minxp;
             } else {
-                xp = plugin.getRand().Next(minxp, maxxp);
+                xp = plugin.GetRand().Next(minxp, maxxp);
             }
             player.giveExp(xp);
 

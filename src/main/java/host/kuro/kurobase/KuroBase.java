@@ -33,7 +33,7 @@ public class KuroBase extends JavaPlugin {
     public boolean IsLinux() { return linux; }
 
     private static MtRand random = new MtRand(System.currentTimeMillis());
-    public static MtRand getRand() { return random; }
+    public static MtRand GetRand() { return random; }
 
     private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
     public HashMap<Player, String> GetClickMode() { return click_mode; }
@@ -88,6 +88,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("shop").setTabCompleter(new ShopTabCompleter());
         getCommand("pay").setExecutor(new PayCommand(this));
         getCommand("pay").setTabCompleter(new PayTabCompleter());
+        getCommand("rand").setExecutor(new RandCommand(this));
+        getCommand("rand").setTabCompleter(new RandTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
