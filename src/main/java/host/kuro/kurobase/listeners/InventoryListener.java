@@ -1,8 +1,10 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -55,6 +57,15 @@ public class InventoryListener implements Listener {
             leftChest = Chest.class.cast(doublechest.getLeftSide());
             rightChest = Chest.class.cast(doublechest.getRightSide());
         } else {
+            return;
+        }
+
+        // check area
+        AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+        if (area != null) {
+            player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            event.setCancelled(true);
             return;
         }
 
