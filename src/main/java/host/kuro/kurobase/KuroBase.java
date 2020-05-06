@@ -10,6 +10,7 @@ import host.kuro.kurobase.listeners.InventoryListener;
 import host.kuro.kurobase.listeners.PlayerListener;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
+import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
@@ -107,6 +108,10 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.task"));
         MinutesTask minutes_task = new MinutesTask(this);
         minutes_task.runTaskTimer(this, 200, 1200);
+
+        // check world data
+        getLogger().info(Language.translate("plugin.setup.worlddata"));
+        DataUtils.RefreshChestData(db);
 
         // load plugin
         if (!LoadDependPlugin()) {
