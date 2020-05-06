@@ -3,6 +3,7 @@ package host.kuro.kurobase.listeners;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -64,6 +65,12 @@ public class BlockListener implements Listener {
             ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.MATERIAL.INSERT"), bargs);
             bargs.clear();
             bargs = null;
+
+            String target = block.getType().toString();
+            if (target.toLowerCase().indexOf("chest") >= 0) {
+                // check chest data
+                DataUtils.RefreshChestData(plugin.getDB());
+            }
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
