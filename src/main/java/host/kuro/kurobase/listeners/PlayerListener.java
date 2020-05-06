@@ -163,8 +163,8 @@ public class PlayerListener implements Listener {
 			player.setExp(newExp);
 			e.setKeepLevel(true);
 
-			ParticleUtils.CrownParticle(player, Particle.LAVA, 30); // particle
-			SoundUtils.PlaySound(player,"buun1", false);
+			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
+			SoundUtils.PlaySound(player,"sceneswitch2", false);
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
