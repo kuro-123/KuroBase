@@ -67,5 +67,5 @@ commands:
     aliases: [ar]
   home:
     description: ホームポイント設定コマンド
-    usage: /home [set] ※指定なしの場合はテレポート
+    usage: /home [set|del] ※指定なしの場合はテレポート
     aliases: [ho]
