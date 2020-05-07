@@ -166,7 +166,7 @@ public class PlayerListener implements Listener {
 			e.setKeepLevel(true);
 
 			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
-			SoundUtils.PlaySound(player,"don-1", false);
+			SoundUtils.BroadcastSound("don-1", false);
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 

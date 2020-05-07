@@ -110,6 +110,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("rand").setTabCompleter(new RandTabCompleter());
         getCommand("area").setExecutor(new AreaCommand(this));
         getCommand("area").setTabCompleter(new AreaTabCompleter());
+        getCommand("home").setExecutor(new HomeCommand(this));
+        getCommand("home").setTabCompleter(new HomeTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
