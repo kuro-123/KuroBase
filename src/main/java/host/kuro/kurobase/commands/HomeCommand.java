@@ -69,13 +69,12 @@ public class HomeCommand implements CommandExecutor {
             }
             PlayerUtils.PayMoney(KuroBase.getDB(), player, 50);
             PlayerUtils.AddLogWarpPay(player, "WARP", 50);
-
+            ParticleUtils.CenterParticle(player, Particle.CAMPFIRE_COSY_SMOKE, 50, 4);
             player.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
             new BukkitRunnable(){
                 @Override
                 public void run() {
                 player.sendMessage(ChatColor.YELLOW + Language.translate("commands.home.teleport"));
-                ParticleUtils.CenterParticle(player, Particle.CAMPFIRE_COSY_SMOKE, 50, 4);
                 SoundUtils.PlaySound(player, "typewriter-2", false);
                 }
             }.runTaskLaterAsynchronously(plugin, 10);
@@ -102,20 +101,29 @@ public class HomeCommand implements CommandExecutor {
     private boolean ActionSet(Player player) {
         // update
         try {
-            AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-            if (!(area.owner.toLowerCase().equals(player.getName().toLowerCase()))) {
+            AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+            if (area == null) {
                 // not own area
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.home.error.own"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
+            } else {
+                if (!(area.owner.toLowerCase().equals(player.getName().toLowerCase()))) {
+                    // not own area
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.home.error.own"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
             }
 
             String exist = ExistHome(player);
-            if (exist != area.name) {
-                // already home
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.home.error.already") + " [エリア:" + area.name + "]");
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
+            if (exist.length() > 0) {
+                if (!exist.toLowerCase().equals(area.name.toLowerCase())) {
+                    // already home
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.home.error.already") + " [エリア:" + area.name + "]");
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
             }
 
             // UPDATE
@@ -124,7 +132,7 @@ public class HomeCommand implements CommandExecutor {
             args.add(new DatabaseArgs("i", ""+player.getLocation().getBlockY())); // y
             args.add(new DatabaseArgs("i", ""+player.getLocation().getBlockZ())); // z
             args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-            args.add(new DatabaseArgs("i", area.name)); // name
+            args.add(new DatabaseArgs("c", area.name)); // name
             int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.AREA.UPDATE.HOME"), args);
             args.clear();
             args = null;
