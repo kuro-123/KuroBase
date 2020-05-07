@@ -11,6 +11,26 @@ import java.util.ArrayList;
 
 public class ErrorUtils {
 
+    public static String GetErrorMessageNonDb(Exception ex) {
+        StackTraceElement[] ste = ex.getStackTrace();
+        String buff = "";
+        StringBuilder sb = new StringBuilder();
+        for (StackTraceElement element: ste) {
+            sb.append("[");
+            sb.append(element);
+            sb.append("]\n");
+        }
+        buff = (ex.getClass().getName() + ": "+ ex.getMessage() + " -> " + new String(sb));
+        if (buff.length() > 1024) {
+            buff = buff.substring(0, 1024);
+        }
+        String className = new Object(){}.getClass().getEnclosingClass().getName();
+        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+        String message = (className + ":" + methodName + " -> " + buff);
+        Bukkit.getLogger().warning(message);
+        return message;
+    }
+
     public static String GetErrorMessage(Exception ex) {
         StackTraceElement[] ste = ex.getStackTrace();
         String buff = "";

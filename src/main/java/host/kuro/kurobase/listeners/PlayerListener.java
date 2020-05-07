@@ -161,7 +161,8 @@ public class PlayerListener implements Listener {
 			int value = plugin.getConfig().getInt("Game.death", 200);
 			int newExp = (player.getTotalExperience()-value);
 			if (newExp < 0) newExp = 0;
-			player.setExp(newExp);
+			player.setTotalExperience(newExp);
+
 			e.setKeepLevel(true);
 
 			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
@@ -199,74 +200,77 @@ public class PlayerListener implements Listener {
 				}
 			}
 
-			EntityDamageEvent damage = e.getEntity().getLastDamageCause();
-			if (damage != null) {
-				EntityDamageEvent.DamageCause cause = damage.getCause();
-				if (cause != null) {
-					switch (cause) {
-						case BLOCK_EXPLOSION	: cause_name = Language.translate("death.BLOCK_EXPLOSION"); break;
-						case CONTACT			: cause_name = Language.translate("death.CONTACT"); break;
-						case CRAMMING			: cause_name = Language.translate("death.CRAMMING"); break;
-						case CUSTOM				: cause_name = Language.translate("death.CUSTOM"); break;
-						case DRAGON_BREATH		: cause_name = Language.translate("death.DRAGON_BREATH"); break;
-						case DROWNING			: cause_name = Language.translate("death.DROWNING"); break;
-						case DRYOUT				: cause_name = Language.translate("death.DRYOUT"); break;
-						case ENTITY_ATTACK		: cause_name = Language.translate("death.ENTITY_ATTACK"); break;
-						case ENTITY_EXPLOSION	: cause_name = Language.translate("death.ENTITY_EXPLOSION"); break;
-						case ENTITY_SWEEP_ATTACK: cause_name = Language.translate("death.ENTITY_SWEEP_ATTACK"); break;
-						case FALL				: cause_name = Language.translate("death.FALL"); break;
-						case FALLING_BLOCK		: cause_name = Language.translate("death.FALLING_BLOCK"); break;
-						case FIRE				: cause_name = Language.translate("death.FIRE"); break;
-						case FIRE_TICK			: cause_name = Language.translate("death.FIRE_TICK"); break;
-						case FLY_INTO_WALL		: cause_name = Language.translate("death.FLY_INTO_WALL"); break;
-						case HOT_FLOOR			: cause_name = Language.translate("death.HOT_FLOOR"); break;
-						case LAVA				: cause_name = Language.translate("death.LAVA"); break;
-						case LIGHTNING			: cause_name = Language.translate("death.LIGHTNING"); break;
-						case MAGIC				: cause_name = Language.translate("death.MAGIC"); break;
-						case MELTING			: cause_name = Language.translate("death.MELTING"); break;
-						case POISON				: cause_name = Language.translate("death.POISON"); break;
-						case PROJECTILE			: cause_name = Language.translate("death.PROJECTILE"); break;
-						case STARVATION			: cause_name = Language.translate("death.STARVATION"); break;
-						case SUFFOCATION		: cause_name = Language.translate("death.SUFFOCATION"); break;
-						case SUICIDE			: cause_name = Language.translate("death.SUICIDE"); break;
-						case THORNS				: cause_name = Language.translate("death.THORNS"); break;
-						case VOID				: cause_name = Language.translate("death.VOID"); break;
-						case WITHER				: cause_name = Language.translate("death.WITHER"); break;
+			Entity entity = e.getEntity();
+			if (entity != null) {
+				EntityDamageEvent damage = entity.getLastDamageCause();
+				if (damage != null) {
+					EntityDamageEvent.DamageCause cause = damage.getCause();
+					if (cause != null) {
+						switch (cause) {
+							case BLOCK_EXPLOSION	: cause_name = Language.translate("death.BLOCK_EXPLOSION"); break;
+							case CONTACT			: cause_name = Language.translate("death.CONTACT"); break;
+							case CRAMMING			: cause_name = Language.translate("death.CRAMMING"); break;
+							case CUSTOM				: cause_name = Language.translate("death.CUSTOM"); break;
+							case DRAGON_BREATH		: cause_name = Language.translate("death.DRAGON_BREATH"); break;
+							case DROWNING			: cause_name = Language.translate("death.DROWNING"); break;
+							case DRYOUT				: cause_name = Language.translate("death.DRYOUT"); break;
+							case ENTITY_ATTACK		: cause_name = Language.translate("death.ENTITY_ATTACK"); break;
+							case ENTITY_EXPLOSION	: cause_name = Language.translate("death.ENTITY_EXPLOSION"); break;
+							case ENTITY_SWEEP_ATTACK: cause_name = Language.translate("death.ENTITY_SWEEP_ATTACK"); break;
+							case FALL				: cause_name = Language.translate("death.FALL"); break;
+							case FALLING_BLOCK		: cause_name = Language.translate("death.FALLING_BLOCK"); break;
+							case FIRE				: cause_name = Language.translate("death.FIRE"); break;
+							case FIRE_TICK			: cause_name = Language.translate("death.FIRE_TICK"); break;
+							case FLY_INTO_WALL		: cause_name = Language.translate("death.FLY_INTO_WALL"); break;
+							case HOT_FLOOR			: cause_name = Language.translate("death.HOT_FLOOR"); break;
+							case LAVA				: cause_name = Language.translate("death.LAVA"); break;
+							case LIGHTNING			: cause_name = Language.translate("death.LIGHTNING"); break;
+							case MAGIC				: cause_name = Language.translate("death.MAGIC"); break;
+							case MELTING			: cause_name = Language.translate("death.MELTING"); break;
+							case POISON				: cause_name = Language.translate("death.POISON"); break;
+							case PROJECTILE			: cause_name = Language.translate("death.PROJECTILE"); break;
+							case STARVATION			: cause_name = Language.translate("death.STARVATION"); break;
+							case SUFFOCATION		: cause_name = Language.translate("death.SUFFOCATION"); break;
+							case SUICIDE			: cause_name = Language.translate("death.SUICIDE"); break;
+							case THORNS				: cause_name = Language.translate("death.THORNS"); break;
+							case VOID				: cause_name = Language.translate("death.VOID"); break;
+							case WITHER				: cause_name = Language.translate("death.WITHER"); break;
+						}
+					}
+					Entity damager = null;
+					if (damage instanceof EntityDamageByBlockEvent) {
+						if (killer == null) {
+							killername = damager.getType().toString();
+						}
+					}
+					else if (damage instanceof EntityDamageByEntityEvent) {
+						damager = ((EntityDamageByEntityEvent) damage).getDamager();
+						if (killer == null) {
+							killername = damager.getName();
+						}
 					}
 				}
-				Entity damager = null;
-				if (damage instanceof EntityDamageByBlockEvent) {
-					if (killer == null) {
-						killername = damager.getType().toString();
-					}
-				}
-				else if (damage instanceof EntityDamageByEntityEvent) {
-					damager = ((EntityDamageByEntityEvent) damage).getDamager();
-					if (killer == null) {
-						killername = damager.getName();
-					}
-				}
-			}
 
-			String fmt;
-			StringBuilder sb = new StringBuilder();
-			sb.append(ChatColor.YELLOW);
-			if (killername.length() > 0) {
-				if (killitem.length() <= 0) {
-					killitem = "不明";
+				String fmt;
+				StringBuilder sb = new StringBuilder();
+				sb.append(ChatColor.YELLOW);
+				if (killername.length() > 0) {
+					if (killitem.length() <= 0) {
+						killitem = "不明";
+					}
+					fmt = Language.translate("death.MESSAGE_ATTACK");
+					sb.append(String.format(fmt, player.getDisplayName(), cause_name, killername, killitem));
+				} else {
+					fmt = Language.translate("death.MESSAGE_NORMAL");
+					sb.append(String.format(fmt, player.getDisplayName(), cause_name));
 				}
-				fmt = Language.translate("death.MESSAGE_ATTACK");
-				sb.append(String.format(fmt, player.getDisplayName(), cause_name, killername, killitem));
-			} else {
-				fmt = Language.translate("death.MESSAGE_NORMAL");
-				sb.append(String.format(fmt, player.getDisplayName(), cause_name));
-			}
-			String message = new String(sb);
-			e.setDeathMessage(message);
+				String message = new String(sb);
+				e.setDeathMessage(message);
 
-			DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-			if (dm != null) {
-				dm.SendDiscordRedMessage(message);
+				DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
+				if (dm != null) {
+					dm.SendDiscordRedMessage(message);
+				}
 			}
 
 		} catch (Exception ex) {

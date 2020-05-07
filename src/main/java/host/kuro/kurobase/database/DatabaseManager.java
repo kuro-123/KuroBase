@@ -41,11 +41,11 @@ public class DatabaseManager {
             conn = DriverManager.getConnection("jdbc:" + sJdbc + "://" + shost + ":" + sPort + "/" + sDb, sUser, sPass);
         }
         catch (SQLException ex) {
-            ErrorUtils.GetErrorMessage(ex);
+            ErrorUtils.GetErrorMessageNonDb(ex);
             return false;
         }
         catch (Exception ex2){
-            ErrorUtils.GetErrorMessage(ex2);
+            ErrorUtils.GetErrorMessageNonDb(ex2);
             return false;
         }
         plugin.getLogger().info(Language.translate("plugin.db.connect"));
@@ -60,7 +60,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException ex){
-            ErrorUtils.GetErrorMessage(ex);
+            ErrorUtils.GetErrorMessageNonDb(ex);
             return false;
         }
         plugin.getLogger().info(Language.translate("plugin.db.disconnect"));
@@ -119,7 +119,7 @@ public class DatabaseManager {
             try {
                 conn.rollback();
             } catch (Exception ex2) {
-                ErrorUtils.GetErrorMessage(ex2);
+                ErrorUtils.GetErrorMessageNonDb(ex2);
             }
         } catch (Exception ex3) {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
@@ -129,7 +129,7 @@ public class DatabaseManager {
             try {
                 conn.rollback();
             } catch (Exception ex4) {
-                ErrorUtils.GetErrorMessage(ex4);
+                ErrorUtils.GetErrorMessageNonDb(ex4);
             }
         } finally {
             try {
@@ -138,7 +138,7 @@ public class DatabaseManager {
                     ps = null;
                 }
             } catch (Exception ex) {
-                ErrorUtils.GetErrorMessage(ex);
+                ErrorUtils.GetErrorMessageNonDb(ex);
             }
         }
         return num;
@@ -183,13 +183,13 @@ public class DatabaseManager {
             plugin.getLogger().warning("SQL : " + stmt.toString());
             plugin.getLogger().warning("ERR_CD : " + ex.getSQLState());
             plugin.getLogger().warning("ERR : " + ex.getMessage());
-            ErrorUtils.GetErrorMessage(ex);
+            ErrorUtils.GetErrorMessageNonDb(ex);
             return null;
         } catch (Exception ex2) {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
             org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
             plugin.getLogger().warning("SQL : " + stmt.toString());
-            ErrorUtils.GetErrorMessage(ex2);
+            ErrorUtils.GetErrorMessageNonDb(ex2);
             return null;
         }
         return rs;
