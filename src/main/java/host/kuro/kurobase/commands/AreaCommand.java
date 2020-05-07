@@ -42,12 +42,8 @@ public class AreaCommand implements CommandExecutor {
             return false;
         }
         if (args.length == 0) {
-            // cansel
-            plugin.GetClickMode().remove(player);
-            player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.modeoff"));
-            RemoveAreaData(player);
-            SoundUtils.PlaySound(player,"switch1", false);
-            return true;
+            // list
+            return ActionList(player);
         }
 
         String action = args[0].toLowerCase();
@@ -117,7 +113,58 @@ public class AreaCommand implements CommandExecutor {
         area.name = name;
         plugin.GetAreaData().put(player, area);
     }
+
     private void RemoveAreaData(Player player) {
         plugin.GetAreaData().remove(player);
+    }
+
+    private boolean ActionList(Player player) {
+        plugin.GetClickMode().remove(player);
+        RemoveAreaData(player);
+
+        try {
+            PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.AREAS.OWN"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = plugin.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                int cnt = 0;
+                StringBuilder sb = new StringBuilder();
+                while(rs.next()){
+                    sb.append(ChatColor.DARK_GREEN);
+                    sb.append(String.format("[ エリア:%s ワールド: %s 位置: %d,%d,%d - %d,%d,%d ]"
+                            , rs.getString("name")
+                            , rs.getString("world")
+                            , rs.getInt("x1")
+                            , rs.getInt("y1")
+                            , rs.getInt("z1")
+                            , rs.getInt("x2")
+                            , rs.getInt("y2")
+                            , rs.getInt("z2")));
+                    sb.append("\n");
+                    sb.append(ChatColor.DARK_GREEN);
+                    cnt++;
+                }
+                sb.append(String.format("エリア数 : %d\n", cnt));
+                player.sendMessage(new String(sb));
+                SoundUtils.PlaySound(player,"switch1", false);
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            SoundUtils.PlaySound(player, "cancel5", false);
+            return false;
+        }
+        SoundUtils.PlaySound(player,"switch1", false);
+        return true;
     }
 }
