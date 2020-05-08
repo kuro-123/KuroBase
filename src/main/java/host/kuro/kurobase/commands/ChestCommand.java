@@ -28,6 +28,12 @@ public class ChestCommand implements CommandExecutor {
             return false;
         }
         player = (Player)sender;
+        // check survival world
+        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
         if (args.length < 1) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));

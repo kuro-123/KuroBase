@@ -7,6 +7,8 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -44,6 +46,16 @@ public class EntityListener implements Listener {
                 if (cause != null) {
                     if (cause == ENTITY_ATTACK || cause == PROJECTILE) {
                         Player player = (Player)entity;
+                        // check world
+                        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+                            GameMode mode = player.getGameMode();
+                            if (mode != GameMode.CREATIVE) {
+                                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                                SoundUtils.PlaySound(player,"cancel5", false);
+                                e.setCancelled(true);
+                                return;
+                            }
+                        }
                         if (!plugin.GetSoundBattle().containsKey(player)) {
                             SoundUtils.PlaySound(player, "battle", true);
                             plugin.GetSoundBattle().put(player, System.currentTimeMillis());

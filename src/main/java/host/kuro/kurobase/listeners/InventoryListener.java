@@ -9,6 +9,7 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
@@ -46,7 +47,6 @@ public class InventoryListener implements Listener {
             return;
         }
         Player player = Player.class.cast(event.getPlayer());
-
         InventoryHolder holder = event.getInventory().getHolder();
         Chest leftChest = null;
         Chest rightChest = null;
@@ -57,6 +57,14 @@ public class InventoryListener implements Listener {
             leftChest = Chest.class.cast(doublechest.getLeftSide());
             rightChest = Chest.class.cast(doublechest.getRightSide());
         } else {
+            return;
+        }
+
+        // check world
+        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            event.setCancelled(true);
             return;
         }
 

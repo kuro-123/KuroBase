@@ -53,14 +53,18 @@ public class PlayerListener implements Listener {
 					SoundUtils.BroadcastSound("kanri", true);
 				}
 				else if (rank == PlayerUtils.RANK_NUSHI) {
-					player.setGameMode(GameMode.CREATIVE);
 					SoundUtils.BroadcastSound("kuro", true);
 				}
+				// force survival
 			} else {
 				if (rank == PlayerUtils.RANK_MINARAI) {
 					player.setOp(false);
 				}
-				player.setGameMode(GameMode.SURVIVAL);
+			}
+			// force survival
+			GameMode mode = player.getGameMode();
+			if (mode != GameMode.SURVIVAL) {
+				PlayerUtils.ForceSurvival(player);
 			}
 
 			// check skin make
@@ -402,6 +406,16 @@ public class PlayerListener implements Listener {
 				return;
 			}
 
+			// check gamemode
+			if (cmd.toLowerCase().equals("/gamemode")) {
+				if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+					player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+					SoundUtils.PlaySound(player,"cancel5", false);
+					e.setCancelled(true);
+					return;
+				}
+			}
+
 			// log cmd
 			ArrayList<DatabaseArgs> cargs = new ArrayList<DatabaseArgs>();
 			cargs.add(new DatabaseArgs("c", player.getLocation().getWorld().getName())); // world
@@ -445,6 +459,11 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		int totalexp = player.getTotalExperience();
 
+		// check world
+		if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+			return;
+		}
+
 		// UPDATE
 		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 		args.add(new DatabaseArgs("i", ""+totalexp)); // totalexp
@@ -459,6 +478,11 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		int newlevel = e.getNewLevel();
 		int oldlevel = e.getOldLevel();
+
+		// check world
+		if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+			return;
+		}
 
 		ChatColor color;
 		String kbn;
@@ -697,6 +721,27 @@ public class PlayerListener implements Listener {
 				return;
 			}
 		}
+	}
+
+	@EventHandler
+	public void onRespawn(final PlayerRespawnEvent e) {
+		Player player = e.getPlayer();
+		// force survival
+		PlayerUtils.ForceSurvival(player);
+	}
+
+	@EventHandler
+	public void onTeleport(final PlayerTeleportEvent e) {
+		Player player = e.getPlayer();
+		// force survival
+		PlayerUtils.ForceSurvival(player);
+	}
+
+	@EventHandler
+	public void onGameModeChange(final PlayerGameModeChangeEvent e) {
+		// mode change is empty
+		Player player = e.getPlayer();
+		PlayerUtils.RemoveAllItems(player);
 	}
 
 	@EventHandler

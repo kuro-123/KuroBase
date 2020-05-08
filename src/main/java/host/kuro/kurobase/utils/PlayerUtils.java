@@ -12,6 +12,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -24,6 +25,8 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import com.mojang.authlib.*;
+import org.bukkit.inventory.ItemStack;
+
 public class PlayerUtils {
     // rank number
     public static final int RANK_MINARAI = 0;
@@ -459,5 +462,30 @@ public class PlayerUtils {
             ErrorUtils.GetErrorMessage(ex);
         }
         return ret;
+    }
+
+    public static final boolean IsSurvivalWorld(KuroBase plugin, Player player) {
+        String name = plugin.getConfig().getString("Game.creative", "city");
+        if (player.getLocation().getWorld().getName().toLowerCase().equals(name.toLowerCase())) {
+            return false;
+        }
+        return true;
+    }
+
+    public static final void RemoveAllItems(Player player) {
+        for(ItemStack item : player.getInventory().getContents())
+        {
+            if (item == null) continue; // null check
+            player.getInventory().remove(item);
+        }
+        player.updateInventory();
+    }
+
+    public static final void ForceSurvival(Player player) {
+        GameMode mode = player.getGameMode();
+        if (mode != GameMode.SURVIVAL) {
+            player.setGameMode(GameMode.SURVIVAL);
+            RemoveAllItems(player);
+        }
     }
 }

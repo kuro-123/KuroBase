@@ -4,11 +4,9 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.utils.AreaUtils;
-import host.kuro.kurobase.utils.DataUtils;
-import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.SoundUtils;
+import host.kuro.kurobase.utils.*;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -32,15 +30,27 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
+        int ret;
         try {
             Player player = e.getPlayer();
 
-            // UPDATE
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.BREAK.UPDATE.PLAYER"), args);
-            args.clear();
-            args = null;
+            // check world
+            if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+                GameMode mode = player.getGameMode();
+                if (mode != GameMode.CREATIVE) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    e.setCancelled(true);
+                    return;
+                }
+            } else {
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.BREAK.UPDATE.PLAYER"), args);
+                args.clear();
+                args = null;
+            }
 
             Block block = e.getBlock();
 
@@ -93,15 +103,27 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
+        int ret;
         try {
             Player player = e.getPlayer();
 
-            // UPDATE
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLACE.UPDATE.PLAYER"), args);
-            args.clear();
-            args = null;
+            // check world
+            if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+                GameMode mode = player.getGameMode();
+                if (mode != GameMode.CREATIVE) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    e.setCancelled(true);
+                    return;
+                }
+            } else {
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLACE.UPDATE.PLAYER"), args);
+                args.clear();
+                args = null;
+            }
 
             Block block = e.getBlock();
 

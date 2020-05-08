@@ -2,6 +2,7 @@ package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,12 +35,7 @@ public class RiCommand implements CommandExecutor {
             return false;
         }
 
-        for(ItemStack item : player.getInventory().getContents())
-        {
-            if (item == null) continue; // null check
-            player.getInventory().remove(item);
-        }
-        player.updateInventory();
+        PlayerUtils.RemoveAllItems(player);
 
         player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.ri.success"));
         SoundUtils.PlaySound(player,"switch1", false);
