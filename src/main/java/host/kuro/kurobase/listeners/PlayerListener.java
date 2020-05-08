@@ -407,12 +407,15 @@ public class PlayerListener implements Listener {
 			}
 
 			// check gamemode
-			if (cmd.toLowerCase().equals("/gamemode")) {
-				if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
-					player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-					SoundUtils.PlaySound(player,"cancel5", false);
-					e.setCancelled(true);
-					return;
+			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+			if (rank < PlayerUtils.RANK_NUSHI) {
+				if (cmd.toLowerCase().equals("/gamemode")) {
+					if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+						player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+						SoundUtils.PlaySound(player, "cancel5", false);
+						e.setCancelled(true);
+						return;
+					}
 				}
 			}
 
