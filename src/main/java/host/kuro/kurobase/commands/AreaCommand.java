@@ -39,6 +39,12 @@ public class AreaCommand implements CommandExecutor {
 
         // check survival world
         if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+        // check creative
+        if (player.getGameMode() == GameMode.CREATIVE) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
             SoundUtils.PlaySound(player,"cancel5", false);
             return false;

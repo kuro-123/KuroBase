@@ -8,6 +8,7 @@ import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurobase.utils.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,13 @@ public class PayCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
+        // check creative
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+
         if (args.length != 2) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));

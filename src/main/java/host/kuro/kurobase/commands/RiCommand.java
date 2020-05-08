@@ -5,6 +5,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,6 +29,13 @@ public class RiCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
+        // check creative
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+
         if (args.length != 0) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));

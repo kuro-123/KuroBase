@@ -9,6 +9,7 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,19 @@ public class ShopCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
+
+        // check survival world
+        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+        // check creative
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
         if (!(args.length == 0 || args.length == 1)) {
             // check args
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
