@@ -409,7 +409,7 @@ public class EntityListener implements Listener {
                 SoundUtils.PlaySound(player, "complete", true);
             }
 
-            SoundUtils.BroadcastSound("sceneswitch2", false);
+            SoundUtils.PlaySound(player,"sceneswitch2", false);
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
