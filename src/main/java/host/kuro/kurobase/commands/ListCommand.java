@@ -2,11 +2,9 @@ package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

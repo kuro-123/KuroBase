@@ -115,8 +115,6 @@ public class KuroBase extends JavaPlugin {
         getCommand("area").setTabCompleter(new AreaTabCompleter());
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("home").setTabCompleter(new HomeTabCompleter());
-        getCommand("frame").setExecutor(new FrameCommand(this));
-        getCommand("frame").setTabCompleter(new FrameTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
