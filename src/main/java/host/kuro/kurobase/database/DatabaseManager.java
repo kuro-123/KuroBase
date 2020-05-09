@@ -114,7 +114,7 @@ public class DatabaseManager {
                 plugin.getLogger().warning("SQL : " + stmt.toString());
                 plugin.getLogger().warning("ERR_CD : " + ex.getSQLState());
                 plugin.getLogger().warning("ERR : " + ex.getMessage());
-                ErrorUtils.GetErrorMessage(ex);
+                ErrorUtils.GetErrorMessageNonDb(ex);
             }
             try {
                 conn.rollback();
@@ -125,7 +125,7 @@ public class DatabaseManager {
             plugin.getLogger().warning(Language.translate("plugin.db.error"));
             org.postgresql.jdbc.PgStatement stmt = (org.postgresql.jdbc.PgStatement)ps;
             plugin.getLogger().warning("SQL : " + stmt.toString());
-            ErrorUtils.GetErrorMessage(ex3);
+            ErrorUtils.GetErrorMessageNonDb(ex3);
             try {
                 conn.rollback();
             } catch (Exception ex4) {
