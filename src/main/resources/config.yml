@@ -17,7 +17,6 @@ Database:
 Web:
   skinpath: ""
   skinmake: ""
-  framepath: ""
 
 Skin:
   cooldays: 3
