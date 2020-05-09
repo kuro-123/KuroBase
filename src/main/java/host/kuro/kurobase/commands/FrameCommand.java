@@ -35,7 +35,7 @@ public class FrameCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
-        if (!(args.length == 1 || args.length == 2)) {
+        if (!(args.length == 1 || args.length == 2 || args.length == 3)) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
             SoundUtils.PlaySound(player,"cancel5", false);
@@ -59,6 +59,8 @@ public class FrameCommand implements CommandExecutor {
 
     private boolean ActionList(Player player) {
         plugin.GetClickMode().remove(player);
+        plugin.GetFrame().remove(player);
+
         try {
             PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.FRAME.LIST"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -71,7 +73,7 @@ public class FrameCommand implements CommandExecutor {
                 StringBuilder sb = new StringBuilder();
                 while(rs.next()){
                     sb.append(ChatColor.DARK_GREEN);
-                    sb.append(String.format("[ フレーム:%s URL: %s ]"
+                    sb.append(String.format("[ 登録フレーム: %s URL: %s ]"
                             , rs.getString("name")
                             , rs.getString("url")
                             ));
@@ -79,7 +81,7 @@ public class FrameCommand implements CommandExecutor {
                     sb.append(ChatColor.DARK_GREEN);
                     cnt++;
                 }
-                sb.append(String.format("フレーム数 : %d\n", cnt));
+                sb.append(String.format("登録フレーム数 : %d\n", cnt));
                 player.sendMessage(new String(sb));
                 SoundUtils.PlaySound(player,"switch1", false);
             }
@@ -102,44 +104,52 @@ public class FrameCommand implements CommandExecutor {
 
     private boolean ActionAdd(Player player, String[] args) {
         plugin.GetClickMode().remove(player);
+        plugin.GetFrame().remove(player);
+
         BufferedImage bi =null;
         URLConnection urlcon;
         try {
+            // check args
+            if (args.length != 3) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.len"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+            // name
             String sName = args[1];
             if (!IsLength(sName)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.len"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-
-            URI uri = new URI(args[0]);
+            // url
+            URI uri = new URI(args[2]);
             URL url = uri.toURL();
             urlcon = url.openConnection();
             bi = ImageIO.read(urlcon.getInputStream());
 
             String path = plugin.getConfig().getString("Web.framepath");
+            String sPath = "";
             File saveFile = null;
             if (plugin.IsLinux()) {
                 if (path.length() > 0) {
                     new File(path).mkdirs();
-                    saveFile = new File( path + "/" + player.getName().toLowerCase() + ".png");
+                    sPath = path + "/" + player.getName().toLowerCase() + ".png";
+                    saveFile = new File(sPath);
                     ImageIO.write(bi, "png", saveFile);
                 }
-
             } else {
                 new File(plugin.getDataFolder() + "/frame/data/").mkdirs();
-                saveFile = new File( plugin.getDataFolder() + "/frame/data/" + player.getName() + ".png");
+                sPath = plugin.getDataFolder() + "/frame/data/" + player.getName() + ".png";
+                saveFile = new File(sPath);
                 ImageIO.write(bi, "png", saveFile);
             }
             if (saveFile != null) {
-                String sURL = url.getPath();
-                String sPath = saveFile.getPath();
-
                 // add
                 ArrayList<DatabaseArgs> fargs = new ArrayList<DatabaseArgs>();
                 fargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
                 fargs.add(new DatabaseArgs("c", sName)); // name
-                fargs.add(new DatabaseArgs("c", sURL)); // url
+                fargs.add(new DatabaseArgs("c", args[2])); // url
                 fargs.add(new DatabaseArgs("c", sPath)); // path
                 int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.FRAME.ADD"), fargs);
                 fargs.clear();
@@ -150,10 +160,12 @@ public class FrameCommand implements CommandExecutor {
                     return false;
                 }
             } else {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.download.error "));
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.download.error"));
                 SoundUtils.PlaySound(player, "cancel5", false);
                 return false;
             }
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.download.success"));
+            SoundUtils.PlaySound(player, "switch1", false);
             return true;
 
         } catch (URISyntaxException ex) {
@@ -171,30 +183,43 @@ public class FrameCommand implements CommandExecutor {
     }
 
     private boolean ActionSet(Player player, String[] args) {
+        if (args.length != 2) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.len"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
         // change mode
         if (plugin.GetClickMode().containsKey(player)) {
             String click_mode = plugin.GetClickMode().get(player);
             if (click_mode.equals("frame")) {
                 plugin.GetClickMode().remove(player);
+                plugin.GetFrame().remove(player);
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.frame.modeoff"));
                 SoundUtils.PlaySound(player,"switch1", false);
             } else {
-                plugin.GetClickMode().remove(player);
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.frame.modeon"));
                 SoundUtils.PlaySound(player,"switch1", false);
                 plugin.GetClickMode().put(player, "frame");
+                plugin.GetFrame().put(player, args[1]);
             }
         } else {
-            plugin.GetClickMode().remove(player);
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.frame.modeon"));
             SoundUtils.PlaySound(player,"switch1", false);
             plugin.GetClickMode().put(player, "frame");
+            plugin.GetFrame().put(player, args[1]);
         }
         return false;
     }
 
     private boolean ActionDel(Player player, String[] args) {
         plugin.GetClickMode().remove(player);
+        plugin.GetFrame().remove(player);
+
+        if (args.length != 2) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.error.len"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
         try {
             String sName = args[1];
             if (!IsLength(sName)) {
@@ -214,6 +239,8 @@ public class FrameCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player, "cancel5", false);
                 return false;
             }
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.delete.success"));
+            SoundUtils.PlaySound(player, "switch1", false);
             return true;
 
         } catch (Exception ex) {

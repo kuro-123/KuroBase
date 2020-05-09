@@ -27,7 +27,9 @@ public class FrameTabCompleter implements TabCompleter {
             cmds.add("del");
             return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
         case 2:
-            if (args[0].toLowerCase().equals("set") || args[0].toLowerCase().equals("del")) {
+            if (args[0].toLowerCase().equals("add")) {
+                cmds.add("名前を入力<3～16文字>");
+            } else if (args[0].toLowerCase().equals("set") || args[0].toLowerCase().equals("del")) {
                 // regist list
                 boolean success = false;
                 try {
@@ -61,6 +63,11 @@ public class FrameTabCompleter implements TabCompleter {
             } else {
                 cmds.add("名前を入力<3～16文字>");
             }
+            return StringUtil.copyPartialMatches(args[1], cmds, new ArrayList<String>());
+
+        case 3:
+            cmds.add("URLを入力(httpから始まる画像URL)");
+            return StringUtil.copyPartialMatches(args[2], cmds, new ArrayList<String>());
         }
         return null;
     }

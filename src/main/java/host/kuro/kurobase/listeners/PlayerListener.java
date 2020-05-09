@@ -131,6 +131,7 @@ public class PlayerListener implements Listener {
 			plugin.GetSoundBattle().remove(player);
 			plugin.GetAreaData().remove(player);
 			plugin.GetMoveMessage().remove(player);
+			plugin.GetFrame().remove(player);
 
 			// 計測終了
 			int elapse = 0;

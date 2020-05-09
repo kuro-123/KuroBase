@@ -57,6 +57,9 @@ public class KuroBase extends JavaPlugin {
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
 
+    private static HashMap<Player, String> frame_name = new HashMap<Player, String>();
+    public HashMap<Player, String> GetFrame() { return frame_name; }
+
     @Override
     public void onEnable() {
         String os = System.getProperty("os.name").toLowerCase();
