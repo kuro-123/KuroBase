@@ -37,6 +37,8 @@ public class SkinTask extends BukkitRunnable {
     public void run() {
         try {
             if (player == null) return;
+            if (this.path.length() <= 0) return;
+            if (this.makepath.length() <= 0) return;
 
             // get profile skin data
             SkinData skin = PlayerUtils.getPlayerSkin(player);

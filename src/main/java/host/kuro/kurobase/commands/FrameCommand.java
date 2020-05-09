@@ -112,38 +112,45 @@ public class FrameCommand implements CommandExecutor {
                 return false;
             }
 
-            String path = plugin.getConfig().getString("Web.framepath");
             URI uri = new URI(args[0]);
             URL url = uri.toURL();
             urlcon = url.openConnection();
             bi = ImageIO.read(urlcon.getInputStream());
 
-            File saveFile;
+            String path = plugin.getConfig().getString("Web.framepath");
+            File saveFile = null;
             if (plugin.IsLinux()) {
-                new File(path).mkdirs();
-                saveFile = new File( path + "/" + player.getName().toLowerCase() + ".png");
-                ImageIO.write(bi, "png", saveFile);
+                if (path.length() > 0) {
+                    new File(path).mkdirs();
+                    saveFile = new File( path + "/" + player.getName().toLowerCase() + ".png");
+                    ImageIO.write(bi, "png", saveFile);
+                }
 
             } else {
                 new File(plugin.getDataFolder() + "/frame/data/").mkdirs();
                 saveFile = new File( plugin.getDataFolder() + "/frame/data/" + player.getName() + ".png");
                 ImageIO.write(bi, "png", saveFile);
             }
+            if (saveFile != null) {
+                String sURL = url.getPath();
+                String sPath = saveFile.getPath();
 
-            String sURL = url.getPath();
-            String sPath = saveFile.getPath();
-
-            // add
-            ArrayList<DatabaseArgs> fargs = new ArrayList<DatabaseArgs>();
-            fargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
-            fargs.add(new DatabaseArgs("c", sName)); // name
-            fargs.add(new DatabaseArgs("c", sURL)); // url
-            fargs.add(new DatabaseArgs("c", sPath)); // path
-            int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.FRAME.ADD"), fargs);
-            fargs.clear();
-            fargs = null;
-            if (ret != 1) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.add.error"));
+                // add
+                ArrayList<DatabaseArgs> fargs = new ArrayList<DatabaseArgs>();
+                fargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // uuid
+                fargs.add(new DatabaseArgs("c", sName)); // name
+                fargs.add(new DatabaseArgs("c", sURL)); // url
+                fargs.add(new DatabaseArgs("c", sPath)); // path
+                int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.FRAME.ADD"), fargs);
+                fargs.clear();
+                fargs = null;
+                if (ret != 1) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.add.error"));
+                    SoundUtils.PlaySound(player, "cancel5", false);
+                    return false;
+                }
+            } else {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.frame.download.error "));
                 SoundUtils.PlaySound(player, "cancel5", false);
                 return false;
             }
