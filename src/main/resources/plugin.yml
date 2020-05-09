@@ -69,3 +69,7 @@ commands:
     description: ホームポイント設定コマンド
     usage: /home [set|del] ※指定なしの場合はテレポート
     aliases: [ho]
+  frame:
+    description: 画像フレーム設定コマンド
+    usage: /frame <url>
+    aliases: [fr]

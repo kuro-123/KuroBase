@@ -112,6 +112,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("area").setTabCompleter(new AreaTabCompleter());
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("home").setTabCompleter(new HomeTabCompleter());
+        getCommand("frame").setExecutor(new FrameCommand(this));
+        getCommand("frame").setTabCompleter(new FrameTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -178,6 +180,8 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
         // area
         db.ExecuteUpdate(Language.translate("SQL.CREATE.AREA"), null);
+        // frame
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.FRAME"), null);
         // views
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.ELAPSE"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.STATUS"), null);
