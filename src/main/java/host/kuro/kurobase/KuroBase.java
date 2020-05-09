@@ -181,8 +181,6 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
         // area
         db.ExecuteUpdate(Language.translate("SQL.CREATE.AREA"), null);
-        // frame
-        db.ExecuteUpdate(Language.translate("SQL.CREATE.FRAME"), null);
         // views
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.ELAPSE"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.STATUS"), null);
