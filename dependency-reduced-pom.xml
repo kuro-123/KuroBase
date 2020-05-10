@@ -82,11 +82,18 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>host.kuro</groupId>
+      <groupId>host.kuro.discord</groupId>
       <artifactId>KuroDiscord</artifactId>
       <version>1.0</version>
       <scope>system</scope>
       <systemPath>${basedir}/KuroDiscord.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>host.kuro.plugin</groupId>
+      <artifactId>ImageOnMap</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/ImageOnMap.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

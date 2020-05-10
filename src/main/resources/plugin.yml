@@ -10,6 +10,7 @@ description: Base plugin for 123 server culture spigot
 website: http://kuro.host/
 depend:
   - KuroDiscord
+  - ImageOnMap
 
 commands:
   list:

@@ -20,6 +20,7 @@
     <orderEntry type="jdk" jdkName="14" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KuroDiscord" level="project" />
+    <orderEntry type="library" name="ImageOnMap" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:21.0" level="project" />
@@ -36,9 +37,18 @@
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: host.kuro:KuroDiscord:1.0">
+      <library name="Maven: host.kuro.discord:KuroDiscord:1.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/KuroDiscord.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: host.kuro.plugin:ImageOnMap:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ImageOnMap.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

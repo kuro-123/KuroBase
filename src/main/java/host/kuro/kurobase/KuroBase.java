@@ -1,5 +1,6 @@
 package host.kuro.kurobase;
 
+import fr.moribus.imageonmap.ImageOnMap;
 import host.kuro.kurobase.commands.*;
 import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.AreaData;
@@ -20,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,6 +34,9 @@ public class KuroBase extends JavaPlugin {
 
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
+
+    private static ImageOnMap imageonmap = null;
+    public static ImageOnMap getImageOnMap() { return imageonmap; }
 
     private boolean linux = true;
     public boolean IsLinux() { return linux; }
@@ -143,12 +148,20 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.protectdata"));
         AreaUtils.SetupProtectData();
 
-        // load plugin
-        if (!LoadDependPlugin()) {
+        // load discord plugin
+        if (!LoadDependPluginKuroDiscord()) {
             disablePlugin();
             return;
         }
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
+
+        // load imageonmap plugin
+        if (!LoadDependPluginImageOnMap()) {
+            disablePlugin();
+            return;
+        }
+        imageonmap = (ImageOnMap)getServer().getPluginManager().getPlugin("ImageOnMap");
+
         if (!linux) {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
         } else {
@@ -194,13 +207,21 @@ public class KuroBase extends JavaPlugin {
         }
     }
 
-    private boolean LoadDependPlugin() {
+    private boolean LoadDependPluginKuroDiscord() {
         RegisteredServiceProvider<KuroDiscord> rsp = getServer().getServicesManager().getRegistration(KuroDiscord.class);
         if (rsp == null) {
             return false;
         }
         kurodiscord = rsp.getProvider();
         return kurodiscord != null;
+    }
+    private boolean LoadDependPluginImageOnMap() {
+        RegisteredServiceProvider<ImageOnMap> rsp = getServer().getServicesManager().getRegistration(ImageOnMap.class);
+        if (rsp == null) {
+            return false;
+        }
+        imageonmap = rsp.getProvider();
+        return imageonmap != null;
     }
 
     private void disablePlugin() {
