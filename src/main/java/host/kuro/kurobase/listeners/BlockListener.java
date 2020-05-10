@@ -55,12 +55,14 @@ public class BlockListener implements Listener {
             Block block = e.getBlock();
 
             // check area
-            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
-            if (area != null) {
-                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                e.setCancelled(true);
-                return;
+            if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+                AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+                if (area != null) {
+                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                    SoundUtils.PlaySound(player, "cancel5", false);
+                    e.setCancelled(true);
+                    return;
+                }
             }
 
             StringBuilder sb = new StringBuilder();
@@ -128,12 +130,14 @@ public class BlockListener implements Listener {
             Block block = e.getBlock();
 
             // check area
-            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
-            if (area != null) {
-                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                e.setCancelled(true);
-                return;
+            if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+                AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+                if (area != null) {
+                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    e.setCancelled(true);
+                    return;
+                }
             }
 
             // INSERT

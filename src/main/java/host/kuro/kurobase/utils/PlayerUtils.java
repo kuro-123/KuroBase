@@ -465,8 +465,13 @@ public class PlayerUtils {
     }
 
     public static final boolean IsSurvivalWorld(KuroBase plugin, Player player) {
-        String name = plugin.getConfig().getString("Game.creative", "city");
-        if (player.getLocation().getWorld().getName().toLowerCase().equals(name.toLowerCase())) {
+        String name = plugin.getConfig().getString("Game.creative", "city").toLowerCase();
+        String now = player.getLocation().getWorld().getName().toLowerCase();
+        if (now.equals(name)) {
+            return false;
+        } else if (now.indexOf("nether") >= 0) {
+            return false;
+        } else if (now.indexOf("the_end") >= 0) {
             return false;
         }
         return true;
