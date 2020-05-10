@@ -45,14 +45,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: host.kuro.plugin:ImageOnMap:1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/ImageOnMap.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
   </component>
 </module>

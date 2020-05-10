@@ -1,6 +1,6 @@
 package host.kuro.kurobase;
 
-import fr.moribus.imageonmap.ImageOnMap;
+//import fr.moribus.imageonmap.ImageOnMap;
 import host.kuro.kurobase.commands.*;
 import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.AreaData;
@@ -34,8 +34,8 @@ public class KuroBase extends JavaPlugin {
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
 
-    private static ImageOnMap imageonmap = null;
-    public static ImageOnMap getImageOnMap() { return imageonmap; }
+    //private static ImageOnMap imageonmap = null;
+    //public static ImageOnMap getImageOnMap() { return imageonmap; }
 
     private boolean linux = true;
     public boolean IsLinux() { return linux; }
@@ -152,11 +152,11 @@ public class KuroBase extends JavaPlugin {
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
 
         // load imageonmap plugin
-        if (!LoadDependPluginImageOnMap()) {
-            disablePlugin();
-            return;
-        }
-        imageonmap = (ImageOnMap)getServer().getPluginManager().getPlugin("ImageOnMap");
+        //if (!LoadDependPluginImageOnMap()) {
+        //    disablePlugin();
+        //    return;
+        //}
+        //imageonmap = (ImageOnMap)getServer().getPluginManager().getPlugin("ImageOnMap");
 
         if (!linux) {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
@@ -211,14 +211,14 @@ public class KuroBase extends JavaPlugin {
         kurodiscord = rsp.getProvider();
         return kurodiscord != null;
     }
-    private boolean LoadDependPluginImageOnMap() {
-        RegisteredServiceProvider<ImageOnMap> rsp = getServer().getServicesManager().getRegistration(ImageOnMap.class);
-        if (rsp == null) {
-            return false;
-        }
-        imageonmap = rsp.getProvider();
-        return imageonmap != null;
-    }
+    //private boolean LoadDependPluginImageOnMap() {
+        //RegisteredServiceProvider<ImageOnMap> rsp = getServer().getServicesManager().getRegistration(ImageOnMap.class);
+        //if (rsp == null) {
+        //    return false;
+        //}
+        //imageonmap = rsp.getProvider();
+        //return imageonmap != null;
+    //}
 
     private void disablePlugin() {
         getServer().getPluginManager().disablePlugin(this);

@@ -165,11 +165,13 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getEntity();
 
+			int drop = e.getDroppedExp();
 			int value = plugin.getConfig().getInt("Game.death", 200);
-			int newExp = (player.getTotalExperience()-value);
-			if (newExp < 0) newExp = 0;
-			player.setTotalExperience(newExp);
-
+			value = value * plugin.GetRand().Next(1, 3);
+			if (drop>value) {
+				drop = value;
+			}
+			e.setDroppedExp(drop);
 			e.setKeepLevel(true);
 
 			ParticleUtils.CrownParticle(player, Particle.LAVA, 50); // particle
