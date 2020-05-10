@@ -61,7 +61,7 @@ public class InventoryListener implements Listener {
         }
 
         // check world
-        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+        if (PlayerUtils.IsCityWorld(plugin, player)) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
             SoundUtils.PlaySound(player,"cancel5", false);
             event.setCancelled(true);

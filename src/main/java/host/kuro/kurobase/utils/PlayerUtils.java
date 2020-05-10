@@ -483,6 +483,15 @@ public class PlayerUtils {
         return true;
     }
 
+    public static final boolean IsCityWorld(KuroBase plugin, Player player) {
+        String name = plugin.getConfig().getString("Game.creative", "city").toLowerCase();
+        String now = player.getLocation().getWorld().getName().toLowerCase();
+        if (now.equals(name)) {
+            return true;
+        }
+        return false;
+    }
+
     public static final void RemoveAllItems(Player player) {
         for(ItemStack item : player.getInventory().getContents())
         {

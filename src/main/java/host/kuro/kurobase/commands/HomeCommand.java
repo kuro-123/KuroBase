@@ -35,7 +35,7 @@ public class HomeCommand implements CommandExecutor {
         }
         player = (Player)sender;
         // check survival world
-        if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+        if (PlayerUtils.IsCityWorld(plugin, player)) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
             SoundUtils.PlaySound(player,"cancel5", false);
             return false;

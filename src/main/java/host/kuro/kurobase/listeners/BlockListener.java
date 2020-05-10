@@ -35,7 +35,7 @@ public class BlockListener implements Listener {
             Player player = e.getPlayer();
 
             // check world
-            if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            if (PlayerUtils.IsCityWorld(plugin, player)) {
                 GameMode mode = player.getGameMode();
                 if (mode != GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
@@ -110,7 +110,7 @@ public class BlockListener implements Listener {
             Player player = e.getPlayer();
 
             // check world
-            if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            if (PlayerUtils.IsCityWorld(plugin, player)) {
                 GameMode mode = player.getGameMode();
                 if (mode != GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));

@@ -413,7 +413,7 @@ public class PlayerListener implements Listener {
 			int rank = PlayerUtils.GetRank(plugin, player);
 			if (rank < PlayerUtils.RANK_NUSHI) {
 				if (cmd.toLowerCase().equals("/gamemode")) {
-					if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+					if (!PlayerUtils.IsCityWorld(plugin, player)) {
 						player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
 						SoundUtils.PlaySound(player, "cancel5", false);
 						e.setCancelled(true);
@@ -466,7 +466,7 @@ public class PlayerListener implements Listener {
 		int totalexp = player.getTotalExperience();
 
 		// check world
-		if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+		if (PlayerUtils.IsCityWorld(plugin, player)) {
 			return;
 		}
 
@@ -486,7 +486,7 @@ public class PlayerListener implements Listener {
 		int oldlevel = e.getOldLevel();
 
 		// check world
-		if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
+		if (PlayerUtils.IsCityWorld(plugin, player)) {
 			return;
 		}
 
