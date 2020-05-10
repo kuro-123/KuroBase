@@ -31,4 +31,21 @@ public class WetherListener {
             }
         }
     }
+
+    @EventHandler(priority= EventPriority.HIGHEST)
+    public void onThunderChange(ThunderChangeEvent event) {
+        String name = plugin.getConfig().getString("Game.creative", "city").toLowerCase();
+        String world = event.getWorld().getName().toLowerCase();
+        if (world.equals(name)) {
+            event.setCancelled(event.toThunderState());
+        } else {
+            boolean rain = event.toThunderState();
+            int value = plugin.getConfig().getInt("Game.rain", 15);
+            if(rain) {
+                if (plugin.GetRand().Next(0, 100) > value) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 }
