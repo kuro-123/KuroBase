@@ -627,6 +627,14 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
+	public void onDropItem(final PlayerDropItemEvent e) {
+		Player player = e.getPlayer();
+		if (player.getGameMode() == GameMode.CREATIVE) {
+			e.setCancelled(true);
+		}
+	}
+
+	@EventHandler
 	public void onRespawn(final PlayerRespawnEvent e) {
 		Player player = e.getPlayer();
 		// force survival
