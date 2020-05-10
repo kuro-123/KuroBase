@@ -21,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,24 +45,21 @@ public class KuroBase extends JavaPlugin {
 
     private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
     public HashMap<Player, String> GetClickMode() { return click_mode; }
-
     private static HashMap<Player, Long> afk_status = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetAfkStatus() { return afk_status; }
-
     private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetSoundBattle() { return sound_battle; }
-
     private static HashMap<Player, Long> move_message = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetMoveMessage() { return move_message; }
-
     private static HashMap<Player, AreaData> area_data = new HashMap<Player, AreaData>();
     public HashMap<Player, AreaData> GetAreaData() { return area_data; }
+    private static HashMap<Player, String> frame_name = new HashMap<Player, String>();
+    public HashMap<Player, String> GetFrame() { return frame_name; }
+    private static HashMap<Player, Integer> rank = new HashMap<Player, Integer>();
+    public HashMap<Player, Integer> GetRank() { return rank; }
 
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
-
-    private static HashMap<Player, String> frame_name = new HashMap<Player, String>();
-    public HashMap<Player, String> GetFrame() { return frame_name; }
 
     @Override
     public void onEnable() {

@@ -184,32 +184,38 @@ public class PlayerUtils {
         return ret;
     }
 
-    public static final int GetRank(DatabaseManager db, Player player) {
+    public static final int GetRank(KuroBase plugin, Player player) {
         int ret = RANK_MINARAI;
-        try {
-            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.PLAYER.RANK"));
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
-            ResultSet rs = db.ExecuteQuery(ps, args);
-            args.clear();
-            args = null;
-            if (rs != null) {
-                while(rs.next()){
-                    ret = rs.getInt("rank");
-                    break;
+        if (plugin.GetRank().containsKey(player)) {
+            return plugin.GetRank().get(player);
+        } else {
+            try {
+                PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.PLAYER.RANK"));
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+                ResultSet rs = plugin.getDB().ExecuteQuery(ps, args);
+                args.clear();
+                args = null;
+                if (rs != null) {
+                    while(rs.next()){
+                        ret = rs.getInt("rank");
+                        break;
+                    }
                 }
+                if (ps != null) {
+                    ps.close();
+                    ps = null;
+                }
+                if (rs != null) {
+                    rs.close();
+                    rs = null;
+                }
+            } catch (Exception ex) {
+                ErrorUtils.GetErrorMessage(ex);
+                return ret;
             }
-            if (ps != null) {
-                ps.close();
-                ps = null;
-            }
-            if (rs != null) {
-                rs.close();
-                rs = null;
-            }
-        } catch (Exception ex) {
-            ErrorUtils.GetErrorMessage(ex);
         }
+        plugin.GetRank().put(player, ret);
         return ret;
     }
 
@@ -277,15 +283,15 @@ public class PlayerUtils {
         return ret;
     }
 
-    public static final boolean CheckCommandRank(DatabaseManager db, Player player, String cmd) {
+    public static final boolean CheckCommandRank(KuroBase plugin, Player player, String cmd) {
         int data_rank = 9;
         String usage = "";
         try {
             cmd = cmd.trim().replace("/", "").toLowerCase();
-            PreparedStatement ps = db.getConnection().prepareStatement(Language.translate("SQL.COMMAND.CHECKRANK"));
+            PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.COMMAND.CHECKRANK"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
             args.add(new DatabaseArgs("c", cmd));
-            ResultSet rs = db.ExecuteQuery(ps, args);
+            ResultSet rs = plugin.getDB().ExecuteQuery(ps, args);
             args.clear();
             args = null;
             if (rs != null) {
@@ -308,7 +314,7 @@ public class PlayerUtils {
             return false;
         }
 
-        int rank = GetRank(db, player);
+        int rank = GetRank(plugin, player);
         if (rank >= data_rank) {
             return true;
         }

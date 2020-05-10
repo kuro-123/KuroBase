@@ -48,7 +48,7 @@ public class PlayerListener implements Listener {
 
 			// setting rank
 			player.setOp(true);
-			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+			int rank = PlayerUtils.GetRank(plugin, player);
 			if (rank >= PlayerUtils.RANK_KANRI) {
 				if (rank == PlayerUtils.RANK_KANRI) {
 					SoundUtils.BroadcastSound("kanri", true);
@@ -133,6 +133,7 @@ public class PlayerListener implements Listener {
 			plugin.GetAreaData().remove(player);
 			plugin.GetMoveMessage().remove(player);
 			plugin.GetFrame().remove(player);
+			plugin.GetRank().remove(player);
 
 			// 計測終了
 			int elapse = 0;
@@ -403,13 +404,13 @@ public class PlayerListener implements Listener {
 			}
 
 			// check exec rank
-			if (!PlayerUtils.CheckCommandRank(plugin.getDB(), player, cmd)) {
+			if (!PlayerUtils.CheckCommandRank(plugin, player, cmd)) {
 				e.setCancelled(true);
 				return;
 			}
 
 			// check gamemode
-			int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+			int rank = PlayerUtils.GetRank(plugin, player);
 			if (rank < PlayerUtils.RANK_NUSHI) {
 				if (cmd.toLowerCase().equals("/gamemode")) {
 					if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
@@ -578,7 +579,7 @@ public class PlayerListener implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-		int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+		int rank = PlayerUtils.GetRank(plugin, player);
 		if (rank < PlayerUtils.RANK_KANRI) {
 			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
 			SoundUtils.PlaySound(player, "cancel5", false);
@@ -597,7 +598,7 @@ public class PlayerListener implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-		int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+		int rank = PlayerUtils.GetRank(plugin, player);
 		if (rank < PlayerUtils.RANK_KANRI) {
 			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
 			SoundUtils.PlaySound(player, "cancel5", false);

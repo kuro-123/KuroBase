@@ -52,7 +52,7 @@ public class ShopCommand implements CommandExecutor {
         }
 
         try {
-            int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+            int rank = PlayerUtils.GetRank(plugin, player);
             if (rank < PlayerUtils.RANK_KANRI) {
                 // check perm count
                 int perm = plugin.getConfig().getInt("Perm.shop", 3000);

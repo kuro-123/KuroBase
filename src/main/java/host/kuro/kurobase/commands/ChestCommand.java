@@ -64,7 +64,7 @@ public class ChestCommand implements CommandExecutor {
 
     private boolean ActionLock(String[] args) {
         try {
-            int rank = PlayerUtils.GetRank(KuroBase.getDB(), player);
+            int rank = PlayerUtils.GetRank(plugin, player);
             if (rank < PlayerUtils.RANK_KANRI) {
                 // check perm count
                 int perm = plugin.getConfig().getInt("Perm.chestlock", 5000);
