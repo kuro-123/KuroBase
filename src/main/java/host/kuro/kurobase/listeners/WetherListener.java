@@ -18,7 +18,7 @@ public class WetherListener {
     @EventHandler(priority= EventPriority.HIGHEST)
     public void onWeatherChange(WeatherChangeEvent event) {
         boolean rain = event.toWeatherState();
-        int value = plugin.getConfig().getInt("Game.rain", 30);
+        int value = plugin.getConfig().getInt("Game.rain", 15);
         if(rain) {
             if (plugin.GetRand().Next(0, 100) <= value) {
                 event.setCancelled(true);
