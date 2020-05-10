@@ -6,10 +6,7 @@ import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.listeners.BlockListener;
-import host.kuro.kurobase.listeners.EntityListener;
-import host.kuro.kurobase.listeners.InventoryListener;
-import host.kuro.kurobase.listeners.PlayerListener;
+import host.kuro.kurobase.listeners.*;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
 import host.kuro.kurobase.utils.AreaUtils;
@@ -87,6 +84,7 @@ public class KuroBase extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new WetherListener(this), this);
         this.getServer().getPluginManager().registerEvents(new GuiShopHandler(), this);
 
         // regist command
