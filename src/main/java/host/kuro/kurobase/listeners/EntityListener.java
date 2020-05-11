@@ -48,6 +48,7 @@ public class EntityListener implements Listener {
             if (entity instanceof Player) {
                 EntityDamageEvent.DamageCause cause = e.getCause();
                 if (cause != null) {
+                    // special attack
                     if (cause == ENTITY_ATTACK || cause == PROJECTILE) {
                         Player player = (Player)entity;
                         // check world
@@ -71,6 +72,16 @@ public class EntityListener implements Listener {
                             if (elapse >= 240) {
                                 SoundUtils.PlaySound(player, "battle", true);
                                 plugin.GetSoundBattle().put(player, System.currentTimeMillis());
+                            }
+                        }
+                        // special attack
+                        if (cause == ENTITY_ATTACK) {
+                            if (ActionSpecialAttack(player, e.getDamager())) {
+                                double damage = e.getDamage();
+                                damage = damage * plugin.GetRand().Next(1, 3);
+                                e.setDamage(damage);
+                                SoundUtils.PlaySound(player,"buun1", false);
+                                player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.attack.special"));
                             }
                         }
                     }
@@ -418,5 +429,76 @@ public class EntityListener implements Listener {
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
+    }
+
+    private boolean ActionSpecialAttack(Player player, Entity entity) {
+        int ritu = 0;
+        switch (entity.getType()) {
+        case ZOMBIE:
+            ritu = 5;
+            break;
+        case SKELETON:
+            ritu = 5;
+            break;
+        case SPIDER:
+            ritu = 5;
+            break;
+        case CAVE_SPIDER:
+            ritu = 5;
+            break;
+        case CREEPER:
+            ritu = 7;
+            break;
+        case ENDERMAN:
+            ritu = 7;
+            break;
+        case GHAST:
+            ritu = 7;
+            break;
+        case WITHER_SKELETON:
+            ritu = 8;
+            break;
+        case PIG_ZOMBIE:
+            ritu = 8;
+            break;
+        case PHANTOM:
+            ritu = 8;
+            break;
+        case HUSK:
+            ritu = 8;
+            break;
+        case STRAY:
+            ritu = 8;
+            break;
+        case EVOKER:
+            ritu = 8;
+            break;
+        case RAVAGER:
+            ritu = 8;
+            break;
+        case BLAZE:
+            ritu = 10;
+            if (plugin.GetRand().Next(1, 100) < 15) {
+                player.setFireTicks(3);
+            }
+            break;
+        case WITHER:
+            ritu = 10;
+            if (plugin.GetRand().Next(1, 100) < 20) {
+                player.setFireTicks(5);
+            }
+            break;
+        case ENDER_DRAGON:
+            ritu = 30;
+            if (plugin.GetRand().Next(1, 100) < 30) {
+                player.setFireTicks(10);
+            }
+            break;
+        }
+        int value = plugin.GetRand().Next(1, 100);
+        if (value < ritu) {
+            return true;
+        }
+        return false;
     }
 }
