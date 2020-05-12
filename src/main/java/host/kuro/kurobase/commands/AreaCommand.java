@@ -37,11 +37,13 @@ public class AreaCommand implements CommandExecutor {
         }
         Player player = (Player)sender;
 
-        // check survival world
+        // check city world
         if (PlayerUtils.IsCityWorld(plugin, player)) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            return false;
+            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
         }
         // check creative
         if (player.getGameMode() == GameMode.CREATIVE) {
@@ -126,6 +128,7 @@ public class AreaCommand implements CommandExecutor {
         AreaData area = new AreaData();
         area.owner = player.getName();
         area.name = name;
+        area.world = player.getWorld().getName();
         plugin.GetAreaData().put(player, area);
     }
 

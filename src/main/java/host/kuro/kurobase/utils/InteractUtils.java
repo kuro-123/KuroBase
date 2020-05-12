@@ -4,27 +4,13 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.map.MapRenderer;
-import org.bukkit.map.MapView;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class InteractUtils {
@@ -57,6 +43,7 @@ public class InteractUtils {
             AreaData area = plugin.GetAreaData().get(player);
             switch (area.status) {
                 case 0: // first point
+                    area.world = block.getLocation().getWorld().getName();
                     area.x1 = block.getLocation().getBlockX();
                     area.y1 = block.getLocation().getBlockY();
                     area.z1 = block.getLocation().getBlockZ();
@@ -89,15 +76,22 @@ public class InteractUtils {
                             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.minimum.error"));
                             SoundUtils.PlaySound(player, "cancel5", false);
                         } else {
+                            boolean money_throw = false;
+                            if (PlayerUtils.IsCityWorld(plugin, player)) {
+                                if (PlayerUtils.GetRank(plugin, player) >= PlayerUtils.RANK_KANRI) {
+                                    money_throw = true;
+                                }
+                            }
+
                             int price = count * 2;
                             int money = PlayerUtils.GetMoney(KuroBase.getDB(), player);
-                            if (money < price) {
+                            if (!money_throw && money < price) {
                                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pay.monerror"));
                                 SoundUtils.PlaySound(player, "cancel5", false);
                             } else {
                                 // INSERT
                                 ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-                                args.add(new DatabaseArgs("c", player.getWorld().getName())); // world
+                                args.add(new DatabaseArgs("c", area.world)); // world
                                 args.add(new DatabaseArgs("i", "" + area.x1)); // x1
                                 args.add(new DatabaseArgs("i", "" + area.y1)); // y1
                                 args.add(new DatabaseArgs("i", "" + area.z1)); // z1
@@ -114,11 +108,13 @@ public class InteractUtils {
                                     player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
                                     SoundUtils.PlaySound(player, "cancel5", false);
                                 } else {
-                                    // pay
-                                    PlayerUtils.PayMoney(KuroBase.getDB(), player, price);
-                                    // pay log
-                                    PlayerUtils.AddLogAreaPay(player, "AREA", price);
-                                    // data reseup
+                                    if (!money_throw) {
+                                        // pay
+                                        PlayerUtils.PayMoney(KuroBase.getDB(), player, price);
+                                        // pay log
+                                        PlayerUtils.AddLogAreaPay(player, "AREA", price);
+                                    }
+                                    // data resetup
                                     AreaUtils.SetupProtectData();
 
                                     new Location(player.getWorld(), area.x1, area.y1, area.z1).getBlock().setType(Material.BLUE_TERRACOTTA);

@@ -20,6 +20,7 @@ public class AreaUtils {
             if (rs != null) {
                 while(rs.next()){
                     AreaData area = new AreaData();
+                    area.world = rs.getString("world");
                     area.owner = rs.getString("owner");
                     area.name = rs.getString("name");
                     area.x1 = rs.getInt("x1");
@@ -67,6 +68,7 @@ public class AreaUtils {
             if (player != null) {
                 if (area.owner.toLowerCase().equals(player.getName().toLowerCase())) continue;
             }
+            if (!player.getLocation().getWorld().getName().equals(area.world)) continue;
             int x1 = Math.min(area.x1, area.x2);
             int x2 = Math.max(area.x1, area.x2);
             int y1 = Math.min(area.y1, area.y2);
