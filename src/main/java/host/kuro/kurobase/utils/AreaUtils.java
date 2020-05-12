@@ -62,13 +62,13 @@ public class AreaUtils {
         return;
     }
 
-    public static final AreaData CheckInsideProtect(Player player, int x, int y, int z) {
+    public static final AreaData CheckInsideProtect(Player player, String world, int x, int y, int z) {
         if (KuroBase.GetProtect().size() <= 0) return null;
         for (AreaData area : KuroBase.GetProtect()) {
             if (player != null) {
                 if (area.owner.toLowerCase().equals(player.getName().toLowerCase())) continue;
             }
-            if (!player.getLocation().getWorld().getName().equals(area.world)) continue;
+            if (!world.equals(area.world)) continue;
             int x1 = Math.min(area.x1, area.x2);
             int x2 = Math.max(area.x1, area.x2);
             int y1 = Math.min(area.y1, area.y2);

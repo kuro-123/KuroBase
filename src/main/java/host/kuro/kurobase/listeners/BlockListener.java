@@ -54,7 +54,7 @@ public class BlockListener implements Listener {
 
             // check area
             if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
-                AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+                AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
                 if (area != null) {
                     player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
                     SoundUtils.PlaySound(player, "cancel5", false);
@@ -129,7 +129,7 @@ public class BlockListener implements Listener {
 
             // check area
             if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
-                AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+                AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
                 if (area != null) {
                     player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
                     SoundUtils.PlaySound(player,"cancel5", false);
@@ -164,7 +164,7 @@ public class BlockListener implements Listener {
             Player player = e.getPlayer();
 
             // check area
-            AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+            AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
             if (area != null) {
                 player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
                 SoundUtils.PlaySound(player,"cancel5", false);

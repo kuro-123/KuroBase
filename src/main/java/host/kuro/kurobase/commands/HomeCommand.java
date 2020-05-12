@@ -110,7 +110,7 @@ public class HomeCommand implements CommandExecutor {
     private boolean ActionSet(Player player) {
         // update
         try {
-            AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+            AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
             if (area == null) {
                 // not own area
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.home.error.own"));

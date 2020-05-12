@@ -68,7 +68,7 @@ public class InventoryListener implements Listener {
         }
 
         // check area
-        AreaData area = AreaUtils.CheckInsideProtect(player, leftChest.getX(), leftChest.getY(), leftChest.getZ());
+        AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), leftChest.getX(), leftChest.getY(), leftChest.getZ());
         if (area != null) {
             player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
             SoundUtils.PlaySound(player,"cancel5", false);

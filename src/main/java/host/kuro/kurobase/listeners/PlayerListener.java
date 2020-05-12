@@ -14,6 +14,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -134,6 +135,11 @@ public class PlayerListener implements Listener {
 			plugin.GetMoveMessage().remove(player);
 			plugin.GetFrame().remove(player);
 			plugin.GetRank().remove(player);
+			plugin.GetSelectDataOne().remove(player);
+			plugin.GetSelectDataTwo().remove(player);
+			plugin.GetSelectStatus().remove(player);
+			plugin.GetInteractWait().remove(player);
+			plugin.GetExecWE().remove(player);
 
 			// 計測終了
 			int elapse = 0;
@@ -563,7 +569,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 	private void SendMoveMessage(Player player) {
-		AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+		AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 		if (area != null) {
 			PlayerUtils.SendActionBar(player, ChatColor.YELLOW + String.format("[ 敷地:%s <by %s> ]", area.name, area.owner));
 		}
@@ -574,7 +580,7 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		Block block = e.getBlock();
 		// check area
-		AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+		AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
 		if (area != null) {
 			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
 			SoundUtils.PlaySound(player,"cancel5", false);
@@ -593,7 +599,7 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		Block block = e.getBlock();
 		// check area
-		AreaData area = AreaUtils.CheckInsideProtect(player, block.getX(), block.getY(), block.getZ());
+		AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
 		if (area != null) {
 			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
 			SoundUtils.PlaySound(player,"cancel5", false);
@@ -617,14 +623,29 @@ public class PlayerListener implements Listener {
 
 		// click mode
 		if (plugin.GetClickMode().containsKey(player)) {
-			String click_mode = plugin.GetClickMode().get(player);
-			if (click_mode.equals("blockid")) {
-				InteractUtils.ClickBlockId(plugin, e, player, block);
-				return;
-			}
-			else if (click_mode.equals("area")) {
-				InteractUtils.ClickArea(plugin, e, player, block);
-				return;
+			Action action = e.getAction();
+			if (action == Action.RIGHT_CLICK_BLOCK) {
+				if (!plugin.GetInteractWait().containsKey(player)) {
+					plugin.GetInteractWait().put(player, System.currentTimeMillis());
+				} else {
+					long before = plugin.GetInteractWait().get(player);
+					long after = System.currentTimeMillis();
+					if ((after - before) < 500) {
+						e.setCancelled(true);
+						return;
+					}
+					plugin.GetInteractWait().put(player, System.currentTimeMillis());
+				}
+				String click_mode = plugin.GetClickMode().get(player);
+				if (click_mode.equals("blockid")) {
+					InteractUtils.ClickBlockId(plugin, e, player, block);
+				}
+				else if (click_mode.equals("select")) {
+					InteractUtils.ClickSelect(plugin, e, player, block);
+				}
+				else if (click_mode.equals("area")) {
+					InteractUtils.ClickArea(plugin, e, player, block);
+				}
 			}
 		}
 	}

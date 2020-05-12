@@ -78,3 +78,9 @@ commands:
     description: サバイバルになるコマンド
     usage: /survival (/s)
     aliases: [s]
+  sel:
+    description: 選択コマンド（２点選択）
+    usage: /sel
+  set:
+    description: ブロック設定コマンド
+    usage: /set <ブロック選択or入力>

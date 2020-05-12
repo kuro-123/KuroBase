@@ -1,6 +1,5 @@
 package host.kuro.kurobase;
 
-//import fr.moribus.imageonmap.ImageOnMap;
 import host.kuro.kurobase.commands.*;
 import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.AreaData;
@@ -14,6 +13,7 @@ import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,9 +30,6 @@ public class KuroBase extends JavaPlugin {
 
     private static KuroDiscord kurodiscord = null;
     public static KuroDiscord getDiscord() { return kurodiscord; }
-
-    //private static ImageOnMap imageonmap = null;
-    //public static ImageOnMap getImageOnMap() { return imageonmap; }
 
     private boolean linux = true;
     public boolean IsLinux() { return linux; }
@@ -54,6 +51,16 @@ public class KuroBase extends JavaPlugin {
     public HashMap<Player, String> GetFrame() { return frame_name; }
     private static HashMap<Player, Integer> rank = new HashMap<Player, Integer>();
     public HashMap<Player, Integer> GetRank() { return rank; }
+    private static HashMap<Player, Integer> select_status = new HashMap<Player, Integer>();
+    public HashMap<Player, Integer> GetSelectStatus() { return select_status; }
+    private static HashMap<Player, Location> select_data_one = new HashMap<Player, Location>();
+    public HashMap<Player, Location> GetSelectDataOne() { return select_data_one; }
+    private static HashMap<Player, Location> select_data_two = new HashMap<Player, Location>();
+    public HashMap<Player, Location> GetSelectDataTwo() { return select_data_two; }
+    private static HashMap<Player, Long> interact_wait = new HashMap<Player, Long>();
+    public HashMap<Player, Long> GetInteractWait() { return interact_wait; }
+    private static HashMap<Player, Integer> exec_we = new HashMap<Player, Integer>();
+    public HashMap<Player, Integer> GetExecWE() { return exec_we; }
 
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
@@ -97,6 +104,7 @@ public class KuroBase extends JavaPlugin {
         getCommand("ri").setExecutor(new RiCommand(this));
         getCommand("creative").setExecutor(new CreativeCommand(this));
         getCommand("survival").setExecutor(new SurvivalCommand(this));
+        getCommand("sel").setExecutor(new SelCommand(this));
 
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());
@@ -116,6 +124,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("area").setTabCompleter(new AreaTabCompleter());
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("home").setTabCompleter(new HomeTabCompleter());
+        getCommand("set").setExecutor(new SetCommand(this));
+        getCommand("set").setTabCompleter(new SetTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
