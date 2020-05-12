@@ -291,6 +291,7 @@ public class PlayerUtils {
             PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.COMMAND.CHECKRANK"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
             args.add(new DatabaseArgs("c", cmd));
+            args.add(new DatabaseArgs("c", cmd));
             ResultSet rs = plugin.getDB().ExecuteQuery(ps, args);
             args.clear();
             args = null;
@@ -507,5 +508,34 @@ public class PlayerUtils {
             player.setGameMode(GameMode.SURVIVAL);
             RemoveAllItems(player);
         }
+    }
+
+    public static final int GetPlayTime(KuroBase plugin, Player player) {
+        int play_time = 0;
+        try {
+            PreparedStatement ps = plugin.getDB().getConnection().prepareStatement(Language.translate("SQL.PLAYER.TIME"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = plugin.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    play_time = rs.getInt("play_time");
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return play_time;
     }
 }

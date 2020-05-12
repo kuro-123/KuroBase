@@ -53,8 +53,7 @@ public class EntityListener implements Listener {
                         Player player = (Player)entity;
                         // check world
                         if (PlayerUtils.IsCityWorld(plugin, player)) {
-                            GameMode mode = player.getGameMode();
-                            if (mode != GameMode.CREATIVE) {
+                            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
                                 player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
                                 SoundUtils.PlaySound(player,"cancel5", false);
                                 e.setCancelled(true);

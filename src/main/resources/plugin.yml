@@ -36,7 +36,7 @@ commands:
   info:
     description: 123鯖情報を開く
     usage: /info (URLが出るのでクリックしてください)
-    aliases: [if]
+    aliases: [i]
   map:
     description: 123鯖マップを開く
     usage: /map (URLが出るのでクリックしてください)
@@ -70,3 +70,11 @@ commands:
     description: ホームポイント設定コマンド
     usage: /home [set|del] ※指定なしの場合はテレポート
     aliases: [ho]
+  creative:
+    description: クリエになるコマンド
+    usage: /creative (/c)
+    aliases: [c]
+  survival:
+    description: サバイバルになるコマンド
+    usage: /survival (/s)
+    aliases: [s]
