@@ -122,7 +122,7 @@ public class SetCommand implements CommandExecutor {
 
             WorldEditTask we_task = new WorldEditTask(plugin, player, "set", count);
             we_task.SetMaterial(mat);
-            int delay = plugin.getConfig().getInt("WorldEdit.task_delay", 4);
+            int delay = plugin.getConfig().getInt("WorldEdit.task_delay", 2);
             BukkitTask task = we_task.runTaskTimer(plugin, 0, delay);
             we_task.SetTask(task);
 

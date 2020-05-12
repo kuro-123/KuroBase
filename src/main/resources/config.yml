@@ -43,6 +43,6 @@ Game:
   rain: 15
 
 WorldEdit:
-  task_delay: 4
+  task_delay: 2
   task_block: 10
   block_max: 40000

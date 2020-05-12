@@ -17,7 +17,7 @@ public class SetTabCompleter implements TabCompleter {
             case 1:
                 cmds.add("AIR");
                 for (Material mat : Material.values()) {
-                    if (mat.isBlock() && mat.isSolid()) {
+                    if (mat.isBlock() && mat.isSolid() && !mat.hasGravity()) {
                         cmds.add(mat.name());
                     }
                 }

@@ -99,6 +99,7 @@ public class WorldEditTask extends BukkitRunnable {
                 for (j=y1; j<=y2; j++) {
                     for (k=z1; k<=z2; k++) {
                         Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
+                        if (block.getType().hasGravity()) continue;
                         if (block.getType() != set) {
                             block.setType(set);
                             make_cnt++;
