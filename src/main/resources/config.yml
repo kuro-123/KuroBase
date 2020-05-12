@@ -36,7 +36,7 @@ Url:
 Game:
   afk: 600000
   rank: 7200
-  mode_change: 7200
+  mode_change: 10800
   death: 200
   survival: world
   creative: city
