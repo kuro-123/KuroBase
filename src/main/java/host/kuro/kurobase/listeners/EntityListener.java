@@ -78,7 +78,7 @@ public class EntityListener implements Listener {
                         if (cause == ENTITY_ATTACK) {
                             if (ActionSpecialAttack(player, e.getDamager())) {
                                 double damage = e.getDamage();
-                                damage = damage * plugin.GetRand().Next(1, 3);
+                                damage = damage * plugin.GetRand().Next(2, 4);
                                 e.setDamage(damage);
                                 SoundUtils.PlaySound(player,"buun1", false);
                                 player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.attack.special"));
