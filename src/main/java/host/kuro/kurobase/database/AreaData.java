@@ -10,5 +10,4 @@ public class AreaData {
     public int x2 = 9999999;
     public int y2 = 9999999;
     public int z2 = 9999999;
-    public int status = 0;
 }

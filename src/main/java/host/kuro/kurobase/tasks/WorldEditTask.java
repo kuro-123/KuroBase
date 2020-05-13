@@ -25,9 +25,11 @@ public class WorldEditTask extends BukkitRunnable {
     private final int make_max;
     private BukkitTask task = null;
     private boolean end = false;
-    private Material set = null;
+    private Material set1 = null;
+    private Material set2 = null;
     private final Location loc1;
     private final Location loc2;
+    private boolean firstTake = true;
 
     private int exec_count = 0;
     private final int x1;
@@ -51,18 +53,17 @@ public class WorldEditTask extends BukkitRunnable {
         z1 = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
         z2 = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
         make_max = plugin.getConfig().getInt("WorldEdit.task_block", 10);
-
-        plugin.GetExecWE().put(player, 1);
-        PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit SET 開始] [ 対象: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
-        SoundUtils.PlaySound(player,"cork-plug1", false);
     }
 
     public void SetTask(BukkitTask task) {
         this.task = task;
     }
 
-    public void SetMaterial(Material set) {
-        this.set = set;
+    public void SetMaterialOne(Material set1) {
+        this.set1 = set1;
+    }
+    public void SetMaterialTwo(Material set2) {
+        this.set2 = set2;
     }
 
     @Override
@@ -71,6 +72,7 @@ public class WorldEditTask extends BukkitRunnable {
         if (end) return;
         switch (mode) {
             case "set": ActionSet();
+            case "rep": ActionRep();
         }
         exec_count++;
         if (exec_count > 5000) {
@@ -83,13 +85,19 @@ public class WorldEditTask extends BukkitRunnable {
     }
 
     private void ActionSet() {
-        if (set == null) {
+        if (set1 == null) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
             SoundUtils.PlaySound(player,"cancel5", false);
             end = true;
             task.cancel();
             plugin.GetExecWE().remove(player);
             return;
+        }
+        if (firstTake) {
+            plugin.GetExecWE().put(player, 1);
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit SET 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            SoundUtils.PlaySound(player, "cork-plug1", false);
+            firstTake = false;
         }
         try {
             boolean hit=false;
@@ -100,8 +108,8 @@ public class WorldEditTask extends BukkitRunnable {
                     for (k=z1; k<=z2; k++) {
                         Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
                         if (block.getType().hasGravity()) continue;
-                        if (block.getType() != set) {
-                            block.setType(set);
+                        if (block.getType() != set1) {
+                            block.setType(set1);
                             make_cnt++;
                             hit = true;
                         }
@@ -115,7 +123,7 @@ public class WorldEditTask extends BukkitRunnable {
                 // finish
                 end = true;
                 task.cancel();
-                PlayerUtils.BroadcastMessage(ChatColor.WHITE + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
                 SoundUtils.PlaySound(player,"cork-plug1", false);
                 plugin.GetExecWE().remove(player);
             }
@@ -129,4 +137,59 @@ public class WorldEditTask extends BukkitRunnable {
             plugin.GetExecWE().remove(player);
         }
     }
+
+    private void ActionRep() {
+        if (set1 == null || set2 == null) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            end = true;
+            task.cancel();
+            plugin.GetExecWE().remove(player);
+            return;
+        }
+        if (firstTake) {
+            plugin.GetExecWE().put(player, 1);
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit REP 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            SoundUtils.PlaySound(player, "cork-plug1", false);
+            firstTake = false;
+        }
+        try {
+            boolean hit=false;
+            int make_cnt=0;
+            int i=0,j=0,k=0;
+            for (i=x1; i<=x2; i++) {
+                for (j=y1; j<=y2; j++) {
+                    for (k=z1; k<=z2; k++) {
+                        Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
+                        if (block.getType().hasGravity()) continue;
+                        if (block.getType() == set1) {
+                            block.setType(set2);
+                            make_cnt++;
+                            hit = true;
+                        }
+                        if (make_cnt >= make_max) break;
+                    }
+                    if (make_cnt >= make_max) break;
+                }
+                if (make_cnt >= make_max) break;
+            }
+            if (!hit) {
+                // finish
+                end = true;
+                task.cancel();
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                SoundUtils.PlaySound(player,"cork-plug1", false);
+                plugin.GetExecWE().remove(player);
+            }
+
+        } catch (Exception ex) {
+            plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            end = true;
+            task.cancel();
+            plugin.GetExecWE().remove(player);
+        }
+    }
+
 }

@@ -12,11 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-public class SetCommand implements CommandExecutor {
+public class RepCommand implements CommandExecutor {
 
     private final KuroBase plugin;
 
-    public SetCommand(KuroBase plugin) {
+    public RepCommand(KuroBase plugin) {
         this.plugin = plugin;
     }
 
@@ -28,7 +28,7 @@ public class SetCommand implements CommandExecutor {
             return false;
         }
         final Player player = (Player)sender;
-        if (args.length != 1) {
+        if (args.length != 2) {
             // args check
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
             SoundUtils.PlaySound(player,"cancel5", false);
@@ -82,15 +82,33 @@ public class SetCommand implements CommandExecutor {
 
             // check material choise
             String name = args[0].toUpperCase();
-            Material mat = Material.getMaterial(name);
-            if (mat == null) {
+            Material mat1 = Material.getMaterial(name);
+            if (mat1 == null) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.material.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 ClearMemory(player);
                 return false;
             }
-            if (mat != Material.AIR) {
-                if (!(mat.isBlock() && mat.isSolid())) {
+            if (mat1 != Material.AIR) {
+                if (!(mat1.isBlock() && mat1.isSolid())) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.material.error"));
+                    SoundUtils.PlaySound(player, "cancel5", false);
+                    ClearMemory(player);
+                    return false;
+                }
+            }
+
+            // check material choise
+            name = args[1].toUpperCase();
+            Material mat2 = Material.getMaterial(name);
+            if (mat2 == null) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.material.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                ClearMemory(player);
+                return false;
+            }
+            if (mat2 != Material.AIR) {
+                if (!(mat2.isBlock() && mat2.isSolid())) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.material.error"));
                     SoundUtils.PlaySound(player, "cancel5", false);
                     ClearMemory(player);
@@ -120,8 +138,9 @@ public class SetCommand implements CommandExecutor {
                 return false;
             }
 
-            WorldEditTask we_task = new WorldEditTask(plugin, player, "set", count);
-            we_task.SetMaterialOne(mat);
+            WorldEditTask we_task = new WorldEditTask(plugin, player, "rep", count);
+            we_task.SetMaterialOne(mat1);
+            we_task.SetMaterialTwo(mat2);
             int delay = plugin.getConfig().getInt("WorldEdit.task_delay", 2);
             BukkitTask task = we_task.runTaskTimer(plugin, 0, delay);
             we_task.SetTask(task);

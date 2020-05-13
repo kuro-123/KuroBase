@@ -45,8 +45,6 @@ public class KuroBase extends JavaPlugin {
     public HashMap<Player, Long> GetSoundBattle() { return sound_battle; }
     private static HashMap<Player, Long> move_message = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetMoveMessage() { return move_message; }
-    private static HashMap<Player, AreaData> area_data = new HashMap<Player, AreaData>();
-    public HashMap<Player, AreaData> GetAreaData() { return area_data; }
     private static HashMap<Player, String> frame_name = new HashMap<Player, String>();
     public HashMap<Player, String> GetFrame() { return frame_name; }
     private static HashMap<Player, Integer> rank = new HashMap<Player, Integer>();
@@ -126,6 +124,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("home").setTabCompleter(new HomeTabCompleter());
         getCommand("set").setExecutor(new SetCommand(this));
         getCommand("set").setTabCompleter(new SetTabCompleter());
+        getCommand("rep").setExecutor(new RepCommand(this));
+        getCommand("rep").setTabCompleter(new RepTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));

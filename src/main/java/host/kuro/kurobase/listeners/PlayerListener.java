@@ -131,7 +131,6 @@ public class PlayerListener implements Listener {
 			plugin.GetClickMode().remove(player);
 			plugin.GetAfkStatus().remove(player);
 			plugin.GetSoundBattle().remove(player);
-			plugin.GetAreaData().remove(player);
 			plugin.GetMoveMessage().remove(player);
 			plugin.GetFrame().remove(player);
 			plugin.GetRank().remove(player);
@@ -623,6 +622,7 @@ public class PlayerListener implements Listener {
 
 		// click mode
 		if (plugin.GetClickMode().containsKey(player)) {
+			String click_mode = plugin.GetClickMode().get(player);
 			Action action = e.getAction();
 			if (action == Action.RIGHT_CLICK_BLOCK) {
 				if (!plugin.GetInteractWait().containsKey(player)) {
@@ -636,15 +636,16 @@ public class PlayerListener implements Listener {
 					}
 					plugin.GetInteractWait().put(player, System.currentTimeMillis());
 				}
-				String click_mode = plugin.GetClickMode().get(player);
 				if (click_mode.equals("blockid")) {
 					InteractUtils.ClickBlockId(plugin, e, player, block);
 				}
 				else if (click_mode.equals("select")) {
 					InteractUtils.ClickSelect(plugin, e, player, block);
 				}
-				else if (click_mode.equals("area")) {
-					InteractUtils.ClickArea(plugin, e, player, block);
+
+			} else if (action == Action.LEFT_CLICK_BLOCK) {
+				if (click_mode.equals("select")) {
+					InteractUtils.ClickBlockId(plugin, e, player, block);
 				}
 			}
 		}

@@ -84,3 +84,6 @@ commands:
   set:
     description: ブロック設定コマンド
     usage: /set <ブロック選択or入力>
+  rep:
+    description: ブロック置換コマンド
+    usage: /rep <ブロック選択or入力>
