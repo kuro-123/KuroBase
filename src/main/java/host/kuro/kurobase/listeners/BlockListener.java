@@ -31,6 +31,7 @@ public class BlockListener implements Listener {
         int ret;
         try {
             Player player = e.getPlayer();
+            Block block = e.getBlock();
 
             // check world
             if (PlayerUtils.IsCityWorld(plugin, player)) {
@@ -41,6 +42,15 @@ public class BlockListener implements Listener {
                     e.setCancelled(true);
                     return;
                 }
+                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+                    if (area != null) {
+                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                        SoundUtils.PlaySound(player, "cancel5", false);
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
             } else {
                 // UPDATE
                 ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -49,8 +59,6 @@ public class BlockListener implements Listener {
                 args.clear();
                 args = null;
             }
-
-            Block block = e.getBlock();
 
             // check area
             if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
@@ -106,6 +114,7 @@ public class BlockListener implements Listener {
         int ret;
         try {
             Player player = e.getPlayer();
+            Block block = e.getBlock();
 
             // check world
             if (PlayerUtils.IsCityWorld(plugin, player)) {
@@ -116,6 +125,15 @@ public class BlockListener implements Listener {
                     e.setCancelled(true);
                     return;
                 }
+                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+                    if (area != null) {
+                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                        SoundUtils.PlaySound(player, "cancel5", false);
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
             } else {
                 // UPDATE
                 ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -124,8 +142,6 @@ public class BlockListener implements Listener {
                 args.clear();
                 args = null;
             }
-
-            Block block = e.getBlock();
 
             // check area
             if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
@@ -162,6 +178,26 @@ public class BlockListener implements Listener {
         try {
             Block block = e.getBlock();
             Player player = e.getPlayer();
+
+            // check world
+            if (PlayerUtils.IsCityWorld(plugin, player)) {
+                GameMode mode = player.getGameMode();
+                if (mode != GameMode.CREATIVE) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                    SoundUtils.PlaySound(player, "cancel5", false);
+                    e.setCancelled(true);
+                    return;
+                }
+                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+                    if (area != null) {
+                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                        SoundUtils.PlaySound(player, "cancel5", false);
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
+            }
 
             // check area
             AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());

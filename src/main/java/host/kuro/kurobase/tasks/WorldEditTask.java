@@ -46,7 +46,7 @@ public class WorldEditTask extends BukkitRunnable {
     private int start_y;
     private int start_z;
 
-    private ArrayList<Block> blocks;
+    private static ArrayList<Block> blocks;
 
     public WorldEditTask(KuroBase plugin, Player player, String mode, int count) {
         this.plugin = plugin;
@@ -225,18 +225,18 @@ public class WorldEditTask extends BukkitRunnable {
             firstTake = false;
         }
         try {
-            ArrayList<Block> blocks = new ArrayList<Block>();
             boolean hit=false;
             int make_cnt=0;
             int i=0,j=0,k=0;
+            int p=0,q=0,r=0;
             int num = 0;
-            for (i=x1; i<=x2; i++) {
-                for (j=y1; j<=y2; j++) {
-                    for (k=z1; k<=z2; k++) {
-                        Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
+            for (i=x1, p=0; i<=x2; i++, p++) {
+                for (j=y1, q=0; j<=y2; j++, q++) {
+                    for (k=z1, r=0; k<=z2; k++, r++) {
                         Block pasteblock = blocks.get(num);
                         num++;
-                        if (block.getType().hasGravity()) continue;
+                        if (pasteblock.getType().hasGravity()) continue;
+                        Block block = new Location(loc1.getWorld(), start_x+p, start_y+q, start_z+r).getBlock();
                         if (block.getType() != pasteblock.getType()) {
                             block.setType(pasteblock.getType());
                             make_cnt++;
