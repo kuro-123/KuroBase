@@ -218,18 +218,6 @@ public class WorldEditTask extends BukkitRunnable {
     }
 
     private void ActionPaste() {
-        if (set1 == null) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            end = true;
-            task.cancel();
-            if (blocks != null) {
-                blocks.clear();
-                blocks = null;
-            }
-            plugin.GetExecWE().remove(player);
-            return;
-        }
         if (firstTake) {
             plugin.GetExecWE().put(player, 1);
             PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit PASTE 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));

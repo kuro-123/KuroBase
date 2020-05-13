@@ -98,6 +98,8 @@ public class PasteCommand implements CommandExecutor {
                 return false;
             }
 
+            plugin.GetSelectStatus().remove(player);
+
             // change mode
             if (plugin.GetClickMode().containsKey(player)) {
                 String click_mode = plugin.GetClickMode().get(player);
@@ -121,7 +123,6 @@ public class PasteCommand implements CommandExecutor {
             ClearMemory(player);
             return false;
         }
-        ClearMemory(player);
         return true;
     }
 
