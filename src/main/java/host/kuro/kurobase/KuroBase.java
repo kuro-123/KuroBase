@@ -103,6 +103,7 @@ public class KuroBase extends JavaPlugin {
         getCommand("creative").setExecutor(new CreativeCommand(this));
         getCommand("survival").setExecutor(new SurvivalCommand(this));
         getCommand("sel").setExecutor(new SelCommand(this));
+        getCommand("paste").setExecutor(new PasteCommand(this));
 
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());

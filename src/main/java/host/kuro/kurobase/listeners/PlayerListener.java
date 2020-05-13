@@ -642,6 +642,9 @@ public class PlayerListener implements Listener {
 				else if (click_mode.equals("select")) {
 					InteractUtils.ClickSelect(plugin, e, player, block);
 				}
+				else if (click_mode.equals("paste")) {
+					InteractUtils.ClickPaste(plugin, e, player, block);
+				}
 
 			} else if (action == Action.LEFT_CLICK_BLOCK) {
 				if (click_mode.equals("select")) {

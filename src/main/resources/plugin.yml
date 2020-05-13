@@ -87,3 +87,6 @@ commands:
   rep:
     description: ブロック置換コマンド
     usage: /rep <ブロック選択or入力>
+  paste:
+    description: 貼付モードコマンド
+    usage: /paste

@@ -4,6 +4,7 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.tasks.WorldEditTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitTask;
+
 import java.util.ArrayList;
 
 public class InteractUtils {
@@ -70,6 +73,67 @@ public class InteractUtils {
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
+        e.setCancelled(true);
+    }
+
+    public static void ClickPaste(KuroBase plugin, PlayerInteractEvent e, Player player, Block block) {
+        String message;
+        try {
+            // check selection one
+            if (!plugin.GetSelectDataOne().containsKey(player)) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                return;
+            }
+            // check selection two
+            if (!plugin.GetSelectDataTwo().containsKey(player)) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                return;
+            }
+            Location loc1 = plugin.GetSelectDataOne().get(player);
+            Location loc2 = plugin.GetSelectDataTwo().get(player);
+            // check location
+            if (loc1 == null || loc2 == null) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                plugin.GetClickMode().remove(player);
+                return;
+            }
+            // check exec
+            if (plugin.GetExecWE().size() > 0) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.erroe.exec"));
+                SoundUtils.PlaySound(player, "cancel5", false);
+                e.setCancelled(true);
+                plugin.GetClickMode().remove(player);
+                return;
+            }
+            int count = 0;
+            int max_block = plugin.getConfig().getInt("WorldEdit.block_max", 40000);
+            if (count > max_block) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.set.over"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                e.setCancelled(true);
+                plugin.GetClickMode().remove(player);
+                return;
+            }
+
+            WorldEditTask we_task = new WorldEditTask(plugin, player, "paste", count);
+            we_task.SetStart(block.getX(), block.getY(), block.getZ());
+            int delay = plugin.getConfig().getInt("WorldEdit.task_delay", 2);
+            BukkitTask task = we_task.runTaskTimer(plugin, 0, delay);
+            we_task.SetTask(task);
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            plugin.GetClickMode().remove(player);
+            e.setCancelled(true);
+            return;
+        }
+        plugin.GetClickMode().remove(player);
         e.setCancelled(true);
     }
 
@@ -145,4 +209,5 @@ public class InteractUtils {
         }
         return count;
     }
+
 }

@@ -2,6 +2,7 @@ package host.kuro.kurobase.tasks;
 
 import com.sun.tools.javac.comp.Check;
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
@@ -15,6 +16,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
 
 public class WorldEditTask extends BukkitRunnable {
 
@@ -39,6 +42,12 @@ public class WorldEditTask extends BukkitRunnable {
     private final int z1;
     private final int z2;
 
+    private int start_x;
+    private int start_y;
+    private int start_z;
+
+    private ArrayList<Block> blocks;
+
     public WorldEditTask(KuroBase plugin, Player player, String mode, int count) {
         this.plugin = plugin;
         this.player = player;
@@ -58,12 +67,27 @@ public class WorldEditTask extends BukkitRunnable {
     public void SetTask(BukkitTask task) {
         this.task = task;
     }
-
     public void SetMaterialOne(Material set1) {
         this.set1 = set1;
     }
     public void SetMaterialTwo(Material set2) {
         this.set2 = set2;
+    }
+    public void SetStart(int x, int y, int z) {
+        this.start_x = x;
+        this.start_y = y;
+        this.start_z = z;
+
+        blocks = new ArrayList<Block>();
+        int i=0,j=0,k=0;
+        for (i=x1; i<=x2; i++) {
+            for (j=y1; j<=y2; j++) {
+                for (k=z1; k<=z2; k++) {
+                    Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
+                    blocks.add(block);
+                }
+            }
+        }
     }
 
     @Override
@@ -73,6 +97,7 @@ public class WorldEditTask extends BukkitRunnable {
         switch (mode) {
             case "set": ActionSet(); return;
             case "rep": ActionRep(); return;
+            case "paste": ActionPaste(); return;
         }
         exec_count++;
         if (exec_count > 5000) {
@@ -192,4 +217,73 @@ public class WorldEditTask extends BukkitRunnable {
         }
     }
 
+    private void ActionPaste() {
+        if (set1 == null) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            end = true;
+            task.cancel();
+            if (blocks != null) {
+                blocks.clear();
+                blocks = null;
+            }
+            plugin.GetExecWE().remove(player);
+            return;
+        }
+        if (firstTake) {
+            plugin.GetExecWE().put(player, 1);
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit PASTE 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            SoundUtils.PlaySound(player, "cork-plug1", false);
+            firstTake = false;
+        }
+        try {
+            ArrayList<Block> blocks = new ArrayList<Block>();
+            boolean hit=false;
+            int make_cnt=0;
+            int i=0,j=0,k=0;
+            int num = 0;
+            for (i=x1; i<=x2; i++) {
+                for (j=y1; j<=y2; j++) {
+                    for (k=z1; k<=z2; k++) {
+                        Block block = new Location(loc1.getWorld(), i, j, k).getBlock();
+                        Block pasteblock = blocks.get(num);
+                        num++;
+                        if (block.getType().hasGravity()) continue;
+                        if (block.getType() != pasteblock.getType()) {
+                            block.setType(pasteblock.getType());
+                            make_cnt++;
+                            hit = true;
+                        }
+                        if (make_cnt >= make_max) break;
+                    }
+                    if (make_cnt >= make_max) break;
+                }
+                if (make_cnt >= make_max) break;
+            }
+            if (!hit) {
+                // finish
+                end = true;
+                task.cancel();
+                if (blocks != null) {
+                    blocks.clear();
+                    blocks = null;
+                }
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                SoundUtils.PlaySound(player,"cork-plug1", false);
+                plugin.GetExecWE().remove(player);
+            }
+
+        } catch (Exception ex) {
+            plugin.getLogger().warning(ErrorUtils.GetErrorMessage(ex));
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.we.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            end = true;
+            task.cancel();
+            if (blocks != null) {
+                blocks.clear();
+                blocks = null;
+            }
+            plugin.GetExecWE().remove(player);
+        }
+    }
 }
