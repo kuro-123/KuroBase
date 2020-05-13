@@ -9,8 +9,8 @@ authors: [kuro-123]
 description: Base plugin for 123 server culture spigot
 website: http://kuro.host/
 depend:
+  - Citizens
   - KuroDiscord
-  - ImageOnMap
 
 commands:
   list:
@@ -90,3 +90,6 @@ commands:
   paste:
     description: 貼付モードコマンド
     usage: /paste
+  entity:
+    description: 独自エンティティ設置コマンド
+    usage: /entity

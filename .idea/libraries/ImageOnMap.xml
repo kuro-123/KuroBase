@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ImageOnMap">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/ImageOnMap.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

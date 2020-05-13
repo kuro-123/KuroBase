@@ -6,15 +6,20 @@ import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.*;
+import host.kuro.kurobase.npc.KuroTrait;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
 import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +29,9 @@ import java.util.HashMap;
 public class KuroBase extends JavaPlugin {
 
     public static boolean DEBUG;
+
+    private static KuroBase instance = null;
+    public static KuroBase GetInstance() { return instance; }
 
     private static DatabaseManager db = null;
     public static DatabaseManager getDB() { return db; }
@@ -63,8 +71,14 @@ public class KuroBase extends JavaPlugin {
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
 
+    private static Plugin citizen_plugin = null;
+    private static TraitInfo citizen_trait= null;
+    private static CitizenListener citizen_listener = null;
+
     @Override
     public void onEnable() {
+        instance = this;
+
         String os = System.getProperty("os.name").toLowerCase();
         if (os.toLowerCase().indexOf("windows") >= 0) {
             linux = false;
@@ -104,6 +118,7 @@ public class KuroBase extends JavaPlugin {
         getCommand("survival").setExecutor(new SurvivalCommand(this));
         getCommand("sel").setExecutor(new SelCommand(this));
         getCommand("paste").setExecutor(new PasteCommand(this));
+        getCommand("entity").setExecutor(new EntityCommand(this));
 
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());
@@ -162,12 +177,22 @@ public class KuroBase extends JavaPlugin {
         }
         kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
 
-        // load imageonmap plugin
-        //if (!LoadDependPluginImageOnMap()) {
-        //    disablePlugin();
-        //    return;
-        //}
-        //imageonmap = (ImageOnMap)getServer().getPluginManager().getPlugin("ImageOnMap");
+        // load citizens plugin
+        getLogger().info(Language.translate("plugin.setup.citizens"));
+        citizen_plugin = getServer().getPluginManager().getPlugin("Citizens");
+        if(citizen_plugin == null || citizen_plugin.isEnabled() == false) {
+            disablePlugin();
+            return;
+        }
+        try {
+            citizen_trait = TraitInfo.create(KuroTrait.class).withName("KuroTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
+        } catch (Throwable ex) {
+            disablePlugin();
+            return;
+        }
+        citizen_listener = new CitizenListener();
+        this.getServer().getPluginManager().registerEvents(citizen_listener, this);
 
         if (!linux) {
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
@@ -222,16 +247,24 @@ public class KuroBase extends JavaPlugin {
         kurodiscord = rsp.getProvider();
         return kurodiscord != null;
     }
-    //private boolean LoadDependPluginImageOnMap() {
-        //RegisteredServiceProvider<ImageOnMap> rsp = getServer().getServicesManager().getRegistration(ImageOnMap.class);
-        //if (rsp == null) {
-        //    return false;
-        //}
-        //imageonmap = rsp.getProvider();
-        //return imageonmap != null;
-    //}
 
     private void disablePlugin() {
+        if (citizen_plugin != null) {
+            if (citizen_trait != null) {
+                try {
+                    CitizensAPI.getTraitFactory().deregisterTrait(citizen_trait);
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                } finally {
+                    citizen_trait = null;
+                }
+            }
+        }
+        if (citizen_listener != null) {
+            HandlerList.unregisterAll(citizen_listener);
+            citizen_listener = null;
+        }
+
         getServer().getPluginManager().disablePlugin(this);
     }
 
