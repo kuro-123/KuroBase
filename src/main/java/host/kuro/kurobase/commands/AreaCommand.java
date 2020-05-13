@@ -61,9 +61,9 @@ public class AreaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.area.action.error"));
                 ret = false;
         }
+        ClearMemory(player);
         if (!ret) {
             SoundUtils.PlaySound(player,"cancel5", false);
-            ClearMemory(player);
             return false;
         }
         return true;
@@ -85,7 +85,7 @@ public class AreaCommand implements CommandExecutor {
         }
 
         try {
-            boolean money_throw = false;
+            boolean kanri_throw = false;
 
             // check survival world
             if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
@@ -94,7 +94,7 @@ public class AreaCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
                         return false;
                     } else {
-                        money_throw = true;
+                        kanri_throw = true;
                     }
                 } else {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
@@ -142,13 +142,15 @@ public class AreaCommand implements CommandExecutor {
             }
             // area count
             int count = InteractUtils.SelectionBlock(plugin, player);
-            if (count <= 512) {
-                player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.minimum.error"));
-                return false;
+            if (!kanri_throw) {
+                if (count <= 512) {
+                    player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.minimum.error"));
+                    return false;
+                }
             }
             int price = count * 2;
             int money = PlayerUtils.GetMoney(KuroBase.getDB(), player);
-            if (!money_throw && money < price) {
+            if (!kanri_throw && money < price) {
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pay.monerror"));
                 return false;
             }
@@ -183,7 +185,7 @@ public class AreaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.area.regist.error"));
                 return false;
             }
-            if (!money_throw) {
+            if (!kanri_throw) {
                 // pay
                 PlayerUtils.PayMoney(KuroBase.getDB(), player, price);
                 // pay log

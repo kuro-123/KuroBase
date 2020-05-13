@@ -128,8 +128,10 @@ public class SetCommand implements CommandExecutor {
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
+            ClearMemory(player);
             return false;
         }
+        ClearMemory(player);
         return true;
     }
 
