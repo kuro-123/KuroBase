@@ -71,8 +71,8 @@ public class WorldEditTask extends BukkitRunnable {
         if (task == null) return;
         if (end) return;
         switch (mode) {
-            case "set": ActionSet();
-            case "rep": ActionRep();
+            case "set": ActionSet(); return;
+            case "rep": ActionRep(); return;
         }
         exec_count++;
         if (exec_count > 5000) {
