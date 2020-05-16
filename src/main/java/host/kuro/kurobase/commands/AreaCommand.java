@@ -101,6 +101,10 @@ public class AreaCommand implements CommandExecutor {
                     return false;
                 }
             } else {
+                int rank = PlayerUtils.GetRank(plugin, player);
+                if (rank == PlayerUtils.RANK_NUSHI) {
+                    kanri_throw = true;
+                }
                 // check creative
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));

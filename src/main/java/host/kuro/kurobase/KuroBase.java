@@ -170,13 +170,6 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.protectdata"));
         AreaUtils.SetupProtectData();
 
-        // load discord plugin
-        if (!LoadDependPluginKuroDiscord()) {
-            disablePlugin();
-            return;
-        }
-        kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
-
         // load citizens plugin
         getLogger().info(Language.translate("plugin.setup.citizens"));
         citizen_plugin = getServer().getPluginManager().getPlugin("Citizens");
@@ -194,9 +187,13 @@ public class KuroBase extends JavaPlugin {
         citizen_listener = new CitizenListener();
         this.getServer().getPluginManager().registerEvents(citizen_listener, this);
 
-        if (!linux) {
-            kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.test"));
-        } else {
+        // load discord plugin
+        if (linux) {
+            if (!LoadDependPluginKuroDiscord()) {
+                disablePlugin();
+                return;
+            }
+            kurodiscord = (KuroDiscord)getServer().getPluginManager().getPlugin("KuroDiscord");
             kurodiscord.getDiscordMessage().SendDiscordBlueMessage(Language.translate("plugin.start"));
             kurodiscord.getDiscordMessage().SendDiscordYellowMessage(Language.translate("plugin.information.discord"));
         }

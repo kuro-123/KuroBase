@@ -39,9 +39,12 @@ public class SetCommand implements CommandExecutor {
         try {
             // check city world
             if (!PlayerUtils.IsCityWorld(plugin, player)) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
+                int rank = PlayerUtils.GetRank(plugin, player);
+                if (rank < PlayerUtils.RANK_NUSHI) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+                    SoundUtils.PlaySound(player, "cancel5", false);
+                    return false;
+                }
             }
             // check creative
             if (player.getGameMode() != GameMode.CREATIVE) {
