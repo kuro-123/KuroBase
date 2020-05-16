@@ -118,7 +118,6 @@ public class KuroBase extends JavaPlugin {
         getCommand("survival").setExecutor(new SurvivalCommand(this));
         getCommand("sel").setExecutor(new SelCommand(this));
         getCommand("paste").setExecutor(new PasteCommand(this));
-        getCommand("entity").setExecutor(new EntityCommand(this));
 
         getCommand("name").setExecutor(new NameCommand(this));
         getCommand("name").setTabCompleter(new NameTabCompleter());
@@ -142,6 +141,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("set").setTabCompleter(new SetTabCompleter());
         getCommand("rep").setExecutor(new RepCommand(this));
         getCommand("rep").setTabCompleter(new RepTabCompleter());
+        getCommand("entity").setExecutor(new EntityCommand(this));
+        getCommand("rep").setTabCompleter(new EntityTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));

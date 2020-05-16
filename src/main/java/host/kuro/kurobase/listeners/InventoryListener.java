@@ -9,13 +9,15 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
-import org.bukkit.entity.Player;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.BlockInventoryHolder;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,16 +47,39 @@ public class InventoryListener implements Listener {
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
-        Player player = Player.class.cast(event.getPlayer());
         InventoryHolder holder = event.getInventory().getHolder();
+        Player player = Player.class.cast(event.getPlayer());
+
+        // check city world
+        if (PlayerUtils.IsCityWorld(plugin, player)) {
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+            SoundUtils.PlaySound(player, "cancel5", false);
+            event.setCancelled(true);
+            return;
+        }
+
+        // check area
+        AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName()
+                , holder.getInventory().getLocation().getBlockX()
+                , holder.getInventory().getLocation().getBlockY()
+                , holder.getInventory().getLocation().getBlockZ());
+        if (area != null) {
+            player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            event.setCancelled(true);
+            return;
+        }
+
         Chest leftChest = null;
         Chest rightChest = null;
         if (holder instanceof Chest) {
             leftChest = Chest.class.cast(holder);
+
         } else if (holder instanceof DoubleChest) {
             DoubleChest doublechest = DoubleChest.class.cast(holder);
             leftChest = Chest.class.cast(doublechest.getLeftSide());
             rightChest = Chest.class.cast(doublechest.getRightSide());
+
         } else {
             return;
         }
@@ -62,15 +87,6 @@ public class InventoryListener implements Listener {
         // check world
         if (PlayerUtils.IsCityWorld(plugin, player)) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            event.setCancelled(true);
-            return;
-        }
-
-        // check area
-        AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), leftChest.getX(), leftChest.getY(), leftChest.getZ());
-        if (area != null) {
-            player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
             SoundUtils.PlaySound(player,"cancel5", false);
             event.setCancelled(true);
             return;
