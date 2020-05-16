@@ -29,7 +29,7 @@ public class CreativeCommand implements CommandExecutor {
         }
         final Player player = (Player)sender;
 
-        int change = plugin.getConfig().getInt("Game.mode_change", 10800);
+        int change = plugin.getConfig().getInt("Game.mode_change", 7200);
         int time = PlayerUtils.GetPlayTime(plugin , player);
         if (time < change) {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.time.fail"));
