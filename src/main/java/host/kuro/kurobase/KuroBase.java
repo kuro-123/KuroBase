@@ -224,13 +224,18 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.COMMAND"), null);
         // area
         db.ExecuteUpdate(Language.translate("SQL.CREATE.AREA"), null);
+        // entity
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.ENTITY"), null);
+
         // views
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.ELAPSE"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.VIEW.STATUS"), null);
+
         // indexes
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.AREA_NAME"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.PRICE_ID_NAME"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.PRICE_NAME"), null);
+
         // UPDATE
         if (IsLinux()) {
             int ret = db.ExecuteUpdate(Language.translate("SQL.LOAD.UPDATE.PLAYER"), null);
