@@ -380,7 +380,7 @@ public class PlayerUtils {
                 rs = null;
             }
 
-            int rank_time = plugin.getConfig().getInt("Game.rank", 7200);
+            int rank_time = plugin.getConfig().getInt("Game.rank", 3600);
             if (rank == 0 && play_time >= rank_time) {
                 // UPDATE
                 ArrayList<DatabaseArgs> rargs = new ArrayList<DatabaseArgs>();
