@@ -80,12 +80,8 @@ public class RandCommand implements CommandExecutor {
         sb.append(") です");
         String message = new String(sb);
 
-        PlayerUtils.BroadcastMessage(message);
+        PlayerUtils.BroadcastMessage(message, true);
         SoundUtils.BroadcastSound("hyoushigi1", false);
-        DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-        if (dm != null) {
-            dm.SendDiscordGreenMessage(message);
-        }
         return true;
     }
 }

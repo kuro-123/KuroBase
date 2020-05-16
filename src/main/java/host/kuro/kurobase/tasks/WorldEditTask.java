@@ -120,7 +120,7 @@ public class WorldEditTask extends BukkitRunnable {
         }
         if (firstTake) {
             plugin.GetExecWE().put(player, 1);
-            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit SET 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit SET 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count), true);
             SoundUtils.PlaySound(player, "cork-plug1", false);
             firstTake = false;
         }
@@ -148,7 +148,7 @@ public class WorldEditTask extends BukkitRunnable {
                 // finish
                 end = true;
                 task.cancel();
-                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()), true);
                 SoundUtils.PlaySound(player,"cork-plug1", false);
                 plugin.GetExecWE().remove(player);
             }
@@ -174,7 +174,7 @@ public class WorldEditTask extends BukkitRunnable {
         }
         if (firstTake) {
             plugin.GetExecWE().put(player, 1);
-            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit REP 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit REP 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count), true);
             SoundUtils.PlaySound(player, "cork-plug1", false);
             firstTake = false;
         }
@@ -202,7 +202,7 @@ public class WorldEditTask extends BukkitRunnable {
                 // finish
                 end = true;
                 task.cancel();
-                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()), true);
                 SoundUtils.PlaySound(player,"cork-plug1", false);
                 plugin.GetExecWE().remove(player);
             }
@@ -220,7 +220,7 @@ public class WorldEditTask extends BukkitRunnable {
     private void ActionPaste() {
         if (firstTake) {
             plugin.GetExecWE().put(player, 1);
-            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit PASTE 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count));
+            PlayerUtils.BroadcastMessage(ChatColor.YELLOW + String.format("[ %s ] さんが [WorldEdit PASTE 開始] [ 範囲: %d ﾌﾞﾛｯｸ ]", player.getDisplayName(), count), true);
             SoundUtils.PlaySound(player, "cork-plug1", false);
             firstTake = false;
         }
@@ -256,7 +256,7 @@ public class WorldEditTask extends BukkitRunnable {
                     blocks.clear();
                     blocks = null;
                 }
-                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()));
+                PlayerUtils.BroadcastMessage(ChatColor.GREEN + String.format("[ %s ] さんの WorldEditが終了", player.getDisplayName()), true);
                 SoundUtils.PlaySound(player,"cork-plug1", false);
                 plugin.GetExecWE().remove(player);
             }

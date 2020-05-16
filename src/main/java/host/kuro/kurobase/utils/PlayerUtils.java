@@ -341,8 +341,18 @@ public class PlayerUtils {
     }
 
     public static void BroadcastMessage(String message) {
+        BroadcastMessage(message, false);
+    }
+    public static void BroadcastMessage(String message, boolean discord) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(message);
+        }
+        if (discord) {
+            // discord
+            DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
+            if (dm != null) {
+                dm.SendDiscordGreenMessage(message);
+            }
         }
     }
     public static void BroadcastActionBar(String message) {
@@ -397,14 +407,9 @@ public class PlayerUtils {
                 sb.append("が住民ランクへと昇格しました！昇格者はリログで反映されます！");
                 String message = new String(sb);
                 // broadcast chat
-                PlayerUtils.BroadcastMessage(message);
+                PlayerUtils.BroadcastMessage(message, true);
                 // broadcast sound
                 SoundUtils.BroadcastSound("shine3", false);
-                // discord
-                DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-                if (dm != null) {
-                    dm.SendDiscordYellowMessage(message);
-                }
                 player.kickPlayer(message);
             }
 
