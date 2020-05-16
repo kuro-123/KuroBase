@@ -3,6 +3,7 @@ package host.kuro.kurobase.listeners;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.EntityUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -34,6 +35,9 @@ public class EntityListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
         try {
             Entity entity = e.getEntity();
+            if (EntityUtils.IsNpc(entity)) {
+                return;
+            }
             if (entity instanceof Player) {
                 EntityDamageEvent.DamageCause cause = e.getCause();
                 if (cause != null) {
@@ -387,32 +391,37 @@ public class EntityListener implements Listener {
             } else {
                 xp = plugin.GetRand().Next(minxp, maxxp);
             }
-            player.giveExp(xp);
 
-            // UPDATE
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.MOBKILL.UPDATE.PLAYER"), args);
-            args.clear();
-            args = null;
+            if (EntityUtils.IsNpc(player)) {
+                EntityUtils.SetNpcExprience(player.getName(), xp);
 
-            // log insert
-            ArrayList<DatabaseArgs> margs = new ArrayList<DatabaseArgs>();
-            margs.add(new DatabaseArgs("c", player.getName())); // src
-            margs.add(new DatabaseArgs("c", entity.getName())); // dst
-            margs.add(new DatabaseArgs("i", ""+xp)); // xp
-            ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.LOG.MOB"), margs);
-            margs.clear();
-            margs = null;
+            } else {
+                player.giveExp(xp);
 
-            // battle sound stop check
-            if (plugin.GetSoundBattle().containsKey(player)) {
-                plugin.GetSoundBattle().remove(player);
-                SoundUtils.StopSoundAll(player);
-                SoundUtils.PlaySound(player, "complete", true);
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.MOBKILL.UPDATE.PLAYER"), args);
+                args.clear();
+                args = null;
+
+                // log insert
+                ArrayList<DatabaseArgs> margs = new ArrayList<DatabaseArgs>();
+                margs.add(new DatabaseArgs("c", player.getName())); // src
+                margs.add(new DatabaseArgs("c", entity.getName())); // dst
+                margs.add(new DatabaseArgs("i", ""+xp)); // xp
+                ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.LOG.MOB"), margs);
+                margs.clear();
+                margs = null;
+
+                // battle sound stop check
+                if (plugin.GetSoundBattle().containsKey(player)) {
+                    plugin.GetSoundBattle().remove(player);
+                    SoundUtils.StopSoundAll(player);
+                    SoundUtils.PlaySound(player, "complete", true);
+                }
+                SoundUtils.PlaySound(player,"sceneswitch2", false);
             }
-
-            SoundUtils.PlaySound(player,"sceneswitch2", false);
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);

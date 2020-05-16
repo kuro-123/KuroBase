@@ -41,6 +41,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_15_R1:2.0.26-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:67.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.clerezza.ext:org.json.simple:0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.10" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.12" level="project" />
     <orderEntry type="library" name="Maven: com.mojang:authlib:1.5.21" level="project" />

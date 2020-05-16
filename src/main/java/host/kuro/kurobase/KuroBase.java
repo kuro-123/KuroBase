@@ -13,13 +13,13 @@ import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
 import host.kuro.kurodiscord.KuroDiscord;
+import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -71,7 +71,8 @@ public class KuroBase extends JavaPlugin {
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
 
-    private static Plugin citizen_plugin = null;
+    private static Citizens citizen_plugin = null;
+    public static Citizens GetCitizens() { return citizen_plugin; }
     private static TraitInfo citizen_trait= null;
     private static CitizenListener citizen_listener = null;
 
@@ -142,7 +143,7 @@ public class KuroBase extends JavaPlugin {
         getCommand("rep").setExecutor(new RepCommand(this));
         getCommand("rep").setTabCompleter(new RepTabCompleter());
         getCommand("entity").setExecutor(new EntityCommand(this));
-        getCommand("rep").setTabCompleter(new EntityTabCompleter());
+        getCommand("entity").setTabCompleter(new EntityTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -173,7 +174,7 @@ public class KuroBase extends JavaPlugin {
 
         // load citizens plugin
         getLogger().info(Language.translate("plugin.setup.citizens"));
-        citizen_plugin = getServer().getPluginManager().getPlugin("Citizens");
+        citizen_plugin = (Citizens)getServer().getPluginManager().getPlugin("Citizens");
         if(citizen_plugin == null || citizen_plugin.isEnabled() == false) {
             disablePlugin();
             return;
@@ -235,6 +236,7 @@ public class KuroBase extends JavaPlugin {
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.AREA_NAME"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.PRICE_ID_NAME"), null);
         db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.PRICE_NAME"), null);
+        db.ExecuteUpdate(Language.translate("SQL.CREATE.INDEX.ENTITY_NAME"), null);
 
         // UPDATE
         if (IsLinux()) {
@@ -249,6 +251,15 @@ public class KuroBase extends JavaPlugin {
         }
         kurodiscord = rsp.getProvider();
         return kurodiscord != null;
+    }
+
+    private boolean LoadDependPluginCitizens() {
+        RegisteredServiceProvider<Citizens> rsp = getServer().getServicesManager().getRegistration(Citizens.class);
+        if (rsp == null) {
+            return false;
+        }
+        citizen_plugin = rsp.getProvider();
+        return citizen_plugin != null;
     }
 
     private void disablePlugin() {

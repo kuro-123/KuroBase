@@ -4,6 +4,9 @@ import host.kuro.kurobase.npc.KuroTrait;
 import net.citizensnpcs.api.ai.speech.event.NPCSpeechEvent;
 import net.citizensnpcs.api.event.*;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,10 +26,28 @@ public class CitizenListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCClick(NPCRightClickEvent event) {
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    void onNPCDeath(NPCDeathEvent event) {
         NPC npc = event.getNPC();
-        Player player = event.getClicker();
-        npc.getNavigator().setTarget(player, false);
-        player.sendMessage("[opnopai3] あーたに、ついてくわよ！");
+        KuroTrait trait = npc.getTrait(KuroTrait.class);
+        if (trait != null) {
+            trait.Close();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    void onNPCDamageByEntity(NPCDamageByEntityEvent event) {
+        NPC npc = event.getNPC();
+        double damage = event.getDamage();
+        Entity entity = event.getDamager();
+
+        if (!(npc.getEntity() instanceof Player)) return;
+        Player npcplayer = ((Player) npc.getEntity());
+        double health = npcplayer.getHealth();
+        double maxhealth = npcplayer.getMaxHealth();
+        int i = npcplayer.getEntityId();
     }
 
 /*
@@ -58,17 +79,13 @@ public class CitizenListener implements Listener {
     void onNPCClick(NPCDamageByBlockEvent event) {
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCDamageByEntityEvent event) {
-    }
+
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCClick(NPCDamageEntityEvent event) {
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCDeathEvent event) {
-    }
+
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCClick(NPCDespawnEvent event) {

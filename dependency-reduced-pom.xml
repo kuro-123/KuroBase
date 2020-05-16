@@ -56,6 +56,10 @@
                   <pattern>com.mojang</pattern>
                   <shadedPattern>com.mojang</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.apache.clerezza.ext</pattern>
+                  <shadedPattern>org.apache.clerezza.ext</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>

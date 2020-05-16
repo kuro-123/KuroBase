@@ -498,6 +498,11 @@ public class PlayerUtils {
     public static final void RemoveAllItems(Player player) {
         player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
         player.getInventory().setItemInOffHand(new ItemStack(Material.AIR, 1));
+        player.getInventory().setChestplate(new ItemStack(Material.AIR, 1));
+        player.getInventory().setBoots(new ItemStack(Material.AIR, 1));
+        player.getInventory().setHelmet(new ItemStack(Material.AIR, 1));
+        player.getInventory().setLeggings(new ItemStack(Material.AIR, 1));
+        player.getInventory().setHelmet(new ItemStack(Material.AIR, 1));
         for(ItemStack item : player.getInventory().getContents())
         {
             if (item == null) continue; // null check
