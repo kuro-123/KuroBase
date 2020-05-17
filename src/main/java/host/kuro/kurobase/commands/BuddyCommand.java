@@ -4,10 +4,7 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.npc.KuroTrait;
-import host.kuro.kurobase.utils.BuddyUtils;
-import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.PlayerUtils;
-import host.kuro.kurobase.utils.SoundUtils;
+import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.Age;
@@ -129,7 +126,7 @@ public class BuddyCommand implements CommandExecutor {
             eargs.add(new DatabaseArgs("i", "" + 0)); // break
             eargs.add(new DatabaseArgs("i", "" + 0)); // place
             eargs.add(new DatabaseArgs("i", "" + 0)); // heart
-            eargs.add(new DatabaseArgs("i", "" + 0)); // join
+            eargs.add(new DatabaseArgs("i", "" + 0)); // spawn
             int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.INSERT.ENTITY"), eargs);
             eargs.clear();
             eargs = null;
@@ -443,7 +440,7 @@ public class BuddyCommand implements CommandExecutor {
             uargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // npc uuid
             uargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
             uargs.add(new DatabaseArgs("c", buddy_name)); // name
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.JOIN.ENTITY"), uargs);
+            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.SPAWN.ENTITY"), uargs);
             uargs.clear();
             uargs = null;
             if (ret != 1) {
@@ -463,8 +460,12 @@ public class BuddyCommand implements CommandExecutor {
             npc.data().setPersistent(NPC.DAMAGE_OTHERS_METADATA, true);
             npc.spawn(loc);
 
+            // particle
+            ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
+            SoundUtils.BroadcastSound("typewriter-2", false);
+
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.select.spawn"));
-            SoundUtils.PlaySound(player,"switch1", false);
+            //SoundUtils.PlaySound(player,"switch1", false);
             //npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, new ItemStack(Material.LEATHER_BOOTS, 1));
 
         } catch (Exception ex) {
@@ -520,10 +521,15 @@ public class BuddyCommand implements CommandExecutor {
                     SoundUtils.PlaySound(player,"cancel5", false);
                     return false;
                 }
+
+                // particle
+                ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
+                SoundUtils.BroadcastSound("typewriter-2", false);
+
                 npc.despawn();
 
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.select.despawn"));
-                SoundUtils.PlaySound(player,"switch1", false);
+                //SoundUtils.PlaySound(player,"switch1", false);
 
             } else {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));

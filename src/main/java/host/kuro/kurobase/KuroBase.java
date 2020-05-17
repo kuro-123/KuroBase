@@ -175,6 +175,7 @@ public class KuroBase extends JavaPlugin {
         // load citizens plugin
         getLogger().info(Language.translate("plugin.setup.citizens"));
         citizen_plugin = (Citizens)getServer().getPluginManager().getPlugin("Citizens");
+        //citizen_plugin.getNPCRegistry().deregisterAll();
         if(citizen_plugin == null || citizen_plugin.isEnabled() == false) {
             disablePlugin();
             return;

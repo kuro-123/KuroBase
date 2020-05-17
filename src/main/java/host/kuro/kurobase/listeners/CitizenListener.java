@@ -49,7 +49,6 @@ public class CitizenListener implements Listener {
             // particle
             ParticleUtils.CrownParticle(npc.getEntity(), Particle.LAVA, 50); // particle
             SoundUtils.BroadcastSound("don-1", false);
-
             // message
             String message = String.format("[ %sさん ] のバディー [ %s ] が死亡しました", npc.getTrait(KuroTrait.class).getOwner().getDisplayName(), npc.getName());
             PlayerUtils.BroadcastMessage(message, false);
@@ -57,7 +56,6 @@ public class CitizenListener implements Listener {
             if (dm != null) {
                 dm.SendDiscordRedMessage(message);
             }
-
             // UPDATE
             ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
             eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid

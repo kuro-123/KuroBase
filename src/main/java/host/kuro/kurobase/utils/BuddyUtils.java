@@ -94,6 +94,8 @@ public class BuddyUtils {
 
     public static boolean SetNpcExprience(String name, int addexp) {
         String uuid = "";
+        String type = "";
+        String mode = "";
         int level = -1;
         int exp = -1;
         try {
@@ -108,6 +110,8 @@ public class BuddyUtils {
                     uuid = rs.getString("uuid");
                     level = rs.getInt("level");
                     exp = rs.getInt("exp");
+                    type = rs.getString("type");
+                    mode = rs.getString("mode");
                     break;
                 }
             }
@@ -140,6 +144,7 @@ public class BuddyUtils {
                 // update status
                 npc.getTrait(KuroTrait.class).setExp(exp);
                 npc.getTrait(KuroTrait.class).setLevel(level);
+                npc.getTrait(KuroTrait.class).setStatus(level, type, mode);
                 npc.getTrait(KuroTrait.class).UpdateStatus();
             }
             // UPDATE

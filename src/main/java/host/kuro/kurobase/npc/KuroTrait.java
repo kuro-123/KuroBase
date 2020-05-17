@@ -3,10 +3,13 @@ package host.kuro.kurobase.npc;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.ErrorUtils;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
+import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.trait.trait.Spawned;
 import net.citizensnpcs.api.util.DataKey;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -28,6 +31,8 @@ public class KuroTrait extends Trait {
     private Entity attack_target = null;
     private Entity before_target = null;
     private Navigator navi = null;
+    // counter
+    private int tick = 0;
     // flag
     private boolean closing = false;
     private boolean SomeSetting = false;
@@ -93,7 +98,7 @@ public class KuroTrait extends Trait {
         double attack_range = 8.0D;
         int attack_delay_tick = 20;
         float base_speed = 0.8F;
-        if (mode.equals(Language.translate("buddy.list.normal"))) {
+        if (mode.equals(Language.translate("buddy.data.normal"))) {
             // LV000 HP:20.00 R: 8.0 AR: 8.00 AD:20.000 BS: 0.7000
             // LV100 HP:24.00 R:18.0 AR:16.00 AD:15.500 BS: 0.9500
             // LV200 HP:28.00 R:28.0 AR:24.00 AD:11.000 BS: 1.2000
@@ -103,7 +108,7 @@ public class KuroTrait extends Trait {
             attack_range = 8.0D + ((double)level * 0.08D);
             attack_delay_tick = 20 - (int)((double)level * 0.045D);
             base_speed = 0.7F + ((float)level * 0.0025F);
-        } else if (mode.equals(Language.translate("buddy.list.guard"))) {
+        } else if (mode.equals(Language.translate("buddy.data.guard"))) {
             // LV000 HP:24.00 R:12.0 AR:12.00 AD:18.000 BS: 0.8000
             // LV100 HP:31.00 R:24.0 AR:21.00 AD:13.200 BS: 1.0700
             // LV200 HP:38.00 R:36.0 AR:30.00 AD: 8.400 BS: 1.3400
@@ -113,7 +118,7 @@ public class KuroTrait extends Trait {
             attack_range = 12.0D + ((double)level * 0.09D);
             attack_delay_tick = 18 - (int)((double)level * 0.048D);
             base_speed = 0.8F + ((float)level * 0.0027F);
-        } else if (mode.equals(Language.translate("buddy.list.battle"))) {
+        } else if (mode.equals(Language.translate("buddy.data.battle"))) {
             // LV000 HP:22.00 R:14.0 AR:14.00 AD:14.000 BS: 0.9000
             // LV100 HP:27.00 R:26.0 AR:23.00 AD:10.000 BS: 1.2500
             // LV200 HP:32.00 R:38.0 AR:32.00 AD: 6.000 BS: 1.6000
@@ -123,7 +128,7 @@ public class KuroTrait extends Trait {
             attack_range = 14.0D + ((double)level * 0.09D);
             attack_delay_tick = 14 - (int)((double)level * 0.040D);
             base_speed = 0.9F + ((float)level * 0.0035F);
-        } else if (mode.equals(Language.translate("buddy.list.nijya"))) {
+        } else if (mode.equals(Language.translate("buddy.data.nijya"))) {
             // LV000 HP:24.00 R:20.0 AR:20.00 AD:12.000 BS: 1.0000
             // LV100 HP:31.00 R:36.0 AR:30.00 AD: 7.000 BS: 1.4200
             // LV200 HP:38.00 R:52.0 AR:40.00 AD: 2.000 BS: 1.8400
@@ -223,7 +228,7 @@ public class KuroTrait extends Trait {
         if (!this.guard) return;
         if ((System.currentTimeMillis() - spawn_time) <= 3000) return;
 
-        double max_dis = 8;
+        double max_dis = range;
         for (Entity entity : owner.getWorld().getEntities()) {
             if (!((entity instanceof Monster) || (entity instanceof Animals))) continue;
             if (entity.getEntityId() == npc.getEntity().getEntityId()) continue;
@@ -232,7 +237,7 @@ public class KuroTrait extends Trait {
             int own_y = npc.getEntity().getLocation().getBlockY();
             double dis = entity.getLocation().distance(npc.getEntity().getLocation());
             if (dis < max_dis) {
-                if (!((own_y-3) <= entity_y && entity_y <= (own_y+3))) {
+                if (!((own_y-2) <= entity_y && entity_y <= (own_y+2))) {
                     continue;
                 }
                 max_dis = dis;
@@ -245,6 +250,10 @@ public class KuroTrait extends Trait {
                     if (attack_target.getEntityId() != before_target.getEntityId()) {
                         navi.setTarget(attack_target, true);
                         before_target = attack_target;
+                    } else {
+                        if ((tick % 20) == 0) {
+                            before_target = null;
+                        }
                     }
                 } else {
                     navi.setTarget(attack_target, true);
@@ -255,6 +264,7 @@ public class KuroTrait extends Trait {
                 before_target = null;
             }
         }
+        tick++;
     }
 
     private void CheckFollow() {
@@ -297,11 +307,13 @@ public class KuroTrait extends Trait {
                 int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
                 eargs.clear();
                 eargs = null;
-
-                npc.despawn();
-                npc.destroy();
+                try {
+                    npc.getEntity().remove();
+                    if (owner != null) owner.sendMessage(ChatColor.LIGHT_PURPLE+name+"は退出しました");
+                } catch (Exception ex) {
+                    ErrorUtils.GetErrorMessageNonDb(ex);
+                }
             }
         }
-        owner.sendMessage(ChatColor.LIGHT_PURPLE+name+"は退出しました");
     }
 }
