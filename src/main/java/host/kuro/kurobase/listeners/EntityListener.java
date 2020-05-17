@@ -3,7 +3,7 @@ package host.kuro.kurobase.listeners;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.utils.EntityUtils;
+import host.kuro.kurobase.utils.BuddyUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -35,7 +35,7 @@ public class EntityListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
         try {
             Entity entity = e.getEntity();
-            if (EntityUtils.IsNpc(entity)) {
+            if (BuddyUtils.IsNpc(entity)) {
                 return;
             }
             if (entity instanceof Player) {
@@ -392,8 +392,8 @@ public class EntityListener implements Listener {
                 xp = plugin.GetRand().Next(minxp, maxxp);
             }
 
-            if (EntityUtils.IsNpc(player)) {
-                EntityUtils.SetNpcExprience(player.getName(), xp);
+            if (BuddyUtils.IsNpc(player)) {
+                BuddyUtils.SetNpcExprience(player.getName(), xp);
 
             } else {
                 player.giveExp(xp);

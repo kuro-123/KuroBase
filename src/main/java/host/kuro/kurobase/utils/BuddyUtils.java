@@ -3,6 +3,9 @@ package host.kuro.kurobase.utils;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.npc.KuroTrait;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -10,8 +13,9 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.UUID;
 
-public class EntityUtils {
+public class BuddyUtils {
 
     public static boolean IsNpc(Entity entity) {
         String name = "";
@@ -89,6 +93,7 @@ public class EntityUtils {
     }
 
     public static boolean SetNpcExprience(String name, int addexp) {
+        String uuid = "";
         int level = -1;
         int exp = -1;
         try {
@@ -100,6 +105,7 @@ public class EntityUtils {
             args = null;
             if (rs != null) {
                 while(rs.next()){
+                    uuid = rs.getString("uuid");
                     level = rs.getInt("level");
                     exp = rs.getInt("exp");
                     break;
@@ -120,24 +126,31 @@ public class EntityUtils {
             return false;
         }
 
-        // lebel換算
-        exp = exp+addexp;
-        int calc_level = calculateLevelForExp(exp);
-        if (level < calc_level) {
-            // level up
-            level = calc_level;
-            PlayerUtils.BroadcastMessage(String.format("[BD] %s が LevelUp!! -> Lv%d", name, level), false);
-            SoundUtils.BroadcastSound("shine3", false);
+        UUID id = UUID.fromString(uuid);
+        NPC npc = CitizensAPI.getNPCRegistry().getByUniqueId(id);
+        if (npc != null) {
+            // lebel換算
+            exp = exp+addexp;
+            int calc_level = calculateLevelForExp(exp);
+            if (level < calc_level) {
+                // level up
+                level = calc_level;
+                PlayerUtils.BroadcastMessage(String.format("[BD] %s が LevelUp!! -> Lv%d", name, level), false);
+                SoundUtils.BroadcastSound("shine3", false);
+                // update status
+                npc.getTrait(KuroTrait.class).setExp(exp);
+                npc.getTrait(KuroTrait.class).setLevel(level);
+                npc.getTrait(KuroTrait.class).UpdateStatus();
+            }
+            // UPDATE
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("i", ""+exp)); // exp
+            args.add(new DatabaseArgs("i", ""+level)); // level
+            args.add(new DatabaseArgs("c", uuid)); // uuid
+            int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.KILLMOB.ENTITY"), args);
+            args.clear();
+            args = null;
         }
-
-        // UPDATE
-        ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-        args.add(new DatabaseArgs("i", ""+exp)); // exp
-        args.add(new DatabaseArgs("i", ""+level)); // level
-        args.add(new DatabaseArgs("c", name)); // name
-        int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.KILLMOB.ENTITY"), args);
-        args.clear();
-        args = null;
         return true;
     }
 

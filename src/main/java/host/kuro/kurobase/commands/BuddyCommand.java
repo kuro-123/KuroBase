@@ -4,7 +4,7 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.npc.KuroTrait;
-import host.kuro.kurobase.utils.EntityUtils;
+import host.kuro.kurobase.utils.BuddyUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -85,64 +85,32 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-            String name = "";
-            String type = "";
-            String mode = "";
-            name = args[1];
-            type = args[2];
-            mode = args[3];
 
-            if (EntityUtils.CheckNameEntity(name)) {
+            String name = args[1];
+            if (BuddyUtils.CheckNameEntity(name)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.exist.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-            if (EntityUtils.ExistEntity(player, name)) {
+            if (BuddyUtils.ExistEntity(player, name)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.exist.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
-            if (type.length() <= 0) {
-                type = "ウサギ";
-            }
-            EntityType settype;
-            switch (type) {
-                case "ウサギ": settype = EntityType.RABBIT; break;
-                case "アヒル": settype = EntityType.CHICKEN; break;
-                case "オウム": settype = EntityType.PARROT; break;
-                case "イヌ": settype = EntityType.WOLF; break;
-                case "ネコ": settype = EntityType.CAT; break;
-                case "キツネ": settype = EntityType.FOX; break;
-                case "ブタ": settype = EntityType.PIG; break;
-                case "ヒツジ": settype = EntityType.SHEEP; break;
-                case "ウシ": settype = EntityType.COW; break;
-                case "ゾンビ": settype = EntityType.ZOMBIE; break;
-                case "スケルトン": settype = EntityType.SKELETON; break;
-                case "クリーパー": settype = EntityType.CREEPER; break;
-                case "パンダ": settype = EntityType.PANDA; break;
-                case "人間": settype = EntityType.PLAYER; break;
-                default:
-            }
-
-            if (mode.length() <= 0) {
-                switch (mode) {
-                    case "ウサギ": mode = "大人"; break;
-                    case "アヒル": mode = "大人"; break;
-                    case "オウム": mode = "大人"; break;
-                    case "イヌ": mode = "大人"; break;
-                    case "ネコ": mode = "大人"; break;
-                    case "キツネ": mode = "大人"; break;
-                    case "ブタ": mode = "大人"; break;
-                    case "ヒツジ": mode = "大人"; break;
-                    case "ウシ": mode = "大人"; break;
-                    case "ゾンビ": mode = "大人"; break;
-                    case "スケルトン": mode = "大人"; break;
-                    case "クリーパー": mode = "大人"; break;
-                    case "パンダ": mode = "大人"; break;
-                    case "人間": mode = "一般"; break;
-                    default:
-                }
+            String type = args[2];
+            type = "人型";
+            String mode = args[3];
+            if (mode.equals(Language.translate("buddy.list.normal"))) {
+                mode = Language.translate("buddy.data.normal");
+            } else if (mode.equals(Language.translate("buddy.list.guard"))) {
+                mode = Language.translate("buddy.data.guard");
+            } else if (mode.equals(Language.translate("buddy.list.battle"))) {
+                mode = Language.translate("buddy.data.battle");
+            } else if (mode.equals(Language.translate("buddy.list.nijya"))) {
+                mode = Language.translate("buddy.data.nijya");
+            } else{
+                mode = Language.translate("buddy.data.normal");
             }
 
             // INSERT
@@ -392,51 +360,50 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-            String entity = args[1];
+            String buddy_name = args[1];
 
-            // create
-            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, entity);
-            npc.addTrait(SkinTrait.class);
-            npc.addTrait(KuroTrait.class);
-
-            // ゲームモード
-            npc.getTrait(GameModeTrait.class).setGameMode(GameMode.SURVIVAL);
-            // 年齢
-            npc.getTrait(Age.class).setAge(17);
-            // スキン
             String name = player.getName();
+            String type = "";
+            String mode = "";
+            int level = -1;
             String skin_name = "";
             String skin_data = "";
             String skin_signature = "";
             String status = "";
-            try {
-                PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
-                ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-                eargs.add(new DatabaseArgs("c", player.getUniqueId().toString()));
-                eargs.add(new DatabaseArgs("c", entity));
-                ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, eargs);
-                eargs.clear();
-                eargs = null;
-                if (rs != null) {
-                    while(rs.next()){
-                        status = rs.getString("status");
-                        skin_name = rs.getString("name");
-                        skin_data = rs.getString("skin_data");
-                        skin_signature = rs.getString("skin_signature");
-                        break;
-                    }
+
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
+            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            eargs.add(new DatabaseArgs("c", buddy_name));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, eargs);
+            eargs.clear();
+            eargs = null;
+            if (rs != null) {
+                while(rs.next()){
+                    type = rs.getString("type");
+                    mode = rs.getString("mode");
+                    level = rs.getInt("level");
+                    status = rs.getString("status");
+                    skin_name = rs.getString("name");
+                    skin_data = rs.getString("skin_data");
+                    skin_signature = rs.getString("skin_signature");
+                    break;
                 }
-                if (ps != null) {
-                    ps.close();
-                    ps = null;
-                }
-                if (rs != null) {
-                    rs.close();
-                    rs = null;
-                }
-            } catch (Exception ex) {
-                ErrorUtils.GetErrorMessage(ex);
             }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+            if (level == -1) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.join.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
             if (status.equals("DEAD")) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.join.dead"));
                 SoundUtils.PlaySound(player,"cancel5", false);
@@ -451,28 +418,34 @@ public class BuddyCommand implements CommandExecutor {
                 }
             }
 
+            // create
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, buddy_name);
+            // trait
+            npc.getTrait(Age.class).setAge(20);
+            npc.getTrait(GameModeTrait.class).setGameMode(GameMode.SURVIVAL);
+            npc.addTrait(SkinTrait.class);
             if (skin_name != null && skin_data != null && skin_signature != null) {
                 if (skin_name.length() > 0 && skin_data.length() > 0 && skin_signature.length() > 0) {
                     npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
                 }
             }
-
+            // trait
+            npc.addTrait(KuroTrait.class);
             npc.getTrait(KuroTrait.class).setGameMode(GameMode.SURVIVAL);
+            npc.getTrait(KuroTrait.class).setName(buddy_name);
             npc.getTrait(KuroTrait.class).setFollow(true);
             npc.getTrait(KuroTrait.class).setGuard(true);
-            npc.getTrait(KuroTrait.class).setHealth(20);
-            npc.getTrait(KuroTrait.class).setMaxHealth(20);
-            npc.getTrait(KuroTrait.class).setName(skin_name);
             npc.getTrait(KuroTrait.class).setOwner(player);
+            npc.getTrait(KuroTrait.class).setStatus(level, type, mode);
 
             // UPDATE
-            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-            eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // npc uuid
-            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
-            eargs.add(new DatabaseArgs("c", entity)); // name
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.JOIN.ENTITY"), eargs);
-            eargs.clear();
-            eargs = null;
+            ArrayList<DatabaseArgs> uargs = new ArrayList<DatabaseArgs>();
+            uargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // npc uuid
+            uargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
+            uargs.add(new DatabaseArgs("c", buddy_name)); // name
+            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.JOIN.ENTITY"), uargs);
+            uargs.clear();
+            uargs = null;
             if (ret != 1) {
                 npc.destroy();
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.join.error"));

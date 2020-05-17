@@ -124,21 +124,8 @@ public class BuddyTabCompleter implements TabCompleter {
         if (PlayerUtils.GetRank(KuroBase.GetInstance(), player) == PlayerUtils.RANK_NUSHI) {
             level = 1000;
         }
-        cmds.add("<タイプを選択>");
-        if (  0 <= level) cmds.add("ウサギ");
-        if ( 11 <= level) cmds.add("アヒル");
-        if ( 31 <= level) cmds.add("オウム");
-        if ( 61 <= level) cmds.add("イヌ");
-        if ( 91 <= level) cmds.add("ネコ");
-        if (121 <= level) cmds.add("キツネ");
-        if (151 <= level) cmds.add("ブタ");
-        if (181 <= level) cmds.add("ヒツジ");
-        if (211 <= level) cmds.add("ウシ");
-        if (241 <= level) cmds.add("ゾンビ");
-        if (271 <= level) cmds.add("スケルトン");
-        if (301 <= level) cmds.add("クリーパー");
-        if (331 <= level) cmds.add("パンダ");
-        if (361 <= level) cmds.add("人間");
+        cmds.add("<タイプを選択 ※現在は人型のみ>");
+        cmds.add(Language.translate("buddy.type.human"));
     }
 
     private void SetInputModeByName(Player player, String name) {
@@ -179,30 +166,11 @@ public class BuddyTabCompleter implements TabCompleter {
             level = 1000;
         }
         cmds.add("<モードを選択>");
-        switch (type) {
-            case "ウサギ":
-            case "アヒル":
-            case "オウム":
-            case "イヌ":
-            case "ネコ":
-            case "キツネ":
-            case "ブタ":
-            case "ヒツジ":
-            case "ウシ":
-            case "ゾンビ":
-            case "スケルトン":
-            case "クリーパー":
-            case "パンダ":
-                cmds.add("子供");
-                cmds.add("大人");
-                break;
-            case "人間":
-                if (level <= 390) cmds.add("一般");
-                if (421 <= level) cmds.add("ボディーガード");
-                if (451 <= level) cmds.add("土木");
-                if (481 <= level) cmds.add("商人");
-                if (511 <= level) cmds.add("傭兵");
-                if (541 <= level) cmds.add("エキスパート");
+        if (type.equals(Language.translate("buddy.type.human"))) {
+            cmds.add(Language.translate("buddy.list.normal"));
+            cmds.add(Language.translate("buddy.list.guard"));
+            cmds.add(Language.translate("buddy.list.battle"));
+            cmds.add(Language.translate("buddy.list.nijya"));
         }
     }
 

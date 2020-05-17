@@ -92,5 +92,5 @@ commands:
     usage: /paste
   buddy:
     description: バディー操作
-    usage: /buddy <add|del|list|url|join|quit> ..
+    usage: /buddy <add|del|list|url|join|quit|revival> ..
     aliases: [b]

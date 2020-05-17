@@ -10,7 +10,6 @@ import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,7 +37,7 @@ public class PlayerListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		try {
 			Player player = e.getPlayer();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			// knock sound
 			SoundUtils.BroadcastSound("door-wood-knock1", false);
@@ -110,7 +109,7 @@ public class PlayerListener implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		try {
 			Player player = e.getPlayer();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			SoundUtils.BroadcastSound("door-close2", false);
 
@@ -171,7 +170,7 @@ public class PlayerListener implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		try {
 			Player player = e.getEntity();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			int drop = e.getDroppedExp();
 			int value = plugin.getConfig().getInt("Game.death", 200);
@@ -299,7 +298,7 @@ public class PlayerListener implements Listener {
 	public void onKick(PlayerKickEvent e) {
 		try {
 			Player player = e.getPlayer();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			e.setLeaveMessage(String.format("[ %sさんはキックされました 理由: %s]", player.getDisplayName(), e.getReason()));
 			String message = e.getLeaveMessage();
@@ -324,7 +323,7 @@ public class PlayerListener implements Listener {
 	public void onLogin(PlayerLoginEvent e) {
 		try {
 			Player player = e.getPlayer();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			// INSERT
 			ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
@@ -378,7 +377,7 @@ public class PlayerListener implements Listener {
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
 		try {
 			Player player = e.getPlayer();
-			if (EntityUtils.IsNpc(player)) return;
+			if (BuddyUtils.IsNpc(player)) return;
 
 			plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
@@ -465,7 +464,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBedEnter(final PlayerBedEnterEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 		SoundUtils.PlaySound(player, "goodnight", true);
 	}
@@ -473,7 +472,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBedLeave(final PlayerBedLeaveEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 		SoundUtils.PlaySound(player, "goodmorning", true);
 	}
@@ -482,7 +481,7 @@ public class PlayerListener implements Listener {
 	public void onExpChange(final PlayerExpChangeEvent e) {
 		Player player = e.getPlayer();
 
-		if (EntityUtils.IsNpc(player)) {
+		if (BuddyUtils.IsNpc(player)) {
 			return;
 		}
 
@@ -508,7 +507,7 @@ public class PlayerListener implements Listener {
 		int newlevel = e.getNewLevel();
 		int oldlevel = e.getOldLevel();
 
-		if (EntityUtils.IsNpc(player)) {
+		if (BuddyUtils.IsNpc(player)) {
 			return;
 		}
 
@@ -573,7 +572,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onMove(final PlayerMoveEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
@@ -590,7 +589,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 	private void SendMoveMessage(Player player) {
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 		if (area != null) {
@@ -601,7 +600,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBucketEmpty(final PlayerBucketEmptyEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		Block block = e.getBlock();
 		// check area
@@ -622,7 +621,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBucketFill(final PlayerBucketFillEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		Block block = e.getBlock();
 		// check area
@@ -644,7 +643,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onInteract(final PlayerInteractEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		plugin.GetAfkStatus().put(player, System.currentTimeMillis()); // afk
 
@@ -687,7 +686,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onDropItem(final PlayerDropItemEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		if (player.getGameMode() == GameMode.CREATIVE) {
 			e.setCancelled(true);
 		}
@@ -696,7 +695,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onRespawn(final PlayerRespawnEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		// force survival
 		PlayerUtils.ForceSurvival(player);
 	}
@@ -704,7 +703,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onTeleport(final PlayerTeleportEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		// force survival
 		PlayerUtils.ForceSurvival(player);
 	}
@@ -713,14 +712,14 @@ public class PlayerListener implements Listener {
 	public void onGameModeChange(final PlayerGameModeChangeEvent e) {
 		// mode change is empty
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 		PlayerUtils.RemoveAllItems(player);
 	}
 
 	@EventHandler
 	public void onChat(final AsyncPlayerChatEvent e) {
 		Player player = e.getPlayer();
-		if (EntityUtils.IsNpc(player)) return;
+		if (BuddyUtils.IsNpc(player)) return;
 
 		String message = e.getMessage();
 
