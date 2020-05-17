@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,8 +56,18 @@ public class ShopHandler {
                     name = rs.getString("org_name");
                     price = rs.getInt("price");
 
-                    Material m = Material.matchMaterial(name);
-                    ItemStack stack = new ItemStack(m, 1);
+                    Material m;
+                    ItemStack stack;
+                    if (name.equals("復活の書")) {
+                        m = Material.getMaterial("PAPER");
+                        stack = new ItemStack(m, 1);
+                        ItemMeta data = stack.getItemMeta();
+                        data.setDisplayName("復活の書");
+                        stack.setItemMeta(data);
+                    } else {
+                        m = Material.matchMaterial(name);
+                        stack = new ItemStack(m, 1);
+                    }
 
                     int buy = price;
                     int sell = price / 2;
