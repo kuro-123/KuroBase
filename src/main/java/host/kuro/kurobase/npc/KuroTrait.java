@@ -309,7 +309,6 @@ public class KuroTrait extends Trait {
                 eargs = null;
                 try {
                     npc.getEntity().remove();
-                    if (owner != null) owner.sendMessage(ChatColor.LIGHT_PURPLE+name+"は退出しました");
                 } catch (Exception ex) {
                     ErrorUtils.GetErrorMessageNonDb(ex);
                 }

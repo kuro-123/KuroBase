@@ -66,11 +66,46 @@ public class BuddyCommand implements CommandExecutor {
             case "del": return ActionDel(player, args);
             case "join": return ActionJoin(player, args);
             case "quit": return ActionQuit(player, args);
+            case "revival": return ActionRevival(player, args);
         }
         return true;
     }
 
     private boolean ActionList(Player player) {
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+        try {
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while(rs.next()){
+                    sb.append(String.format("名前: %s 状態:%s 討伐数:%4d LV:%3d EXP:%5d\n"
+                            ,rs.getString("name")
+                            ,rs.getString("status")
+                            ,rs.getInt("level")
+                            ,rs.getInt("exp")
+                            ,rs.getInt("killmob")
+                            ));
+                    i++;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        sb.append(ChatColor.GREEN + "バディー数: " + i);
+        player.sendMessage(new String(sb));
         return true;
     }
 
@@ -357,8 +392,15 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
+            int rank = PlayerUtils.GetRank(plugin, player);
+            if (rank < PlayerUtils.RANK_NUSHI) {
+                if (BuddyUtils.GetJoinEntity(player)) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.join.already"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
+            }
             String buddy_name = args[1];
-
             String name = player.getName();
             String type = "";
             String mode = "";
@@ -406,7 +448,6 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-            int rank = PlayerUtils.GetRank(plugin, player);
             if (rank < PlayerUtils.RANK_NUSHI) {
                 if (status.equals("JOIN")) {
                     player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.join.join"));
@@ -526,7 +567,7 @@ public class BuddyCommand implements CommandExecutor {
                 ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
                 SoundUtils.BroadcastSound("typewriter-2", false);
 
-                npc.despawn();
+                npc.getTrait(KuroTrait.class).Close();
 
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.select.despawn"));
                 //SoundUtils.PlaySound(player,"switch1", false);
@@ -536,6 +577,25 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean ActionRevival(Player player, String[] args) {
+        try {
+            // args check
+            if (args.length != 2) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+            String entity = args[1];
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);

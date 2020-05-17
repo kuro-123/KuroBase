@@ -40,6 +40,7 @@ public class BuddyTabCompleter implements TabCompleter {
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "join":
                     case "quit":
+                    case "revival":
                     case "type":
                     case "mode":
                     case "url":
@@ -82,6 +83,7 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("add");
         cmds.add("url");
         cmds.add("list");
+        cmds.add("revival");
         cmds.add("del");
         //cmds.add("type");
         //cmds.add("mode");

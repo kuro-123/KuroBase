@@ -68,6 +68,17 @@ public class CitizenListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCDamageByEntity(NPCDamageByEntityEvent event) {
         NPC npc = event.getNPC();
+        // owner no damage
+        Entity damager = event.getDamager();
+        if (damager instanceof  Player) {
+            Player p = (Player)damager;
+            Player owner = npc.getTrait(KuroTrait.class).getOwner();
+            if (owner != null) {
+                if (p.getEntityId() == owner.getEntityId()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
 
 /*

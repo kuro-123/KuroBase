@@ -92,6 +92,35 @@ public class BuddyUtils {
         return ret;
     }
 
+    public static boolean GetJoinEntity(Player player) {
+        boolean ret = false;
+        try {
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.JOIN.ENTITY"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while (rs.next()) {
+                    ret = true;
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
     public static boolean SetNpcExprience(String name, int addexp) {
         String uuid = "";
         String type = "";
