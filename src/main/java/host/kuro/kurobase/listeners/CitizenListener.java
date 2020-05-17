@@ -47,7 +47,7 @@ public class CitizenListener implements Listener {
         Player player = event.getClicker();
         Trait trait = npc.getTrait(BuddyMasterTrait.class);
         if (trait != null) {
-            ShopHandler.loadShop("%の書%");
+            ShopHandler.loadShop("の書", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         }
     }

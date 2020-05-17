@@ -20,6 +20,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -125,7 +126,9 @@ public class BuddyCommand implements CommandExecutor {
 
             // check item
             ItemStack stack = player.getInventory().getItemInMainHand();
-            if (!stack.getType().toString().equals("バディーの書")) {
+            ItemMeta data = stack.getItemMeta();
+            String display = data.getDisplayName();
+            if (!display.equals("バディーの書")) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.item.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
@@ -658,7 +661,9 @@ public class BuddyCommand implements CommandExecutor {
 
             // check item
             ItemStack stack = player.getInventory().getItemInMainHand();
-            if (!stack.getType().toString().equals("復活の書")) {
+            ItemMeta data = stack.getItemMeta();
+            String display = data.getDisplayName();
+            if (!display.equals("復活の書")) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.revival.item.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;

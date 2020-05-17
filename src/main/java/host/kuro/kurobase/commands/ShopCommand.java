@@ -73,7 +73,7 @@ public class ShopCommand implements CommandExecutor {
             if (args.length == 1) {
                 keyword = args[0].toLowerCase();
             }
-            ShopHandler.loadShop(keyword);
+            ShopHandler.loadShop(keyword, "command");
             GuiHandler.open(player, new GuiShop(player, 0));
 
         } catch (Exception ex) {

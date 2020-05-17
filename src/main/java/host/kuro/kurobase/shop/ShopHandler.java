@@ -38,15 +38,21 @@ public class ShopHandler {
         return new ItemStack(Material.getMaterial(mat), 1, (byte) data);
     }
 
-    public static final void loadShop(String key) {
+    public static final void loadShop(String key, String kbn) {
         keyword = key;
         shopItems.clear();
+
+        String exec_sql = "SQL.PRICE.SELECT";
+        if (kbn.equals("npc")) {
+            exec_sql = "SQL.PRICE.BUDDY";
+        }
 
         String name;
         int price;
         try {
-            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SELECT"));
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate(exec_sql));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", "%" + keyword + "%"));
             args.add(new DatabaseArgs("c", "%" + keyword + "%"));
             ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
             args.clear();
@@ -98,13 +104,13 @@ public class ShopHandler {
     }
 
     public static final void addItem(ShopItem item) {
-        loadShop(keyword);
+        loadShop(keyword, "");
         shopItems.add(item);
     }
 
     public static final boolean removeItem(ItemStack stack) {
         try {
-            loadShop(keyword);
+            loadShop(keyword, "");
             for(ShopItem item : shopItems) {
                 if(item.getStack().getType().equals(stack.getType())) {
                     if(item.getStack().getDurability() == stack.getDurability()) {
