@@ -6,10 +6,8 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.trait.trait.Spawned;
 import net.citizensnpcs.api.util.DataKey;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -27,21 +25,29 @@ public class KuroTrait extends Trait {
     @Persist private UUID followingUUID;
     @Persist private Player player;
     @Persist private boolean protect;
+
     private Player npcplayer = null;
     private Entity attack_target = null;
     private Entity before_target = null;
     private Navigator navi = null;
+
     // counter
     private int tick = 0;
+    private int follow_tick = 0;
     // flag
     private boolean closing = false;
     private boolean SomeSetting = false;
+    private static boolean SUPPORT_GLOWING_COLOR = true;
+    private static boolean SUPPORT_TAGS = true;
+    private static boolean SUPPORT_TEAM_SETOPTION = true;
+
     // status
     private Player owner = null;
     private String name = "";
+    private String type = "";
+    private String mode = "";
     private boolean follow = false;
     private boolean guard = false;
-    private GameMode mode = GameMode.SURVIVAL;
     private double max_health = 1.0D;
     private double health = 1.0D;
     private int level = 0;
@@ -66,12 +72,25 @@ public class KuroTrait extends Trait {
     public Player getOwner() { return this.owner; } public void setOwner(Player player) { this.owner = player; }
     // name
     public void setName(String name) { this.name = name; }
-    // gamemode
-    public GameMode getGameMode() { return this.mode; } public void setGameMode(GameMode mode) { this.mode = mode; }
+    // name
+    public void setType(String type) { this.type = type; }
+    // name
+    public void setMode(String mode) { this.mode = mode; }
     // maxhealth
-    public double getMaxHealth() { return this.max_health; } public void setMaxHealth(double health) { this.max_health = health; }
+    public double getMaxHealth() { return this.max_health; }
+    public void setMaxHealth(double health) {
+        this.max_health = health;
+        if (npcplayer!=null) {
+            AttributeInstance healthAttribute = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            healthAttribute.setBaseValue(max_health);
+        }
+    }
     // health
-    public double getHealth() { return this.health; } public void setHealth(double health) { this.health = health; }
+    public double getHealth() { return this.health; }
+    public void setHealth(double health) {
+        this.health = health;
+        if (npcplayer!=null) npcplayer.setHealth(health);
+    }
     // follow
     public boolean getFollow() { return this.follow; } public void setFollow(boolean value) { this.follow = value; }
     // guard
@@ -92,7 +111,7 @@ public class KuroTrait extends Trait {
     public float getBaseSpeed() { return this.base_speed; }  public void setBaseSpeed(float value) { this.base_speed = value; }
 
     // status value
-    public boolean setStatus(int level, String type, String mode) {
+    private boolean setStatus(int level, String type, String mode) {
         double max_health = 20.0D;
         float range = 8.0F;
         double attack_range = 8.0D;
@@ -147,11 +166,12 @@ public class KuroTrait extends Trait {
         if (base_speed >= 2.5F) max_health = 2.5F;
 
         setMaxHealth(max_health);
+        setHealth(max_health);
+
         setRange(range);
         setAttackRange(attack_range);
         setAttackDelayTick(attack_delay_tick);
         setBaseSpeed(base_speed);
-        UpdateStatus();
         return true;
     }
 
@@ -173,11 +193,7 @@ public class KuroTrait extends Trait {
 
     public void UpdateStatus() {
         if (navi == null) return;
-        // hp
-        AttributeInstance healthAttribute = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        healthAttribute.setBaseValue(max_health);
-        npcplayer.setHealth(max_health);
-        // status
+        setStatus(level, type, mode);
         NavigatorParameters param = navi.getLocalParameters();
         param.range(range);
         param.attackRange(attack_range);
@@ -197,7 +213,7 @@ public class KuroTrait extends Trait {
         // navi set
         this.navi = npc.getNavigator();
         // gamemode
-        npcplayer.setGameMode(mode);
+        npcplayer.setGameMode(GameMode.SURVIVAL);
         // display name
         npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "[BD] " + name);
         // status
@@ -224,7 +240,7 @@ public class KuroTrait extends Trait {
         if ((System.currentTimeMillis() - spawn_time) <= 3000) return;
 
         double max_dis = range;
-        for (Entity entity : owner.getWorld().getEntities()) {
+        for (Entity entity : npc.getEntity().getWorld().getEntities()) {
             if (!((entity instanceof Monster) || (entity instanceof Animals))) continue;
             if (entity.getEntityId() == npc.getEntity().getEntityId()) continue;
             if (entity.getEntityId() == owner.getEntityId()) continue;
@@ -240,6 +256,7 @@ public class KuroTrait extends Trait {
             }
         }
         if (attack_target != null) {
+            follow_tick = 0;
             if (!attack_target.isDead()) {
                 if (before_target != null) {
                     if (attack_target.getEntityId() != before_target.getEntityId()) {
@@ -269,41 +286,46 @@ public class KuroTrait extends Trait {
                 navi.cancelNavigation();
             } else {
                 navi.setTarget(owner, false);
+                follow_tick++;
             }
         } else {
             if (follow) {
                 navi.setTarget(owner, false);
+                follow_tick++;
             }
         }
-    }
-
-    private void CheckGameMode(Player npcplayer) {
-        if (npcplayer.getGameMode() != mode) {
-            npcplayer.setGameMode(mode);
+        if (follow_tick > 100) {
+            if (health < max_health) {
+                health += 1.0D;
+                if (health > max_health) {
+                    health = max_health;
+                }
+                npcplayer.setHealth(health);
+            }
+            follow_tick = 0;
         }
     }
 
     private void CheckHealth() {
-        double maxhp = ((Player) npc.getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
-        if (maxhp != max_health) {
-            AttributeInstance healthAttribute = ((Player) npc.getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            healthAttribute.setBaseValue(max_health);
-        }
+        health = npcplayer.getHealth();
+        max_health = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
     }
 
     public void Close() {
         if (closing) return;
         closing = true;
         if (npc != null) {
+            // UPDATE
+            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+            eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid
+            int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
+            eargs.clear();
+            eargs = null;
+
             if (npc.isSpawned()) {
-                // UPDATE
-                ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-                eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid
-                int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
-                eargs.clear();
-                eargs = null;
                 try {
                     npc.getEntity().remove();
+                    KuroBase.GetCitizens().getNPCRegistry().deregister(npc);
                 } catch (Exception ex) {
                     ErrorUtils.GetErrorMessageNonDb(ex);
                 }

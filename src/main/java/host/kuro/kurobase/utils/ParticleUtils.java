@@ -45,7 +45,7 @@ public class ParticleUtils {
         }
     }
 
-    public static final void PartyParticle(Player player, Particle particle, int count) {
+    public static final void PartyParticle(Entity player, Particle particle, int count) {
         if (player == null) return;
         World world = player.getWorld();
         double x1 = player.getLocation().getX();

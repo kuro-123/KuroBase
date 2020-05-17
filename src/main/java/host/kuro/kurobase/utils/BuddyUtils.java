@@ -7,6 +7,7 @@ import host.kuro.kurobase.npc.KuroTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -192,6 +193,8 @@ public class BuddyUtils {
         if (npc != null) {
             // lebel換算
             exp = exp+addexp;
+            npc.getTrait(KuroTrait.class).setExp(exp);
+
             int calc_level = calculateLevelForExp(exp);
             if (level < calc_level) {
                 // level up
@@ -199,9 +202,7 @@ public class BuddyUtils {
                 PlayerUtils.BroadcastMessage(String.format("[BD] %s が LevelUp!! -> Lv%d", name, level), false);
                 SoundUtils.BroadcastSound("shine3", false);
                 // update status
-                npc.getTrait(KuroTrait.class).setExp(exp);
                 npc.getTrait(KuroTrait.class).setLevel(level);
-                npc.getTrait(KuroTrait.class).setStatus(level, type, mode);
                 npc.getTrait(KuroTrait.class).UpdateStatus();
             }
             // UPDATE
