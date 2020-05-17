@@ -217,11 +217,6 @@ public class KuroTrait extends Trait {
         CheckGuard();
         // check follow
         CheckFollow();
-
-        if (!(npc.getEntity() instanceof Player)) return;
-        Player npcplayer = ((Player) npc.getEntity());
-        // check mode change
-        CheckGameMode(npcplayer);
     }
 
     private void CheckGuard() {

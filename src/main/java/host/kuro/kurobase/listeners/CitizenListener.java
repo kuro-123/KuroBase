@@ -3,13 +3,18 @@ package host.kuro.kurobase.listeners;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.npc.BuddyMasterTrait;
 import host.kuro.kurobase.npc.KuroTrait;
+import host.kuro.kurobase.shop.GuiHandler;
+import host.kuro.kurobase.shop.GuiShop;
+import host.kuro.kurobase.shop.ShopHandler;
 import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurodiscord.DiscordMessage;
 import net.citizensnpcs.api.event.*;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -35,8 +40,16 @@ public class CitizenListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCClick(NPCClickEvent event) {
     }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onNPCRightClick(NPCRightClickEvent event) {
+        NPC npc = event.getNPC();
+        Player player = event.getClicker();
+        Trait trait = npc.getTrait(BuddyMasterTrait.class);
+        if (trait != null) {
+            ShopHandler.loadShop("%の書%");
+            GuiHandler.open(player, new GuiShop(player, 0));
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

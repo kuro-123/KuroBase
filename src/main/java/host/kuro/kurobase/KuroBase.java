@@ -6,6 +6,7 @@ import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.*;
+import host.kuro.kurobase.npc.BuddyMasterTrait;
 import host.kuro.kurobase.npc.KuroTrait;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
@@ -74,6 +75,7 @@ public class KuroBase extends JavaPlugin {
     private static Citizens citizen_plugin = null;
     public static Citizens GetCitizens() { return citizen_plugin; }
     private static TraitInfo citizen_trait= null;
+    private static TraitInfo citizen_master_trait= null;
     private static CitizenListener citizen_listener = null;
 
     @Override
@@ -183,6 +185,8 @@ public class KuroBase extends JavaPlugin {
         try {
             citizen_trait = TraitInfo.create(KuroTrait.class).withName("KuroTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
+            citizen_master_trait = TraitInfo.create(BuddyMasterTrait.class).withName("BuddyMasterTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_master_trait);
         } catch (Throwable ex) {
             disablePlugin();
             return;

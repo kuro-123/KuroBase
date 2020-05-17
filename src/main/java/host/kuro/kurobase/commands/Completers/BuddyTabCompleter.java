@@ -31,7 +31,7 @@ public class BuddyTabCompleter implements TabCompleter {
         Player player = (Player)sender;
         switch (args.length) {
             case 1:
-                SetInputAction();
+                SetInputAction(player);
                 return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
             case 2:
                 switch (args[0].toLowerCase()) {
@@ -82,7 +82,7 @@ public class BuddyTabCompleter implements TabCompleter {
         return null;
     }
 
-    private void SetInputAction() {
+    private void SetInputAction(Player player) {
         cmds.add("<アクションを選択>");
         cmds.add("join");
         cmds.add("quit");
@@ -91,6 +91,10 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("list");
         cmds.add("revival");
         cmds.add("del");
+        int rank = PlayerUtils.GetRank(KuroBase.GetInstance(), player);
+        if (rank == PlayerUtils.RANK_NUSHI) {
+            cmds.add("buddyshop");
+        }
         //cmds.add("type");
         //cmds.add("mode");
     }

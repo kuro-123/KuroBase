@@ -3,12 +3,15 @@ package host.kuro.kurobase.commands;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.npc.BuddyMasterTrait;
 import host.kuro.kurobase.npc.KuroTrait;
 import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.Age;
 import net.citizensnpcs.trait.GameModeTrait;
+import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -68,6 +71,7 @@ public class BuddyCommand implements CommandExecutor {
             case "join": return ActionJoin(player, args);
             case "quit": return ActionQuit(player, args);
             case "revival": return ActionRevival(player, args);
+            case "buddyshop": return ActionBuddyShop(player, args);
         }
         return true;
     }
@@ -513,7 +517,9 @@ public class BuddyCommand implements CommandExecutor {
                     npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
                 }
             }
-            // trait
+            npc.addTrait(LookClose.class);
+            npc.getTrait(LookClose.class).lookClose(true);
+
             npc.addTrait(KuroTrait.class);
             npc.getTrait(KuroTrait.class).setGameMode(GameMode.SURVIVAL);
             npc.getTrait(KuroTrait.class).setName(buddy_name);
@@ -690,4 +696,50 @@ public class BuddyCommand implements CommandExecutor {
         }
         return true;
     }
+
+    private boolean ActionBuddyShop(Player player, String[] args) {
+        try {
+            String skin_name = "";
+            String skin_data = "";
+            String skin_signature = "";
+
+            // create
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "バディーマスター");
+
+            // trait
+            npc.getTrait(Age.class).setAge(20);
+            npc.addTrait(SkinTrait.class);
+            if (skin_name != null && skin_data != null && skin_signature != null) {
+                if (skin_name.length() > 0 && skin_data.length() > 0 && skin_signature.length() > 0) {
+                    npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
+                }
+            }
+
+            Location loc = player.getLocation();
+
+            // trait
+            npc.addTrait(LookClose.class);
+            npc.getTrait(LookClose.class).lookClose(true);
+
+            npc.addTrait(BuddyMasterTrait.class);
+            npc.getTrait(BuddyMasterTrait.class).setLocation(loc);
+            npc.setFlyable(false);
+            npc.setProtected(true);
+            npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, true);
+            npc.data().setPersistent(NPC.DAMAGE_OTHERS_METADATA, true);
+            npc.spawn(loc);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD, 1));
+
+            // particle
+            ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
+            SoundUtils.BroadcastSound("typewriter-2", false);
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
+        return true;
+    }
+
 }
