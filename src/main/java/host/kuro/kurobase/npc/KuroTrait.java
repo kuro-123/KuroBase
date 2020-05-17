@@ -1,5 +1,8 @@
 package host.kuro.kurobase.npc;
 
+import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.DatabaseArgs;
+import host.kuro.kurobase.lang.Language;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.persistence.Persist;
@@ -13,6 +16,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class KuroTrait extends Trait {
@@ -70,7 +74,7 @@ public class KuroTrait extends Trait {
         npcplayer.setGameMode(mode);
 
         // display
-        npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "[KM] " + name);
+        npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "[BD] " + name);
 
         // hp
         AttributeInstance healthAttribute = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
@@ -128,6 +132,9 @@ public class KuroTrait extends Trait {
         this.health = health;
     }
 
+    public Player getOwner() {
+        return this.owner;
+    }
     public void setOwner(Player player) {
         this.owner = player;
     }
@@ -233,6 +240,13 @@ public class KuroTrait extends Trait {
         closing = true;
         if (npc != null) {
             if (npc.isSpawned()) {
+                // UPDATE
+                ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+                eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid
+                int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
+                eargs.clear();
+                eargs = null;
+
                 npc.despawn();
                 npc.destroy();
             }

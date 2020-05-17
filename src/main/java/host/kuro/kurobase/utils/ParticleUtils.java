@@ -2,6 +2,7 @@ package host.kuro.kurobase.utils;
 
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -26,7 +27,7 @@ public class ParticleUtils {
         }
     }
 
-    public static final void CrownParticle(Player player, Particle particle, int count) {
+    public static final void CrownParticle(Entity player, Particle particle, int count) {
         if (player == null) return;
         World world = player.getWorld();
         double x1 = player.getLocation().getX();

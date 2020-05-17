@@ -142,8 +142,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("set").setTabCompleter(new SetTabCompleter());
         getCommand("rep").setExecutor(new RepCommand(this));
         getCommand("rep").setTabCompleter(new RepTabCompleter());
-        getCommand("entity").setExecutor(new EntityCommand(this));
-        getCommand("entity").setTabCompleter(new EntityTabCompleter());
+        getCommand("buddy").setExecutor(new BuddyCommand(this));
+        getCommand("buddy").setTabCompleter(new BuddyTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));

@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityTabCompleter implements TabCompleter {
+public class BuddyTabCompleter implements TabCompleter {
 
     List<String> cmds = new ArrayList<String>();
 
@@ -77,14 +77,14 @@ public class EntityTabCompleter implements TabCompleter {
 
     private void SetInputAction() {
         cmds.add("<アクションを選択>");
-        cmds.add("list");
-        cmds.add("add");
         cmds.add("join");
         cmds.add("quit");
-        cmds.add("type");
-        cmds.add("mode");
+        cmds.add("add");
         cmds.add("url");
+        cmds.add("list");
         cmds.add("del");
+        //cmds.add("type");
+        //cmds.add("mode");
     }
 
     private void SetInputName() {

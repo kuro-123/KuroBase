@@ -22,10 +22,70 @@ public class EntityUtils {
         }
         if (name == null) return false;
         if (name.length() <= 0) return false;
-        if (name.indexOf(ChatColor.LIGHT_PURPLE + "[KM] ")<0) {
+        if (name.indexOf(ChatColor.LIGHT_PURPLE + "[BD] ")<0) {
             return false;
         }
         return true;
+    }
+
+    public static boolean ExistEntity(Player player, String name) {
+        boolean ret = false;
+        try {
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+            args.add(new DatabaseArgs("c", name));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while (rs.next()) {
+                    ret = true;
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
+    }
+
+    public static boolean CheckNameEntity(String name) {
+        boolean ret = false;
+        try {
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.NAME.CHECK.NAME"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", name.toLowerCase()));
+            args.add(new DatabaseArgs("c", name.toLowerCase()));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                while (rs.next()) {
+                    ret = true;
+                    break;
+                }
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
+        return ret;
     }
 
     public static boolean SetNpcExprience(String name, int addexp) {
@@ -66,7 +126,7 @@ public class EntityUtils {
         if (level < calc_level) {
             // level up
             level = calc_level;
-            PlayerUtils.BroadcastMessage(String.format("[KM] %s が LevelUp!! -> Lv%d", name, level), false);
+            PlayerUtils.BroadcastMessage(String.format("[BD] %s が LevelUp!! -> Lv%d", name, level), false);
             SoundUtils.BroadcastSound("shine3", false);
         }
 

@@ -90,6 +90,7 @@ commands:
   paste:
     description: 貼付モードコマンド
     usage: /paste
-  entity:
-    description: 独自エンティティ設置コマンド
-    usage: /entity
+  buddy:
+    description: バディー操作
+    usage: /buddy <add|del|list|url|join|quit> ..
+    aliases: [b]
