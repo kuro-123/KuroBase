@@ -16,6 +16,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -596,6 +597,45 @@ public class BuddyCommand implements CommandExecutor {
                 return false;
             }
             String entity = args[1];
+
+            // check dead
+            if (!BuddyUtils.CheckDeadEntity(player, entity)) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.revival.dead.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
+            // check item
+            ItemStack stack = player.getInventory().getItemInMainHand();
+            if (!stack.getType().toString().equals("復活の書")) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.revival.item.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
+            // UPDATE
+            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
+            eargs.add(new DatabaseArgs("c", entity)); // name
+            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.ALIVE.ENTITY"), eargs);
+            eargs.clear();
+            eargs = null;
+            if (ret != 1) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.revival.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
+            int amount = stack.getAmount();
+            amount--;
+            if (amount <= 0) {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
+            } else {
+                stack.setAmount(amount);
+                player.getInventory().setItemInMainHand(stack);
+            }
+            player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.revival.success"));
+            SoundUtils.PlaySound(player,"switch1", false);
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);

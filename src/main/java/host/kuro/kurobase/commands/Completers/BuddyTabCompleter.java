@@ -39,13 +39,19 @@ public class BuddyTabCompleter implements TabCompleter {
                         SetInputName();
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "join":
+                        SetInputEntity(player, "ALIVE");
+                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "quit":
+                        SetInputEntity(player, "JOIN");
+                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "revival":
-                    case "type":
-                    case "mode":
+                        SetInputEntity(player, "DEAD");
+                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
+                    //case "type":
+                    //case "mode":
                     case "url":
                     case "del":
-                        SetInputEntity(player);
+                        SetInputEntity(player, "");
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                 }
                 return null;
@@ -93,10 +99,19 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("<名前を入力>");
     }
 
-    private void SetInputEntity(Player player) {
+    private void SetInputEntity(Player player, String kbn) {
         cmds.add("<エンティティを選択>");
+
+        String sql_kbn = "";
+        switch (kbn) {
+            case "ALIVE": sql_kbn = "SQL.SELECT.ALIVE.ENTITY"; break;
+            case "JOIN": sql_kbn = "SQL.SELECT.JOIN.ENTITY"; break;
+            case "DEAD": sql_kbn = "SQL.SELECT.DEAD.ENTITY"; break;
+            default: sql_kbn = "SQL.SELECT.ENTITY"; break;
+        }
+
         try {
-            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY"));
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate(sql_kbn));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
             args.add(new DatabaseArgs("c", player.getUniqueId().toString()));
             ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
