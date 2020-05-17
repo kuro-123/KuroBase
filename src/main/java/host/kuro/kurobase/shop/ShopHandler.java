@@ -64,6 +64,12 @@ public class ShopHandler {
                         ItemMeta data = stack.getItemMeta();
                         data.setDisplayName("復活の書");
                         stack.setItemMeta(data);
+                    } else if (name.equals("バディーの書")) {
+                        m = Material.getMaterial("PAPER");
+                        stack = new ItemStack(m, 1);
+                        ItemMeta data = stack.getItemMeta();
+                        data.setDisplayName("バディーの書");
+                        stack.setItemMeta(data);
                     } else {
                         m = Material.matchMaterial(name);
                         stack = new ItemStack(m, 1);

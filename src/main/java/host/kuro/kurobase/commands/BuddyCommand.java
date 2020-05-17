@@ -119,30 +119,66 @@ public class BuddyCommand implements CommandExecutor {
                 return false;
             }
 
+            // check item
+            ItemStack stack = player.getInventory().getItemInMainHand();
+            if (!stack.getType().toString().equals("バディーの書")) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.item.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
             String name = args[1];
             if (BuddyUtils.CheckNameEntity(name)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.exist.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
+
             if (BuddyUtils.ExistEntity(player, name)) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.exist.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
 
+            int level = player.getLevel();
+
             String type = args[2];
             type = "人型";
             String mode = args[3];
             if (mode.equals(Language.translate("buddy.list.normal"))) {
+                if (level < 200) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
                 mode = Language.translate("buddy.data.normal");
             } else if (mode.equals(Language.translate("buddy.list.guard"))) {
+                if (level < 300) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
                 mode = Language.translate("buddy.data.guard");
             } else if (mode.equals(Language.translate("buddy.list.battle"))) {
+                if (level < 400) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
                 mode = Language.translate("buddy.data.battle");
             } else if (mode.equals(Language.translate("buddy.list.nijya"))) {
+                if (level < 500) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
                 mode = Language.translate("buddy.data.nijya");
             } else{
+                if (level < 200) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
                 mode = Language.translate("buddy.data.normal");
             }
 
@@ -170,6 +206,15 @@ public class BuddyCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.regist.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
+            }
+
+            int amount = stack.getAmount();
+            amount--;
+            if (amount <= 0) {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
+            } else {
+                stack.setAmount(amount);
+                player.getInventory().setItemInMainHand(stack);
             }
 
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.regist.success"));
