@@ -10,11 +10,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_ATTACK;
+import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.PROJECTILE;
 
 public class BuddyUtils {
 
@@ -31,6 +36,21 @@ public class BuddyUtils {
             return false;
         }
         return true;
+    }
+
+    public static boolean IsBuddyMaster(Entity damager) {
+        String name = "";
+        if (damager instanceof Player) {
+            name = ((Player)damager).getDisplayName();
+        } else {
+            name = damager.getCustomName();
+        }
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (name.indexOf(ChatColor.LIGHT_PURPLE + "バディーマスター")>=0) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean ExistEntity(Player player, String name) {

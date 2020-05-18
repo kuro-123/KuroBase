@@ -5,6 +5,7 @@ import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.npc.BuddyMasterTrait;
 import host.kuro.kurobase.npc.KuroTrait;
+import host.kuro.kurobase.npc.SendTextTrait;
 import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -14,15 +15,13 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -50,6 +49,12 @@ public class BuddyCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player)sender;
+        if (args.length < 1) {
+            // args check
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
+        }
 
         // check city world
         if (PlayerUtils.IsCityWorld(plugin, player)) {
@@ -757,6 +762,13 @@ public class BuddyCommand implements CommandExecutor {
             npc.addTrait(LookClose.class);
             npc.getTrait(LookClose.class).lookClose(true);
 
+            npc.addTrait(SendTextTrait.class);
+            npc.getTrait(SendTextTrait.class).setCool(30000);
+            npc.getTrait(SendTextTrait.class).setRange(8);
+            npc.getTrait(SendTextTrait.class).setTextPercent(30);
+            npc.getTrait(SendTextTrait.class).setText("よお！ @t！ バディー書物の取引をしないか？ 俺を右クリックしてみな！");
+            npc.getTrait(SendTextTrait.class).setText("近隣のモンスター？ 大丈夫、俺が蹴散らしてるさ");
+
             npc.getTrait(Age.class).setAge(20);
             npc.addTrait(SkinTrait.class);
             skin_name = "master";
@@ -771,7 +783,10 @@ public class BuddyCommand implements CommandExecutor {
             npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, true);
             npc.data().setPersistent(NPC.DAMAGE_OTHERS_METADATA, true);
             npc.spawn(loc);
-            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD, 1));
+
+            ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
+            sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
 
             // particle
             ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle

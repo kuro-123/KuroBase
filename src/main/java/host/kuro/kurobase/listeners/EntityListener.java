@@ -38,6 +38,11 @@ public class EntityListener implements Listener {
             if (BuddyUtils.IsNpc(entity)) {
                 return;
             }
+            if (BuddyUtils.IsBuddyMaster(e.getDamager())) {
+                double damage = e.getDamage();
+                e.setDamage(damage * 100.0D);
+                return;
+            }
             if (entity instanceof Player) {
                 EntityDamageEvent.DamageCause cause = e.getCause();
                 if (cause != null) {
@@ -90,6 +95,11 @@ public class EntityListener implements Listener {
         try {
             Entity entity = e.getEntity();
             if (!(entity instanceof Monster || entity instanceof Animals)) return;
+
+            if (BuddyUtils.IsBuddyMaster(e.getEntity().getKiller())) {
+                e.setDroppedExp(0);
+                return;
+            }
 
             Player player = e.getEntity().getKiller();
             if (player == null) return;
@@ -394,6 +404,7 @@ public class EntityListener implements Listener {
 
             if (BuddyUtils.IsNpc(player)) {
                 BuddyUtils.SetNpcExprience(player.getName(), xp);
+                e.setDroppedExp(0);
 
             } else {
                 player.giveExp(xp);

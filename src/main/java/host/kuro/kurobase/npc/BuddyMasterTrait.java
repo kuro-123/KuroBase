@@ -4,7 +4,6 @@ import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.util.DataKey;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -15,41 +14,26 @@ import org.bukkit.entity.*;
 import java.util.UUID;
 
 public class BuddyMasterTrait extends Trait {
-    @Persist("BuddyShopSetting") boolean automaticallyPersistedSetting = false;
-    @Persist("active") private boolean enabled = false;
-    @Persist private Player player;
-    @Persist private boolean protect;
-
-    private Player npcplayer = null;
-    private Entity attack_target = null;
-    private Entity before_target = null;
-    private Navigator navi = null;
-
     // counter
     private int tick = 0;
-    // flag
-    private boolean closing = false;
-    private boolean SomeSetting = false;
+    private long spawn_time = 0;
+    private Entity attack_target = null;
+    private Entity before_target = null;
+
+    private Navigator navi = null;
+    private Player npcplayer = null;
 
     // status
-    private Location location = null;
-    private GameMode mode = GameMode.SURVIVAL;
-    private double max_health = 100.0D;
-    private long spawn_time = 0;
-    private float range = 8.0F;
-    private double attack_range = 8.0D;
-    private int attack_delay_tick = 2;
-    private int update_path_rate = 4;
-    private float base_speed = 2.0F;
+    @Persist private Location location = null;
+    @Persist private double max_health = 100.0D;
+    @Persist private float range = 8.0F;
+    @Persist private double attack_range = 8.0D;
+    @Persist private int attack_delay_tick = 2;
+    @Persist private int update_path_rate = 4;
+    @Persist private float base_speed = 2.0F;
 
     public BuddyMasterTrait() {
-        super("BuddyShopTrait");
-    }
-    public void load(DataKey key) {
-        SomeSetting = key.getBoolean("SomeSetting", false);
-    }
-    public void save(DataKey key) {
-        key.setBoolean("SomeSetting",SomeSetting);
+        super("BuddyMasterTrait");
     }
     // location
     public void setLocation(Location location) { this.location = location; }
@@ -74,13 +58,14 @@ public class BuddyMasterTrait extends Trait {
     public void onSpawn() {
         // spawn time
         spawn_time = System.currentTimeMillis();
-        // cast
+
+        navi = npc.getNavigator();
+
         if (!(npc.getEntity() instanceof Player)) return;
         npcplayer = ((Player) npc.getEntity());
-        // navi set
-        this.navi = npc.getNavigator();
+
         // gamemode
-        npcplayer.setGameMode(mode);
+        npcplayer.setGameMode(GameMode.SURVIVAL);
         // display name
         npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "バディーマスター");
         // status

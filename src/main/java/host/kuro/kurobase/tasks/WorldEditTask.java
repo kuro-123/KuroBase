@@ -1,14 +1,10 @@
 package host.kuro.kurobase.tasks;
 
-import com.sun.tools.javac.comp.Check;
 import host.kuro.kurobase.KuroBase;
-import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
-import host.kuro.kurodiscord.DiscordMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -17,56 +17,39 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class KuroTrait extends Trait {
-    @Persist("KuroSetting") boolean automaticallyPersistedSetting = false;
-    @Persist("active") private boolean enabled = false;
-    @Persist private UUID followingUUID;
-    @Persist private Player player;
-    @Persist private boolean protect;
-
-    private Player npcplayer = null;
-    private Entity attack_target = null;
-    private Entity before_target = null;
-    private Navigator navi = null;
-
     // counter
     private int tick = 0;
     private int follow_tick = 0;
+    private long spawn_time = 0;
     // flag
     private boolean closing = false;
-    private boolean SomeSetting = false;
-    private static boolean SUPPORT_GLOWING_COLOR = true;
-    private static boolean SUPPORT_TAGS = true;
-    private static boolean SUPPORT_TEAM_SETOPTION = true;
 
+    @Persist private boolean protect;
+    @Persist private Player npcplayer = null;
+    @Persist private Entity attack_target = null;
+    @Persist private Entity before_target = null;
+    @Persist private Navigator navi = null;
     // status
-    private Player owner = null;
-    private String name = "";
-    private String type = "";
-    private String mode = "";
-    private boolean follow = false;
-    private boolean guard = false;
-    private double max_health = 1.0D;
-    private double health = 1.0D;
-    private int level = 0;
-    private int exp = 0;
-    private long spawn_time = 0;
-    private float range = 8.0F;
-    private double attack_range = 8.0D;
-    private int attack_delay_tick = 20;
-    private int update_path_rate = 4;
-    private float base_speed = 0.8F;
+    @Persist private Player owner = null;
+    @Persist private String name = "";
+    @Persist private String type = "";
+    @Persist private String mode = "";
+    @Persist private boolean follow = false;
+    @Persist private boolean guard = false;
+    @Persist private double max_health = 1.0D;
+    @Persist private double health = 1.0D;
+    @Persist private int level = 0;
+    @Persist private int exp = 0;
+    @Persist private float range = 8.0F;
+    @Persist private double attack_range = 8.0D;
+    @Persist private int attack_delay_tick = 20;
+    @Persist private int update_path_rate = 4;
+    @Persist private float base_speed = 0.8F;
 
     public KuroTrait() {
         super("KuroTrait");
-    }
-    public void load(DataKey key) {
-        SomeSetting = key.getBoolean("SomeSetting", false);
-    }
-    public void save(DataKey key) {
-        key.setBoolean("SomeSetting",SomeSetting);
     }
     // owner
     public Player getOwner() { return this.owner; } public void setOwner(Player player) { this.owner = player; }
