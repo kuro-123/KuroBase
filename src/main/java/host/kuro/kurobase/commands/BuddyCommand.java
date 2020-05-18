@@ -152,12 +152,12 @@ public class BuddyCommand implements CommandExecutor {
                 return false;
             }
 
-            boolean nuchi = false;
+            boolean nushi = false;
             int rank = PlayerUtils.GetRank(plugin, player);
-            if (rank == PlayerUtils.RANK_NUSHI) nuchi = true;
+            if (rank == PlayerUtils.RANK_NUSHI) nushi = true;
 
             int level = player.getLevel();
-            if (nuchi) level = 1000;
+            if (nushi) level = 1000;
 
             String type = args[2];
             type = "人型";
@@ -451,7 +451,7 @@ public class BuddyCommand implements CommandExecutor {
                 }
             }
             // create
-            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, buddy_name);
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "[ﾊﾞﾃﾞｨｰ] " + buddy_name);
             // trait
             // type
             npc.addTrait(BaseTypeTrait.class);

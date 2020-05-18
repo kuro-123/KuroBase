@@ -99,12 +99,15 @@ public class EntityListener implements Listener {
             Entity entity = e.getEntity();
             if (!(entity instanceof Monster || entity instanceof Animals)) return;
 
-            if (BuddyUtils.IsBuddyMaster(e.getEntity().getKiller())) {
-                e.setDroppedExp(0);
-                return;
+            Player player = null;
+            LivingEntity liv = e.getEntity();
+            if (liv != null) {
+                if (BuddyUtils.IsBuddyMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                player = e.getEntity().getKiller();
             }
-
-            Player player = e.getEntity().getKiller();
             if (player == null) return;
 
             int minxp = 0;

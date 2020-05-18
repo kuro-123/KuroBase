@@ -11,6 +11,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Animals;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class KuroTrait extends Trait {
     // counter
     private int tick = 0;
+    private int away_tick = 0;
     private int follow_tick = 0;
     private long spawn_time = 0;
     // flag
@@ -163,9 +165,9 @@ public class KuroTrait extends Trait {
 
     // owner
     public boolean isOwner() {
-        if (owner == null) {
-            return false;
-        }
+        if (owner == null) return false;
+        if (owner.isDead()) return false;
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getName().equals(owner.getName())) {
                 if (!player.getWorld().getName().equals(owner.getWorld().getName())) {
@@ -174,6 +176,7 @@ public class KuroTrait extends Trait {
                 return true;
             }
         }
+        owner = null;
         return false;
     }
 
@@ -200,8 +203,6 @@ public class KuroTrait extends Trait {
         navi = npc.getNavigator();
         // gamemode
         npcplayer.setGameMode(GameMode.SURVIVAL);
-        // display name
-        npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "[BD] " + name);
         // status
         UpdateStatus();
     }
@@ -219,9 +220,14 @@ public class KuroTrait extends Trait {
         CheckGuard();
         // check follow
         CheckFollow();
+        // check follow
+        CheckLocation();
     }
 
     private void CheckGuard() {
+        if (owner == null) return;
+        if (owner.isDead()) return;
+
         if (!this.guard) return;
         if ((System.currentTimeMillis() - spawn_time) <= 3000) return;
 
@@ -266,6 +272,9 @@ public class KuroTrait extends Trait {
     }
 
     private void CheckFollow() {
+        if (owner == null) return;
+        if (owner.isDead()) return;
+
         if (attack_target != null) return;
         if (navi.isNavigating()) {
             if (!follow) {
@@ -280,7 +289,7 @@ public class KuroTrait extends Trait {
                 follow_tick++;
             }
         }
-        if (follow_tick > 100) {
+        if (follow_tick > 200) {
             if (health < max_health) {
                 health += 1.0D;
                 if (health > max_health) {
@@ -293,8 +302,31 @@ public class KuroTrait extends Trait {
     }
 
     private void CheckHealth() {
+        if (owner == null) return;
+        if (owner.isDead()) return;
+
         health = npcplayer.getHealth();
         max_health = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+    }
+
+    private void CheckLocation() {
+        //if (attack_target != null) return;
+        if (owner == null) return;
+        if (owner.isDead()) return;
+
+        Location npc_loc = npc.getEntity().getLocation();
+        if (npc_loc == null) return;
+        double distance = owner.getLocation().distance(npc_loc);
+        if (distance >= 20) {
+            away_tick++;
+            if (away_tick >= 600) {
+                owner.sendMessage(ChatColor.YELLOW + "ﾊﾞﾃﾞｨｰは離れすぎたため退出しました");
+                Close();
+                away_tick = 0;
+            }
+        } else {
+            away_tick = 0;
+        }
     }
 
     public void Close() {
@@ -316,6 +348,7 @@ public class KuroTrait extends Trait {
                     ErrorUtils.GetErrorMessageNonDb(ex);
                 }
             }
+            owner = null;
         }
     }
 }

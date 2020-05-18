@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 public class BuddyMasterTrait extends Trait {
     private int tick = 0;
+    private int away_tick = 0;
     private Entity attack_target = null;
     private Entity before_target = null;
 
@@ -28,7 +29,7 @@ public class BuddyMasterTrait extends Trait {
     @Persist private double attack_range = 8.0D;
     @Persist private int attack_delay_tick = 2;
     @Persist private int update_path_rate = 4;
-    @Persist private float base_speed = 2.0F;
+    @Persist private float base_speed = 1.0F;
 
     public BuddyMasterTrait() {
         super("BuddyMasterTrait");
@@ -114,5 +115,16 @@ public class BuddyMasterTrait extends Trait {
     private void CheckLocation() {
         if (attack_target != null) return;
         navi.setTarget(location);
+
+        double distance = location.distance(npc.getEntity().getLocation());
+        if (distance >= 5) {
+            away_tick++;
+            if (away_tick >= 600) {
+                npcplayer.teleport(location);
+                away_tick = 0;
+            }
+        } else {
+            away_tick = 0;
+        }
     }
 }

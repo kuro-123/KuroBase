@@ -3,12 +3,11 @@ package host.kuro.kurobase.utils;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class ParticleUtils {
 
-    public static final void CenterParticle(Player player, Particle particle, int count, int range) {
+    public static final void CenterParticle(Entity player, Particle particle, int count, int range) {
         if (player == null) return;
         World world = player.getWorld();
 

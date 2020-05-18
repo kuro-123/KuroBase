@@ -6,6 +6,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.trait.KuroTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
@@ -21,6 +22,7 @@ public class BuddyUtils {
     private final static String DATA_KEY = "NPCTYPE";
 
     public static boolean IsNpc(Entity entity) {
+        if (entity == null) return false;
         if (!entity.hasMetadata(DATA_KEY)) return false;
         if (IsBuddy(entity)) return true;
         if (IsBuddyMaster(entity)) return true;
@@ -29,6 +31,7 @@ public class BuddyUtils {
     }
 
     public static boolean IsBuddy(Entity entity) {
+        if (entity == null) return false;
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
@@ -46,6 +49,7 @@ public class BuddyUtils {
     }
 
     public static boolean IsBuddyMaster(Entity entity) {
+        if (entity == null) return false;
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
@@ -63,6 +67,7 @@ public class BuddyUtils {
     }
 
     public static boolean IsExplaner(Entity entity) {
+        if (entity == null) return false;
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
@@ -244,7 +249,7 @@ public class BuddyUtils {
             if (level < calc_level) {
                 // level up
                 level = calc_level;
-                PlayerUtils.BroadcastMessage(String.format("[BD] %s が LevelUp!! -> Lv%d", name, level), false);
+                PlayerUtils.BroadcastMessage(String.format(ChatColor.AQUA + "[ﾊﾞﾃﾞｨｰ] %s が LevelUp!! -> Lv%d", name, level), false);
                 SoundUtils.BroadcastSound("shine3", false);
                 // update status
                 npc.getTrait(KuroTrait.class).setLevel(level);
@@ -272,5 +277,14 @@ public class BuddyUtils {
             incr += (level % 2 == 0) ? 3 : 4;
         }
         return level;
+    }
+
+    public static void InitBuddy(Player player) {
+        // UPDATE
+        ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+        args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+        int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.INIT.ENTITY"), args);
+        args.clear();
+        args = null;
     }
 }

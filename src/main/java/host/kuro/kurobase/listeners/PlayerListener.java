@@ -7,7 +7,9 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
 import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,6 +23,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -46,6 +49,9 @@ public class PlayerListener implements Listener {
 
 			// minarai check update
 			PlayerUtils.UpdateJyumin(plugin, KuroBase.getDB(), player);
+
+			// init buddy
+			BuddyUtils.InitBuddy(player);
 
 			// setting rank
 			player.setOp(true);
