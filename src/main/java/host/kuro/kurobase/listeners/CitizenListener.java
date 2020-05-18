@@ -8,6 +8,7 @@ import host.kuro.kurobase.shop.GuiShop;
 import host.kuro.kurobase.shop.ShopHandler;
 import host.kuro.kurobase.trait.BaseTypeTrait;
 import host.kuro.kurobase.trait.KuroTrait;
+import host.kuro.kurobase.trait.SendTextTrait;
 import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -62,6 +63,8 @@ public class CitizenListener implements Listener {
         if (npc.getTrait(BaseTypeTrait.class).getType().equals("BUDDYMASTER")) {
             ShopHandler.loadShop("の書", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
+        } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("EXPLANER")) {
+            npc.getTrait(SendTextTrait.class).SendText(player, false);
         } else {
             double dhealth = npc.getTrait(KuroTrait.class).getHealth();
             double dmaxhealth = npc.getTrait(KuroTrait.class).getMaxHealth();

@@ -4,13 +4,10 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.trait.BaseTypeTrait;
-import host.kuro.kurobase.trait.BuddyMasterTrait;
 import host.kuro.kurobase.trait.KuroTrait;
-import host.kuro.kurobase.trait.SendTextTrait;
 import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
@@ -67,7 +64,6 @@ public class BuddyCommand implements CommandExecutor {
                 return false;
             }
         }
-
         switch(args[0].toLowerCase()) {
             case "list": return ActionList(player);
             case "add": return ActionAdd(player, args);
@@ -78,7 +74,6 @@ public class BuddyCommand implements CommandExecutor {
             case "join": return ActionJoin(player, args);
             case "quit": return ActionQuit(player, args);
             case "revival": return ActionRevival(player, args);
-            case "buddyshop": return ActionBuddyShop(player, args);
         }
         return true;
     }
@@ -250,75 +245,7 @@ public class BuddyCommand implements CommandExecutor {
         }
         return true;
     }
-/*
-    private boolean ActionType(Player player, String[] args) {
-        try {
-            // args check
-            if (args.length != 3) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
-            }
-            String entity = args[1];
-            String newtype = args[2];
 
-            // UPDATE
-            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-            eargs.add(new DatabaseArgs("c", newtype)); // type
-            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
-            eargs.add(new DatabaseArgs("c", entity)); // name
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.TYPE.ENTITY"), eargs);
-            eargs.clear();
-            eargs = null;
-            if (ret != 1) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.regist.error"));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
-            }
-            player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.type.success"));
-            SoundUtils.PlaySound(player,"switch1", false);
-
-        } catch (Exception ex) {
-            ErrorUtils.GetErrorMessage(ex);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean ActionMode(Player player, String[] args) {
-        try {
-            // args check
-            if (args.length != 3) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
-            }
-            String entity = args[1];
-            String newmode = args[2];
-
-            // UPDATE
-            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-            eargs.add(new DatabaseArgs("c", newmode)); // type
-            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // player uuid
-            eargs.add(new DatabaseArgs("c", entity)); // name
-            int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.MODE.ENTITY"), eargs);
-            eargs.clear();
-            eargs = null;
-            if (ret != 1) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.regist.error"));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                return false;
-            }
-            player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.mode.success"));
-            SoundUtils.PlaySound(player,"switch1", false);
-
-        } catch (Exception ex) {
-            ErrorUtils.GetErrorMessage(ex);
-            return false;
-        }
-        return true;
-    }
-*/
     private boolean ActionUrl(Player player, String[] args) {
         try {
             // args check
@@ -740,66 +667,6 @@ public class BuddyCommand implements CommandExecutor {
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
             player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean ActionBuddyShop(Player player, String[] args) {
-        try {
-            String skin_name = "";
-            String skin_data = "";
-            String skin_signature = "";
-
-            // create
-            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "バディーマスター");
-
-            // trait
-            Location loc = player.getLocation();
-
-            // trait
-            // type
-            npc.addTrait(BaseTypeTrait.class);
-            npc.getTrait(BaseTypeTrait.class).setType("BUDDYMASTER");
-            // look close
-            npc.addTrait(LookClose.class);
-            npc.getTrait(LookClose.class).lookClose(true);
-            // send text
-            npc.addTrait(SendTextTrait.class);
-            npc.getTrait(SendTextTrait.class).setCool(30000);
-            npc.getTrait(SendTextTrait.class).setRange(8);
-            npc.getTrait(SendTextTrait.class).setTextPercent(30);
-            npc.getTrait(SendTextTrait.class).setText("近隣のモンスター？ 大丈夫、俺が蹴散らしてるさ！");
-            npc.getTrait(SendTextTrait.class).setText("よお！ @t！ バディー書物の取引をしないか？ 俺を右クリックしてみな！");
-            npc.getTrait(SendTextTrait.class).setText("お前のバディーは育ってるか？気長に育てないとな！");
-            npc.getTrait(SendTextTrait.class).setText("バディーが死んだら、復活の所を買うしかない！俺を右クリックしてみな！");
-            npc.getTrait(SendTextTrait.class).setText("バディーが欲しいのかい？なら書物の取引をしないか？俺を右クリックしてみな！");
-            // skin
-            npc.addTrait(SkinTrait.class);
-            skin_name = "master";
-            skin_data = "eyJ0aW1lc3RhbXAiOjE1NjMxMTE1MTcxODcsInByb2ZpbGVJZCI6ImIwZDRiMjhiYzFkNzQ4ODlhZjBlODY2MWNlZTk2YWFiIiwicHJvZmlsZU5hbWUiOiJ4RmFpaUxlUiIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjVlNDY1YzA3YTgyMjI0ODE5MjYxMjE5N2YyNzcxZTcxZDMzMjYzNDViZDc3OTA3MzEzOTllYWUxM2Y2OWNhOCJ9fX0=";
-            skin_signature = "YFbFMaC5/02UGEHV1wYU2Eo6/Cz4ybnAnIjyAbU5tp13G3Nl/X11j52njzNL82O+YrwldxRL7HEn3/K9+VPp9zY7KTg+Hzh2a4ps4AxwDoXUkqmyhVm5r2UDtZkckPJ+pd08KzIzWjM1/CDhCZ2fLPL0MOeeYNt1IO5uR1aEJe2b/46nhKzArwZ3p/vl5lgN1atfETsLnK9Xi6nTdck8J9jzsqvNJpDek87Y1/p6QFPu9gSWVN15tfv/0DbURvK++0CBx0OR93O/ftsS90KpM08fmfjxWde7dTATKmLcnbJY0QpHZyQ3ohe61uHW4cyB1kU0gS3mbJ/eTrMNKHWUYkAh2us+CDkUXbx6oau/GkmR0LyjRER/wyEczDfVbIMvMqE+h0HkdZSblCzkJsIOYBmapom8G7uDT88bKtQZAWzgPpoNyI8BZmImTA9J5YbudUaLnkN8RVANoED1juG4ilAJO6sXHpeURVnoDbkPXyRVo+8gB/2cHGugLSgjZqCt78KMHbo0yFefNPjeQYMSRfXm9IFLNCANK8rfv3K1Sck/Jwc6LaqGuDl7UZZXKEvIjL/B2hc1FUvcC41MXvEyIFB5Fycm0fqClhR9kdlMfl7NLL/W8dA8mooZlrk/CcC4OlGRKFuM+71jOPmU6sSJGWzkUk2qvTcIlSSEYTCF9yU=";
-            npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
-            // equipent
-            ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
-            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
-            // buddy master
-            npc.addTrait(BuddyMasterTrait.class);
-            npc.getTrait(BuddyMasterTrait.class).setLocation(loc);
-            // spawn setting
-            npc.setFlyable(false);
-            npc.setProtected(true);
-            npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, true);
-            npc.data().setPersistent(NPC.DAMAGE_OTHERS_METADATA, true);
-            npc.spawn(loc);
-
-            // particle
-            ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
-            SoundUtils.BroadcastSound("typewriter-2", false);
-
-        } catch (Exception ex) {
-            ErrorUtils.GetErrorMessage(ex);
             SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }

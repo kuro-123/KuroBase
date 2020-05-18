@@ -8,17 +8,23 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class BuddyUtils {
 
+    private final static String DATA_KEY = "NPCTYPE";
+
     public static boolean IsNpc(Entity entity) {
+        if (!entity.hasMetadata(DATA_KEY)) return false;
         if (IsBuddy(entity)) return true;
         if (IsBuddyMaster(entity)) return true;
+        if (IsExplaner(entity)) return true;
         return false;
     }
 
@@ -26,7 +32,16 @@ public class BuddyUtils {
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
-        if (name.equals("BUDDY")) return true;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("BUDDY")) return true;
         return false;
     }
 
@@ -34,7 +49,16 @@ public class BuddyUtils {
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
-        if (name.equals("BUDDYMASTER")) return true;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("BUDDYMASTER")) return true;
         return false;
     }
 
@@ -42,7 +66,15 @@ public class BuddyUtils {
         String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
-        if (name.equals("EXPLANER")) return true;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("EXPLANER")) return true;
         return false;
     }
 

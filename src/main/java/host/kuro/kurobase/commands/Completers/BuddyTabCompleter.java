@@ -2,14 +2,9 @@ package host.kuro.kurobase.commands.Completers;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
-import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
-import host.kuro.kurobase.utils.SoundUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -47,8 +42,6 @@ public class BuddyTabCompleter implements TabCompleter {
                     case "revival":
                         SetInputEntity(player, "DEAD");
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
-                    //case "type":
-                    //case "mode":
                     case "url":
                     case "del":
                         SetInputEntity(player, "");
@@ -91,12 +84,6 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("list");
         cmds.add("revival");
         cmds.add("del");
-        int rank = PlayerUtils.GetRank(KuroBase.GetInstance(), player);
-        if (rank == PlayerUtils.RANK_NUSHI) {
-            cmds.add("buddyshop");
-        }
-        //cmds.add("type");
-        //cmds.add("mode");
     }
 
     private void SetInputName() {

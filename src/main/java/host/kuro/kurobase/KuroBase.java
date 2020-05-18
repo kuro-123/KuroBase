@@ -8,9 +8,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.*;
 import host.kuro.kurobase.shop.GuiShopHandler;
 import host.kuro.kurobase.tasks.MinutesTask;
-import host.kuro.kurobase.trait.BuddyMasterTrait;
-import host.kuro.kurobase.trait.KuroTrait;
-import host.kuro.kurobase.trait.SendTextTrait;
+import host.kuro.kurobase.trait.*;
 import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.DataUtils;
 import host.kuro.kurobase.utils.MtRand;
@@ -151,6 +149,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("rep").setTabCompleter(new RepTabCompleter());
         getCommand("buddy").setExecutor(new BuddyCommand(this));
         getCommand("buddy").setTabCompleter(new BuddyTabCompleter());
+        getCommand("ai").setExecutor(new AiCommand(this));
+        getCommand("ai").setTabCompleter(new AiTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
@@ -257,19 +257,10 @@ public class KuroBase extends JavaPlugin {
         return kurodiscord != null;
     }
 
-    private boolean LoadDependPluginCitizens() {
-        RegisteredServiceProvider<Citizens> rsp = getServer().getServicesManager().getRegistration(Citizens.class);
-        if (rsp == null) {
-            return false;
-        }
-        citizen_plugin = rsp.getProvider();
-        return citizen_plugin != null;
-    }
-
     private boolean EnableTrait() {
         try {
             // original trait
-            TraitInfo citizen_type_trait = TraitInfo.create(SendTextTrait.class).withName("BaseTypeTrait");
+            TraitInfo citizen_type_trait = TraitInfo.create(BaseTypeTrait.class).withName("BaseTypeTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_type_trait);
             TraitInfo citizen_trait = TraitInfo.create(KuroTrait.class).withName("KuroTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
@@ -277,7 +268,7 @@ public class KuroBase extends JavaPlugin {
             CitizensAPI.getTraitFactory().registerTrait(citizen_master_trait);
             TraitInfo citizen_text_trait = TraitInfo.create(SendTextTrait.class).withName("SendTextTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_text_trait);
-            TraitInfo citizen_explaner_trait = TraitInfo.create(SendTextTrait.class).withName("ExplanerTrait");
+            TraitInfo citizen_explaner_trait = TraitInfo.create(ExplanerTrait.class).withName("ExplanerTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_explaner_trait);
         } catch (Exception ex) {
             return false;
@@ -342,10 +333,6 @@ public class KuroBase extends JavaPlugin {
             citizen_listener = null;
         }
         getServer().getPluginManager().disablePlugin(this);
-    }
-
-    private boolean isSpigotServer() {
-        return getServer().getVersion().contains("Spigot");
     }
 
     @Override

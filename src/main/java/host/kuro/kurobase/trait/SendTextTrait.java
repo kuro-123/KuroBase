@@ -56,23 +56,25 @@ public class SendTextTrait extends Trait {
                 }
                 Player player = (Player)entity;
                 if (!send_player.containsKey(player)) {
-                    SendText(player);
+                    SendText(player, true);
                     send_player.put(player, System.currentTimeMillis());
                 } else {
                     long before = send_player.get(player);
                     long after = System.currentTimeMillis();
                     if ((after - before) >= cool) {
-                        SendText(player);
+                        SendText(player, true);
                         send_player.put(player, System.currentTimeMillis());
                     }
                 }
             }
         }
     }
-    private void SendText(Player player) {
-        if (percent < 100) {
-            if (KuroBase.GetRand().Next(1, 100) > percent) {
-                return;
+    public void SendText(Player player, boolean random) {
+        if (random) {
+            if (percent < 100) {
+                if (KuroBase.GetRand().Next(1, 100) > percent) {
+                    return;
+                }
             }
         }
         int min = 1;
@@ -84,7 +86,7 @@ public class SendTextTrait extends Trait {
             i++;
             if (value != i) continue;
             text = text.replace("@t", player.getDisplayName());
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "[" + npc.getName() + "] " + text);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + npc.getName() + ": " + text);
         }
     }
 }

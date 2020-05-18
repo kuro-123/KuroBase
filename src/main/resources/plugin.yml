@@ -92,5 +92,9 @@ commands:
     usage: /paste
   buddy:
     description: バディー操作
-    usage: /buddy <add|del|list|url|join|quit|revival> ..
+    usage: /buddy < add | del | list | url | join | quit | revival > ..
     aliases: [b]
+  ai:
+    description: AI操作(鯖主コマンド)
+    usage: /ai <AI選択>
+    aliases: [a]
