@@ -6,50 +6,43 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.npc.KuroTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_ATTACK;
-import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.PROJECTILE;
-
 public class BuddyUtils {
 
     public static boolean IsNpc(Entity entity) {
-        String name = "";
-        if (entity instanceof Player) {
-            name = ((Player)entity).getDisplayName();
-        } else {
-            name = entity.getCustomName();
-        }
-        if (name == null) return false;
-        if (name.length() <= 0) return false;
-        if (name.indexOf(ChatColor.LIGHT_PURPLE + "[BD] ")<0) {
-            return false;
-        }
-        return true;
+        if (IsBuddy(entity)) return true;
+        if (IsBuddyMaster(entity)) return true;
+        return false;
     }
 
-    public static boolean IsBuddyMaster(Entity damager) {
-        String name = "";
-        if (damager instanceof Player) {
-            name = ((Player)damager).getDisplayName();
-        } else {
-            name = damager.getCustomName();
-        }
+    public static boolean IsBuddy(Entity entity) {
+        String name = entity.getCustomName();
         if (name == null) return false;
         if (name.length() <= 0) return false;
-        if (name.indexOf(ChatColor.LIGHT_PURPLE + "バディーマスター")>=0) {
-            return true;
-        }
+        if (name.equals("BUDDY")) return true;
+        return false;
+    }
+
+    public static boolean IsBuddyMaster(Entity entity) {
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (name.equals("BUDDYMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsExplaner(Entity entity) {
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (name.equals("EXPLANER")) return true;
         return false;
     }
 

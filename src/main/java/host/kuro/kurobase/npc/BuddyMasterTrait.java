@@ -4,19 +4,17 @@ import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.*;
-
-import java.util.UUID;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 
 public class BuddyMasterTrait extends Trait {
-    // counter
     private int tick = 0;
-    private long spawn_time = 0;
     private Entity attack_target = null;
     private Entity before_target = null;
 
@@ -56,18 +54,11 @@ public class BuddyMasterTrait extends Trait {
 
     @Override
     public void onSpawn() {
-        // spawn time
-        spawn_time = System.currentTimeMillis();
-
         navi = npc.getNavigator();
-
         if (!(npc.getEntity() instanceof Player)) return;
         npcplayer = ((Player) npc.getEntity());
-
         // gamemode
         npcplayer.setGameMode(GameMode.SURVIVAL);
-        // display name
-        npcplayer.setDisplayName(ChatColor.LIGHT_PURPLE + "バディーマスター");
         // status
         UpdateStatus();
     }

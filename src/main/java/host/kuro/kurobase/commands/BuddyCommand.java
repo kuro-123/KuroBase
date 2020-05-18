@@ -3,6 +3,7 @@ package host.kuro.kurobase.commands;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.npc.BaseTypeTrait;
 import host.kuro.kurobase.npc.BuddyMasterTrait;
 import host.kuro.kurobase.npc.KuroTrait;
 import host.kuro.kurobase.npc.SendTextTrait;
@@ -10,18 +11,19 @@ import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
-import net.citizensnpcs.trait.*;
+import net.citizensnpcs.trait.LookClose;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -466,7 +468,6 @@ public class BuddyCommand implements CommandExecutor {
                 }
             }
             String buddy_name = args[1];
-            String name = player.getName();
             String type = "";
             String mode = "";
             int level = -1;
@@ -522,14 +523,17 @@ public class BuddyCommand implements CommandExecutor {
                     return false;
                 }
             }
-
             // create
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, buddy_name);
             // trait
-            npc.getTrait(Age.class).setAge(20);
-            npc.getTrait(GameModeTrait.class).setGameMode(GameMode.SURVIVAL);
+            // type
+            npc.addTrait(BaseTypeTrait.class);
+            npc.getTrait(BaseTypeTrait.class).setType("BUDDY");
+            // look close
+            npc.addTrait(LookClose.class);
+            npc.getTrait(LookClose.class).lookClose(true);
+            // skin
             npc.addTrait(SkinTrait.class);
-
             if (skin_data == null) {
                 if (mode.equals(Language.translate("buddy.data.normal"))) {
                     skin_name = "people";
@@ -560,9 +564,7 @@ public class BuddyCommand implements CommandExecutor {
                     }
                 }
             }
-            npc.addTrait(LookClose.class);
-            npc.getTrait(LookClose.class).lookClose(true);
-
+            // kuro
             npc.addTrait(KuroTrait.class);
             npc.getTrait(KuroTrait.class).setLevel(level);
             npc.getTrait(KuroTrait.class).setExp(exp);
@@ -588,10 +590,10 @@ public class BuddyCommand implements CommandExecutor {
                 return false;
             }
 
+            // spawn setting
             Location loc = player.getLocation();
             loc.setX(loc.getX()+1.0D);
             loc.setZ(loc.getZ()+1.0D);
-
             npc.setFlyable(false);
             npc.setProtected(false);
             npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
@@ -603,8 +605,6 @@ public class BuddyCommand implements CommandExecutor {
             SoundUtils.BroadcastSound("typewriter-2", false);
 
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.entity.select.spawn"));
-            //SoundUtils.PlaySound(player,"switch1", false);
-            //npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, new ItemStack(Material.LEATHER_BOOTS, 1));
 
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
@@ -759,34 +759,40 @@ public class BuddyCommand implements CommandExecutor {
             Location loc = player.getLocation();
 
             // trait
+            // type
+            npc.addTrait(BaseTypeTrait.class);
+            npc.getTrait(BaseTypeTrait.class).setType("BUDDYMASTER");
+            // look close
             npc.addTrait(LookClose.class);
             npc.getTrait(LookClose.class).lookClose(true);
-
+            // send text
             npc.addTrait(SendTextTrait.class);
             npc.getTrait(SendTextTrait.class).setCool(30000);
             npc.getTrait(SendTextTrait.class).setRange(8);
             npc.getTrait(SendTextTrait.class).setTextPercent(30);
+            npc.getTrait(SendTextTrait.class).setText("近隣のモンスター？ 大丈夫、俺が蹴散らしてるさ！");
             npc.getTrait(SendTextTrait.class).setText("よお！ @t！ バディー書物の取引をしないか？ 俺を右クリックしてみな！");
-            npc.getTrait(SendTextTrait.class).setText("近隣のモンスター？ 大丈夫、俺が蹴散らしてるさ");
-
-            npc.getTrait(Age.class).setAge(20);
+            npc.getTrait(SendTextTrait.class).setText("お前のバディーは育ってるか？気長に育てないとな！");
+            npc.getTrait(SendTextTrait.class).setText("バディーが死んだら、復活の所を買うしかない！俺を右クリックしてみな！");
+            npc.getTrait(SendTextTrait.class).setText("バディーが欲しいのかい？なら書物の取引をしないか？俺を右クリックしてみな！");
+            // skin
             npc.addTrait(SkinTrait.class);
             skin_name = "master";
             skin_data = "eyJ0aW1lc3RhbXAiOjE1NjMxMTE1MTcxODcsInByb2ZpbGVJZCI6ImIwZDRiMjhiYzFkNzQ4ODlhZjBlODY2MWNlZTk2YWFiIiwicHJvZmlsZU5hbWUiOiJ4RmFpaUxlUiIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjVlNDY1YzA3YTgyMjI0ODE5MjYxMjE5N2YyNzcxZTcxZDMzMjYzNDViZDc3OTA3MzEzOTllYWUxM2Y2OWNhOCJ9fX0=";
             skin_signature = "YFbFMaC5/02UGEHV1wYU2Eo6/Cz4ybnAnIjyAbU5tp13G3Nl/X11j52njzNL82O+YrwldxRL7HEn3/K9+VPp9zY7KTg+Hzh2a4ps4AxwDoXUkqmyhVm5r2UDtZkckPJ+pd08KzIzWjM1/CDhCZ2fLPL0MOeeYNt1IO5uR1aEJe2b/46nhKzArwZ3p/vl5lgN1atfETsLnK9Xi6nTdck8J9jzsqvNJpDek87Y1/p6QFPu9gSWVN15tfv/0DbURvK++0CBx0OR93O/ftsS90KpM08fmfjxWde7dTATKmLcnbJY0QpHZyQ3ohe61uHW4cyB1kU0gS3mbJ/eTrMNKHWUYkAh2us+CDkUXbx6oau/GkmR0LyjRER/wyEczDfVbIMvMqE+h0HkdZSblCzkJsIOYBmapom8G7uDT88bKtQZAWzgPpoNyI8BZmImTA9J5YbudUaLnkN8RVANoED1juG4ilAJO6sXHpeURVnoDbkPXyRVo+8gB/2cHGugLSgjZqCt78KMHbo0yFefNPjeQYMSRfXm9IFLNCANK8rfv3K1Sck/Jwc6LaqGuDl7UZZXKEvIjL/B2hc1FUvcC41MXvEyIFB5Fycm0fqClhR9kdlMfl7NLL/W8dA8mooZlrk/CcC4OlGRKFuM+71jOPmU6sSJGWzkUk2qvTcIlSSEYTCF9yU=";
             npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
-
+            // equipent
+            ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
+            // buddy master
             npc.addTrait(BuddyMasterTrait.class);
             npc.getTrait(BuddyMasterTrait.class).setLocation(loc);
+            // spawn setting
             npc.setFlyable(false);
             npc.setProtected(true);
             npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, true);
             npc.data().setPersistent(NPC.DAMAGE_OTHERS_METADATA, true);
             npc.spawn(loc);
-
-            ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
-            sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
-            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
 
             // particle
             ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle

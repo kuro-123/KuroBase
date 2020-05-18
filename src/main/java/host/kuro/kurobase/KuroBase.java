@@ -75,10 +75,13 @@ public class KuroBase extends JavaPlugin {
 
     private static Citizens citizen_plugin = null;
     public static Citizens GetCitizens() { return citizen_plugin; }
-    private static TraitInfo citizen_trait= null;
-    private static TraitInfo citizen_master_trait= null;
-    private static TraitInfo citizen_text_trait= null;
     private static CitizenListener citizen_listener = null;
+    private static TraitInfo citizen_type_trait;
+    private static TraitInfo citizen_trait;
+    private static TraitInfo citizen_master_trait;
+    private static TraitInfo citizen_text_trait;
+    private static TraitInfo citizen_explaner_trait;
+
 
     @Override
     public void onEnable() {
@@ -179,19 +182,11 @@ public class KuroBase extends JavaPlugin {
         // load citizens plugin
         getLogger().info(Language.translate("plugin.setup.citizens"));
         citizen_plugin = (Citizens)getServer().getPluginManager().getPlugin("Citizens");
-        //citizen_plugin.getNPCRegistry().deregisterAll();
         if(citizen_plugin == null || citizen_plugin.isEnabled() == false) {
             disablePlugin();
             return;
         }
-        try {
-            citizen_trait = TraitInfo.create(KuroTrait.class).withName("KuroTrait");
-            CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
-            citizen_master_trait = TraitInfo.create(BuddyMasterTrait.class).withName("BuddyMasterTrait");
-            CitizensAPI.getTraitFactory().registerTrait(citizen_master_trait);
-            citizen_text_trait = TraitInfo.create(SendTextTrait.class).withName("SendTextTrait");
-            CitizensAPI.getTraitFactory().registerTrait(citizen_text_trait);
-        } catch (Throwable ex) {
+        if (!EnableTrait()) {
             disablePlugin();
             return;
         }
@@ -271,23 +266,81 @@ public class KuroBase extends JavaPlugin {
         return citizen_plugin != null;
     }
 
+    private boolean EnableTrait() {
+        try {
+            // original trait
+            TraitInfo citizen_type_trait = TraitInfo.create(SendTextTrait.class).withName("BaseTypeTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_type_trait);
+            TraitInfo citizen_trait = TraitInfo.create(KuroTrait.class).withName("KuroTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
+            TraitInfo citizen_master_trait = TraitInfo.create(BuddyMasterTrait.class).withName("BuddyMasterTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_master_trait);
+            TraitInfo citizen_text_trait = TraitInfo.create(SendTextTrait.class).withName("SendTextTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_text_trait);
+            TraitInfo citizen_explaner_trait = TraitInfo.create(SendTextTrait.class).withName("ExplanerTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_explaner_trait);
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
+    }
+
+    private void DisableTrait() {
+        if (citizen_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_trait = null;
+            }
+        }
+        if (citizen_type_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_type_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_type_trait = null;
+            }
+        }
+        if (citizen_master_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_master_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_master_trait = null;
+            }
+        }
+        if (citizen_text_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_text_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_text_trait = null;
+            }
+        }
+        if (citizen_explaner_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_explaner_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_explaner_trait = null;
+            }
+        }
+    }
+
     private void disablePlugin() {
         if (citizen_plugin != null) {
-            if (citizen_trait != null) {
-                try {
-                    CitizensAPI.getTraitFactory().deregisterTrait(citizen_trait);
-                } catch (Throwable ex) {
-                    ex.printStackTrace();
-                } finally {
-                    citizen_trait = null;
-                }
-            }
+            DisableTrait();
         }
         if (citizen_listener != null) {
             HandlerList.unregisterAll(citizen_listener);
             citizen_listener = null;
         }
-
         getServer().getPluginManager().disablePlugin(this);
     }
 

@@ -8,13 +8,15 @@ import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.util.DataKey;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
@@ -26,12 +28,13 @@ public class KuroTrait extends Trait {
     // flag
     private boolean closing = false;
 
-    @Persist private boolean protect;
-    @Persist private Player npcplayer = null;
-    @Persist private Entity attack_target = null;
-    @Persist private Entity before_target = null;
-    @Persist private Navigator navi = null;
+    private Player npcplayer = null;
+    private Entity attack_target = null;
+    private Entity before_target = null;
+    private Navigator navi = null;
+
     // status
+    @Persist private boolean protect;
     @Persist private Player owner = null;
     @Persist private String name = "";
     @Persist private String type = "";
@@ -194,7 +197,7 @@ public class KuroTrait extends Trait {
         if (!(npc.getEntity() instanceof Player)) return;
         npcplayer = ((Player) npc.getEntity());
         // navi set
-        this.navi = npc.getNavigator();
+        navi = npc.getNavigator();
         // gamemode
         npcplayer.setGameMode(GameMode.SURVIVAL);
         // display name

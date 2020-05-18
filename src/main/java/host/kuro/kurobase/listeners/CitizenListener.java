@@ -3,19 +3,17 @@ package host.kuro.kurobase.listeners;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.npc.BuddyMasterTrait;
+import host.kuro.kurobase.npc.BaseTypeTrait;
 import host.kuro.kurobase.npc.KuroTrait;
 import host.kuro.kurobase.shop.GuiHandler;
 import host.kuro.kurobase.shop.GuiShop;
 import host.kuro.kurobase.shop.ShopHandler;
-import host.kuro.kurobase.utils.BuddyUtils;
 import host.kuro.kurobase.utils.ParticleUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurodiscord.DiscordMessage;
 import net.citizensnpcs.api.event.*;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -44,7 +42,7 @@ public class CitizenListener implements Listener {
     void onNPCLeftClick(NPCLeftClickEvent event) {
         NPC npc = event.getNPC();
         Player player = event.getClicker();
-        if (!npc.getName().equals("バディーマスター")) {
+        if (npc.getTrait(BaseTypeTrait.class).getType().equals("BUDDY")) {
             SendNpcInfo(npc, player);
         }
     }
@@ -61,7 +59,7 @@ public class CitizenListener implements Listener {
     void onNPCRightClick(NPCRightClickEvent event) {
         NPC npc = event.getNPC();
         Player player = event.getClicker();
-        if (npc.getName().equals("バディーマスター")) {
+        if (npc.getTrait(BaseTypeTrait.class).getType().equals("BUDDYMASTER")) {
             ShopHandler.loadShop("の書", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else {
@@ -126,49 +124,4 @@ public class CitizenListener implements Listener {
             }
         }
     }
-
-/*
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onEntityTargetNPC(EntityTargetNPCEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCCollisionEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCCombustByBlockEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCCombustByEntityEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCCreateEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCDamageByBlockEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCDamageEntityEvent event) {
-    }
-
-
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCOpenDoorEvent event) {
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCPushEvent event) {
-    }
-
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    void onNPCClick(NPCSpeechEvent event) {
-    }
-*/
 }

@@ -11,7 +11,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.ArrayList;
 
@@ -35,7 +38,7 @@ public class EntityListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
         try {
             Entity entity = e.getEntity();
-            if (BuddyUtils.IsNpc(entity)) {
+            if (BuddyUtils.IsBuddy(entity)) {
                 return;
             }
             if (BuddyUtils.IsBuddyMaster(e.getDamager())) {
@@ -402,7 +405,7 @@ public class EntityListener implements Listener {
                 xp = plugin.GetRand().Next(minxp, maxxp);
             }
 
-            if (BuddyUtils.IsNpc(player)) {
+            if (BuddyUtils.IsBuddy(player)) {
                 BuddyUtils.SetNpcExprience(player.getName(), xp);
                 e.setDroppedExp(0);
 

@@ -7,16 +7,14 @@ import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.world.WorldLoadEvent;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SendTextTrait extends Trait {
 
-    @Persist
-    private final Set<String> send_text = new HashSet<String>();
-
+    @Persist private final Set<String> send_text = new HashSet<String>();
     @Persist private int range = 8;
     @Persist private int cool = 60000;
     @Persist private int percent = 50;
@@ -47,7 +45,7 @@ public class SendTextTrait extends Trait {
         for (Entity entity : npc.getEntity().getWorld().getEntities()) {
             if (!(entity instanceof Player)) continue;
             if (entity.getEntityId() == npc.getEntity().getEntityId()) continue;
-            if (BuddyUtils.IsNpc(entity)) continue;
+            if (BuddyUtils.IsBuddy(entity)) continue;
 
             int entity_y = entity.getLocation().getBlockY();
             int own_y = npc.getEntity().getLocation().getBlockY();
@@ -85,7 +83,7 @@ public class SendTextTrait extends Trait {
         for (String text : send_text) {
             i++;
             if (value != i) continue;
-            text.replace("@t", player.getDisplayName());
+            text = text.replace("@t", player.getDisplayName());
             player.sendMessage(ChatColor.LIGHT_PURPLE + "[" + npc.getName() + "] " + text);
         }
     }
