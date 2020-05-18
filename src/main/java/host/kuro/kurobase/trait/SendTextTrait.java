@@ -1,4 +1,4 @@
-package host.kuro.kurobase.npc;
+package host.kuro.kurobase.trait;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.utils.BuddyUtils;

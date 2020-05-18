@@ -1,4 +1,4 @@
-package host.kuro.kurobase.npc;
+package host.kuro.kurobase.trait;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;

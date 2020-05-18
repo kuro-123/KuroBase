@@ -3,7 +3,7 @@ package host.kuro.kurobase.utils;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.npc.KuroTrait;
+import host.kuro.kurobase.trait.KuroTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Entity;

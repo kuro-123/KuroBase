@@ -1,4 +1,4 @@
-package host.kuro.kurobase.npc;
+package host.kuro.kurobase.trait;
 
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
