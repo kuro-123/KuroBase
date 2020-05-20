@@ -34,6 +34,7 @@ public class KuroTrait extends Trait {
     private Entity attack_target = null;
     private Entity before_target = null;
     private Navigator navi = null;
+    private String movemode = "auto";
 
     // status
     @Persist private boolean protect;
@@ -60,6 +61,8 @@ public class KuroTrait extends Trait {
     public Player getOwner() { return this.owner; } public void setOwner(Player player) { this.owner = player; }
     // name
     public void setName(String name) { this.name = name; }
+    // movemode
+    public void setMoveMode(String movemode) { this.movemode = movemode; }
     // name
     public void setType(String type) { this.type = type; }
     // name
@@ -230,7 +233,10 @@ public class KuroTrait extends Trait {
 
         if (!this.guard) return;
         if ((System.currentTimeMillis() - spawn_time) <= 3000) return;
-
+        if (movemode.equals("follow")) {
+            attack_target = null;
+            return;
+        }
         double max_dis = range;
         for (Entity entity : npc.getEntity().getWorld().getEntities()) {
             if (!((entity instanceof Monster) || (entity instanceof Animals))) continue;

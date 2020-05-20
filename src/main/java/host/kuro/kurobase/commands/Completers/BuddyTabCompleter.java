@@ -36,6 +36,7 @@ public class BuddyTabCompleter implements TabCompleter {
                     case "join":
                         SetInputEntity(player, "ALIVE");
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
+                    case "mode":
                     case "quit":
                         SetInputEntity(player, "JOIN");
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
@@ -52,14 +53,14 @@ public class BuddyTabCompleter implements TabCompleter {
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "add":
-                    case "type":
                         SetInputType(player);
-                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
-                    case "mode":
-                        SetInputModeByName(player, args[args.length-2]);
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "url":
                         SetInputURL();
+                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
+                    case "mode":
+                        cmds.add("autobattle");
+                        cmds.add("follow");
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                 }
                 return null;
@@ -79,6 +80,7 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("<アクションを選択>");
         cmds.add("join");
         cmds.add("quit");
+        cmds.add("mode");
         cmds.add("add");
         cmds.add("url");
         cmds.add("list");

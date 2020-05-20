@@ -67,13 +67,92 @@ public class BuddyCommand implements CommandExecutor {
         switch(args[0].toLowerCase()) {
             case "list": return ActionList(player);
             case "add": return ActionAdd(player, args);
-            //case "type": return ActionType(player, args);
-            //case "mode": return ActionMode(player, args);
+            case "mode": return ActionMode(player, args);
             case "url": return ActionUrl(player, args);
             case "del": return ActionDel(player, args);
             case "join": return ActionJoin(player, args);
             case "quit": return ActionQuit(player, args);
             case "revival": return ActionRevival(player, args);
+        }
+        return true;
+    }
+
+    private boolean ActionMode(Player player, String[] args) {
+        try {
+            // args check
+            if (args.length != 3) {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+            String entity = args[1];
+            String mode = args[2].toLowerCase();
+            String uuid_str = "";
+            try {
+                PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
+                ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+                eargs.add(new DatabaseArgs("c", player.getUniqueId().toString()));
+                eargs.add(new DatabaseArgs("c", entity));
+                ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, eargs);
+                eargs.clear();
+                eargs = null;
+                if (rs != null) {
+                    while(rs.next()){
+                        uuid_str = rs.getString("uuid");
+                        break;
+                    }
+                }
+                if (ps != null) {
+                    ps.close();
+                    ps = null;
+                }
+                if (rs != null) {
+                    rs.close();
+                    rs = null;
+                }
+            } catch (Exception ex) {
+                ErrorUtils.GetErrorMessage(ex);
+            }
+
+            if (uuid_str.length() > 0) {
+                UUID uuid = UUID.fromString(uuid_str);
+                NPC npc = CitizensAPI.getNPCRegistry().getByUniqueId(uuid);
+                if (npc == null) {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
+                // particle
+                ParticleUtils.CrownParticle(npc.getEntity(), Particle.DRIP_LAVA, 50); // particle
+
+                // mode
+                if (mode.equals("autobattle")) {
+                    npc.getTrait(KuroTrait.class).setMoveMode("auto");
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.mode.auto"));
+                    SoundUtils.PlaySound(player,"switch1", false);
+
+                } else if (mode.equals("follow")) {
+                    npc.getTrait(KuroTrait.class).setMoveMode("follow");
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.mode.follow"));
+                    SoundUtils.PlaySound(player,"switch1", false);
+
+                } else {
+                    player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.mode.error"));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    return false;
+                }
+
+            } else {
+                player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                return false;
+            }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.select.error"));
+            SoundUtils.PlaySound(player,"cancel5", false);
+            return false;
         }
         return true;
     }
