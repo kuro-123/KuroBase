@@ -9,15 +9,13 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.BlockInventoryHolder;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +55,8 @@ public class InventoryListener implements Listener {
             event.setCancelled(true);
             return;
         }
+
+        if (holder == null) return;
 
         // check area
         AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName()

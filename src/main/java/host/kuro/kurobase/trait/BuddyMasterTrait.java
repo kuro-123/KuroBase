@@ -2,6 +2,7 @@ package host.kuro.kurobase.trait;
 
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
+import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.GameMode;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 public class BuddyMasterTrait extends Trait {
     private int tick = 0;
     private int away_tick = 0;
+    private int respawn_tick = 0;
     private Entity attack_target = null;
     private Entity before_target = null;
 
@@ -66,11 +68,20 @@ public class BuddyMasterTrait extends Trait {
 
     @Override
     public void run() {
+        respawn_tick++;
         if (!npc.isSpawned()) return;
         // check guard
         CheckGuard();
         // check location
         CheckLocation();
+        // respawn
+        if (respawn_tick > 7200) {
+            if (location != null) {
+                npc.despawn(DespawnReason.PENDING_RESPAWN);
+                npc.spawn(location);
+            }
+            respawn_tick = 0;
+        }
     }
 
     private void CheckGuard() {
