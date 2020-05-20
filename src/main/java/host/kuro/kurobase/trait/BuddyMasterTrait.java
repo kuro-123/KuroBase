@@ -9,7 +9,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -87,7 +86,7 @@ public class BuddyMasterTrait extends Trait {
     private void CheckGuard() {
         double max_dis = range;
         for (Entity entity : npc.getEntity().getWorld().getEntities()) {
-            if (!((entity instanceof Monster) || (entity instanceof Animals))) continue;
+            if (!(entity instanceof Monster)) continue;
             if (entity.getEntityId() == npc.getEntity().getEntityId()) continue;
             int entity_y = entity.getLocation().getBlockY();
             int own_y = npc.getEntity().getLocation().getBlockY();

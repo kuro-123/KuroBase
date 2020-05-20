@@ -4,15 +4,12 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.tasks.MinutesTask;
-import host.kuro.kurobase.tasks.WorldEditTask;
 import host.kuro.kurobase.utils.*;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -195,7 +192,7 @@ public class AreaCommand implements CommandExecutor {
                 // pay log
                 PlayerUtils.AddLogAreaPay(player, "AREA", price);
             }
-
+            Bukkit.getWorld("world").setGameRuleValue("keepInventory", "true");
             // data resetup
             AreaUtils.SetupProtectData();
 

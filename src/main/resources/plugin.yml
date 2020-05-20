@@ -98,3 +98,6 @@ commands:
     description: AI操作(鯖主コマンド)
     usage: /ai <AI選択>
     aliases: [a]
+  rule:
+    description: ルール操作(管理コマンド)
+    usage: /rule <ルール選択> <ON|OFF>
