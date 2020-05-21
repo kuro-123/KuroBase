@@ -272,6 +272,8 @@ public class KuroBase extends JavaPlugin {
             CitizensAPI.getTraitFactory().registerTrait(citizen_trait);
             TraitInfo citizen_master_trait = TraitInfo.create(BuddyMasterTrait.class).withName("BuddyMasterTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_master_trait);
+            TraitInfo citizen_cmaster_trait = TraitInfo.create(CreativeMasterTrait.class).withName("CreativeMasterTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_cmaster_trait);
             TraitInfo citizen_text_trait = TraitInfo.create(SendTextTrait.class).withName("SendTextTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_text_trait);
             TraitInfo citizen_explaner_trait = TraitInfo.create(ExplanerTrait.class).withName("ExplanerTrait");

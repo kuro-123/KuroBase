@@ -63,17 +63,23 @@ public class ShopHandler {
 
                     Material m;
                     ItemStack stack;
-                    if (name.equals("復活の書")) {
+                    if (name.equals(Language.translate("shop.item.revival"))) {
                         m = Material.getMaterial("PAPER");
                         stack = new ItemStack(m, 1);
                         ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName("復活の書");
+                        data.setDisplayName(Language.translate("shop.item.revival"));
                         stack.setItemMeta(data);
-                    } else if (name.equals("バディーの書")) {
+                    } else if (name.equals(Language.translate("shop.item.buddy"))) {
                         m = Material.getMaterial("PAPER");
                         stack = new ItemStack(m, 1);
                         ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName("バディーの書");
+                        data.setDisplayName(Language.translate("shop.item.buddy"));
+                        stack.setItemMeta(data);
+                    } else if (name.equals(Language.translate("shop.item.creative"))) {
+                        m = Material.getMaterial("PAPER");
+                        stack = new ItemStack(m, 1);
+                        ItemMeta data = stack.getItemMeta();
+                        data.setDisplayName(Language.translate("shop.item.creative"));
                         stack.setItemMeta(data);
                     } else {
                         m = Material.matchMaterial(name);

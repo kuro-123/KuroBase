@@ -7,10 +7,13 @@ import host.kuro.kurobase.utils.SoundUtils;
 import host.kuro.kurobase.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class CreativeCommand implements CommandExecutor {
 
@@ -43,9 +46,30 @@ public class CreativeCommand implements CommandExecutor {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.fail"));
             SoundUtils.PlaySound(player,"cancel5", false);
         } else {
-            player.setGameMode(GameMode.CREATIVE);
-            player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.creative.success"));
-            SoundUtils.PlaySound(player,"switch1", false);
+            // check item
+            ItemStack stack = player.getInventory().getItemInMainHand();
+            if (stack != null) {
+                ItemMeta data = stack.getItemMeta();
+                if (data != null) {
+                    String display = data.getDisplayName();
+                    if (!display.equals(Language.translate("shop.item.creative"))) {
+                        player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.item.error"));
+                        SoundUtils.PlaySound(player,"cancel5", false);
+                        return false;
+                    }
+                    int amount = stack.getAmount();
+                    amount--;
+                    if (amount <= 0) {
+                        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
+                    } else {
+                        stack.setAmount(amount);
+                        player.getInventory().setItemInMainHand(stack);
+                    }
+                    player.setGameMode(GameMode.CREATIVE);
+                    player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.creative.success"));
+                    SoundUtils.PlaySound(player,"switch1", false);
+                }
+            }
         }
         return true;
     }

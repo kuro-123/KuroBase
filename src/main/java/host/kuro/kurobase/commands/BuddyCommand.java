@@ -210,7 +210,7 @@ public class BuddyCommand implements CommandExecutor {
                 ItemMeta data = stack.getItemMeta();
                 if (data != null) {
                     String display = data.getDisplayName();
-                    if (!display.equals("バディーの書")) {
+                    if (!display.equals(Language.translate("shop.item.buddy"))) {
                         player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.add.item.error"));
                         SoundUtils.PlaySound(player,"cancel5", false);
                         return false;
@@ -711,7 +711,7 @@ public class BuddyCommand implements CommandExecutor {
                 ItemMeta data = stack.getItemMeta();
                 if (data != null) {
                     String display = data.getDisplayName();
-                    if (!display.equals("復活の書")) {
+                    if (!display.equals(Language.translate("shop.item.revival"))) {
                         player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.entity.revival.item.error"));
                         SoundUtils.PlaySound(player,"cancel5", false);
                         return false;

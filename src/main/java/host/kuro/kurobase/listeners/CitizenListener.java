@@ -68,13 +68,16 @@ public class CitizenListener implements Listener {
                     ShopHandler.loadShop("の書", "npc");
                     GuiHandler.open(player, new GuiShop(player, 0));
                 } else {
-                    player.sendMessage(ChatColor.YELLOW+"ﾊﾞﾃﾞｨｰ取引をするにはLv200以上必要です！狩りをしましょう！");
-                    SoundUtils.PlaySound(player,"cancel5", false);
+                    player.sendMessage(ChatColor.YELLOW + "ﾊﾞﾃﾞｨｰ取引をするにはLv200以上必要です！狩りをしましょう！");
+                    SoundUtils.PlaySound(player, "cancel5", false);
                 }
             } else {
                 ShopHandler.loadShop("の書", "npc");
                 GuiHandler.open(player, new GuiShop(player, 0));
             }
+        } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("CREATIVEMASTER")) {
+            ShopHandler.loadShop("ｸﾘｴﾁｹｯﾄ", "npc");
+            GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("EXPLANER")) {
             npc.getTrait(SendTextTrait.class).SendText(player, false);
         } else {
