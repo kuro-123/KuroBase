@@ -2,7 +2,6 @@ package host.kuro.kurobase.shop;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
-import host.kuro.kurobase.database.DatabaseManager;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
@@ -184,6 +183,16 @@ public class ShopHandler {
             int money = PlayerUtils.GetMoney(KuroBase.getDB(), player);
             String search = stack.getType().name().toLowerCase();
 
+            ItemMeta data = stack.getItemMeta();
+            if (data != null) {
+                String display = data.getDisplayName();
+                if (display != null) {
+                    if (display.length() > 0) {
+                        search = display;
+                    }
+                }
+            }
+
             int ret = 0;
             int total_price = 0;
             int total_amount = 0;
@@ -193,6 +202,15 @@ public class ShopHandler {
                 if (item == null) continue;
                 if(item.getType()!=null) {
                     String itemName = inv.getItem(i).getType().name();
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta != null) {
+                        String display = meta.getDisplayName();
+                        if (display != null) {
+                            if (display.length() > 0) {
+                                itemName = display;
+                            }
+                        }
+                    }
                     if (itemName.toLowerCase().equals(search)) {
                         int suryo = item.getAmount();
                         int price = cost * suryo;

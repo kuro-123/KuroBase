@@ -134,6 +134,7 @@ public class WorldEditTask extends BukkitRunnable {
                             make_cnt++;
                             hit = true;
                         }
+                        block = null;
                         if (make_cnt >= make_max) break;
                     }
                     if (make_cnt >= make_max) break;
@@ -188,6 +189,7 @@ public class WorldEditTask extends BukkitRunnable {
                             make_cnt++;
                             hit = true;
                         }
+                        block = null;
                         if (make_cnt >= make_max) break;
                     }
                     if (make_cnt >= make_max) break;
@@ -238,6 +240,7 @@ public class WorldEditTask extends BukkitRunnable {
                             make_cnt++;
                             hit = true;
                         }
+                        block = null;
                         if (make_cnt >= make_max) break;
                     }
                     if (make_cnt >= make_max) break;
