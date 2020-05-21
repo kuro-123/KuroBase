@@ -34,12 +34,26 @@ public class PvpCommand implements CommandExecutor {
 
         String option = args[0].toLowerCase();
         if (option.equals("on")) {
+            String display = player.getDisplayName();
+            if (display != null) {
+                if (display.length() > 0) {
+                    player.setDisplayName(ChatColor.RED + display + ChatColor.RESET);
+                }
+            }
             plugin.GetPvp().put(player, true);
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pvp.modeon"));
             SoundUtils.PlaySound(player,"switch1", false);
             return true;
         }
         else if (option.equals("off")) {
+            String display = player.getDisplayName();
+            if (display != null) {
+                if (display.length() > 0) {
+                    display = display.replace(ChatColor.RED.toString(), "");
+                    display = display.replace(ChatColor.RESET.toString(), "");
+                    player.setDisplayName(display);
+                }
+            }
             plugin.GetPvp().put(player, false);
             player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pvp.modeoff"));
             SoundUtils.PlaySound(player,"switch1", false);
