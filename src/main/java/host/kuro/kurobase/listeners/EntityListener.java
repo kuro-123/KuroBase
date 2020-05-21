@@ -52,6 +52,26 @@ public class EntityListener implements Listener {
                     // special attack
                     if (cause == ENTITY_ATTACK || cause == PROJECTILE) {
                         Player player = (Player)entity;
+                        Entity damager = e.getDamager();
+                        if (damager instanceof Player) {
+                            Player dmger = ((Player)damager);
+                            // pvp off
+                            boolean pvp = plugin.GetPvp().get(player);
+                            if (pvp == false) {
+                                e.setCancelled(true);
+                                dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
+                                SoundUtils.PlaySound(dmger,"cancel5", false);
+                                return;
+                            } else {
+                                pvp = plugin.GetPvp().get(dmger);
+                                if (pvp == false) {
+                                    e.setCancelled(true);
+                                    dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.own"));
+                                    SoundUtils.PlaySound(dmger,"cancel5", false);
+                                    return;
+                                }
+                            }
+                        }
                         // check world
                         if (PlayerUtils.IsCityWorld(plugin, player)) {
                             if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {

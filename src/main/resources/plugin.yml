@@ -101,3 +101,6 @@ commands:
   rule:
     description: ルール操作(管理コマンド)
     usage: /rule <ルール選択> <ON|OFF>
+  pvp:
+    description: PVPモード切替
+    usage: /pvp <ON|OFF>

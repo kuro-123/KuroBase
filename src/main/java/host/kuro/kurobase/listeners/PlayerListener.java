@@ -52,6 +52,9 @@ public class PlayerListener implements Listener {
 			// init buddy
 			BuddyUtils.InitBuddy(player);
 
+			// pvp off
+			plugin.GetPvp().put(player, false);
+
 			// setting rank
 			player.setOp(true);
 			int rank = PlayerUtils.GetRank(plugin, player);
@@ -145,6 +148,7 @@ public class PlayerListener implements Listener {
 			plugin.GetSelectStatus().remove(player);
 			plugin.GetInteractWait().remove(player);
 			plugin.GetExecWE().remove(player);
+			plugin.GetPvp().remove(player);
 
 			// 計測終了
 			int elapse = 0;

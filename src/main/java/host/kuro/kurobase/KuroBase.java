@@ -67,6 +67,8 @@ public class KuroBase extends JavaPlugin {
     public HashMap<Player, Long> GetInteractWait() { return interact_wait; }
     private static HashMap<Player, Integer> exec_we = new HashMap<Player, Integer>();
     public HashMap<Player, Integer> GetExecWE() { return exec_we; }
+    private static HashMap<Player, Boolean> pvp = new HashMap<Player, Boolean>();
+    public HashMap<Player, Boolean> GetPvp() { return pvp; }
 
     private static ArrayList<AreaData> protect = new ArrayList<AreaData>();
     public static ArrayList<AreaData> GetProtect() { return protect; }
@@ -153,6 +155,8 @@ public class KuroBase extends JavaPlugin {
         getCommand("ai").setTabCompleter(new AiTabCompleter());
         getCommand("rule").setExecutor(new RuleCommand(this));
         getCommand("rule").setTabCompleter(new RuleTabCompleter());
+        getCommand("pvp").setExecutor(new PvpCommand(this));
+        getCommand("pvp").setTabCompleter(new PvpTabCompleter());
 
         // database connect
         getLogger().info(Language.translate("plugin.setup.database"));
