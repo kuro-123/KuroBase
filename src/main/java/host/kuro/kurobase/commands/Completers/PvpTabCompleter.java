@@ -21,7 +21,7 @@ public class PvpTabCompleter implements TabCompleter {
             case 1:
                 cmds.add("ON");
                 cmds.add("OFF");
-                return StringUtil.copyPartialMatches(args[1], cmds, new ArrayList<String>());
+                return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
         }
         return null;
     }
