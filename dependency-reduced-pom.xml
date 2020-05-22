@@ -81,6 +81,10 @@
       <id>everything</id>
       <url>http://repo.citizensnpcs.co/</url>
     </repository>
+    <repository>
+      <id>puha-repo</id>
+      <url>http://repo.puha.io/repo/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>

@@ -82,7 +82,6 @@ public class KuroBase extends JavaPlugin {
     private static TraitInfo citizen_text_trait;
     private static TraitInfo citizen_explaner_trait;
 
-
     @Override
     public void onEnable() {
         instance = this;

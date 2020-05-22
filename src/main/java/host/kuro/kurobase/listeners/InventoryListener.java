@@ -59,12 +59,19 @@ public class InventoryListener implements Listener {
         if (holder == null) return;
 
         // check area
-        AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName()
-                , holder.getInventory().getLocation().getBlockX()
-                , holder.getInventory().getLocation().getBlockY()
-                , holder.getInventory().getLocation().getBlockZ());
-        if (area != null) {
-            player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+        try {
+            AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName()
+                    , holder.getInventory().getLocation().getBlockX()
+                    , holder.getInventory().getLocation().getBlockY()
+                    , holder.getInventory().getLocation().getBlockZ());
+            if (area != null) {
+                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                SoundUtils.PlaySound(player,"cancel5", false);
+                event.setCancelled(true);
+                return;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
             SoundUtils.PlaySound(player,"cancel5", false);
             event.setCancelled(true);
             return;

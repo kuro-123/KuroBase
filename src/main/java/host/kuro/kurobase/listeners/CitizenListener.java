@@ -163,6 +163,7 @@ public class CitizenListener implements Listener {
         NPC npc = event.getNPC();
         // owner no damage
         Entity damager = event.getDamager();
+
         if (damager instanceof  Player) {
             Player p = (Player)damager;
             Player owner = npc.getTrait(KuroTrait.class).getOwner();
@@ -188,5 +189,8 @@ public class CitizenListener implements Listener {
                 SoundUtils.PlaySound(player,"emergency-alert1", false);
             }
         }
+
+        // score update
+        npc.getTrait(KuroTrait.class).setHealth(player.getHealth());
     }
 }

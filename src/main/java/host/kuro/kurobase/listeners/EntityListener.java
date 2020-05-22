@@ -54,21 +54,23 @@ public class EntityListener implements Listener {
                         Player player = (Player)entity;
                         Entity damager = e.getDamager();
                         if (damager instanceof Player) {
-                            Player dmger = ((Player)damager);
-                            // pvp off
-                            boolean pvp = plugin.GetPvp().get(player);
-                            if (pvp == false) {
-                                e.setCancelled(true);
-                                dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
-                                SoundUtils.PlaySound(dmger,"cancel5", false);
-                                return;
-                            } else {
-                                pvp = plugin.GetPvp().get(dmger);
+                            if (!BuddyUtils.IsNpc(damager)) {
+                                Player dmger = ((Player)damager);
+                                // pvp off
+                                boolean pvp = plugin.GetPvp().get(player);
                                 if (pvp == false) {
                                     e.setCancelled(true);
-                                    dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.own"));
+                                    dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
                                     SoundUtils.PlaySound(dmger,"cancel5", false);
                                     return;
+                                } else {
+                                    pvp = plugin.GetPvp().get(dmger);
+                                    if (pvp == false) {
+                                        e.setCancelled(true);
+                                        dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.own"));
+                                        SoundUtils.PlaySound(dmger,"cancel5", false);
+                                        return;
+                                    }
                                 }
                             }
                         }

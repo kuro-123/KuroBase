@@ -18,6 +18,9 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 
@@ -35,6 +38,10 @@ public class KuroTrait extends Trait {
     private Entity before_target = null;
     private Navigator navi = null;
     private String movemode = "auto";
+
+    private static Team team = null;
+    private static Objective objective = null;
+    private static Score score = null;
 
     // status
     @Persist private boolean protect;
@@ -350,6 +357,7 @@ public class KuroTrait extends Trait {
                 try {
                     npc.getEntity().remove();
                     KuroBase.GetCitizens().getNPCRegistry().deregister(npc);
+
                 } catch (Exception ex) {
                     ErrorUtils.GetErrorMessageNonDb(ex);
                 }
