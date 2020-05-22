@@ -21,6 +21,7 @@ import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -91,6 +92,7 @@ public class AiCommand implements CommandExecutor {
             npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
             // equipent
             ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
+            sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
             npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
             // buddy master
             npc.addTrait(BuddyMasterTrait.class);

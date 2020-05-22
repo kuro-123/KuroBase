@@ -53,7 +53,7 @@ public class BuddyTabCompleter implements TabCompleter {
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "add":
-                        SetInputType(player);
+                        SetInputMode(player, args[args.length-2]);
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "url":
                         SetInputURL();
@@ -61,14 +61,6 @@ public class BuddyTabCompleter implements TabCompleter {
                     case "mode":
                         cmds.add("autobattle");
                         cmds.add("follow");
-                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
-                }
-                return null;
-
-            case 4:
-                switch (args[0].toLowerCase()) {
-                    case "add":
-                        SetInputMode(player, args[args.length-2]);
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                 }
                 return null;
@@ -129,15 +121,6 @@ public class BuddyTabCompleter implements TabCompleter {
         }
     }
 
-    private void SetInputType(Player player) {
-        int level = player.getLevel();
-        if (PlayerUtils.GetRank(KuroBase.GetInstance(), player) == PlayerUtils.RANK_NUSHI) {
-            level = 1000;
-        }
-        cmds.add("<タイプを選択 ※現在は人型のみ>");
-        cmds.add(Language.translate("buddy.type.human"));
-    }
-
     private void SetInputModeByName(Player player, String name) {
         String type = "";
         try {
@@ -175,13 +158,11 @@ public class BuddyTabCompleter implements TabCompleter {
         if (PlayerUtils.GetRank(KuroBase.GetInstance(), player) == PlayerUtils.RANK_NUSHI) {
             level = 1000;
         }
-        cmds.add("<モードを選択>");
-        if (type.equals(Language.translate("buddy.type.human"))) {
-            cmds.add(Language.translate("buddy.list.normal"));
-            cmds.add(Language.translate("buddy.list.guard"));
-            cmds.add(Language.translate("buddy.list.battle"));
-            cmds.add(Language.translate("buddy.list.nijya"));
-        }
+        cmds.add("<タイプを選択>");
+        cmds.add(Language.translate("buddy.list.normal"));
+        cmds.add(Language.translate("buddy.list.guard"));
+        cmds.add(Language.translate("buddy.list.battle"));
+        cmds.add(Language.translate("buddy.list.nijya"));
     }
 
     private void SetInputURL() {
