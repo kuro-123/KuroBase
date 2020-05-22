@@ -198,7 +198,7 @@ public class BuddyCommand implements CommandExecutor {
     private boolean ActionAdd(Player player, String[] args) {
         try {
             // args check
-            if (args.length != 3) {
+            if (args.length != 2) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
@@ -239,7 +239,7 @@ public class BuddyCommand implements CommandExecutor {
             if (nushi) level = 1000;
 
             String type = "人型";
-            String mode = args[2];
+            String mode = "一般";
 
             // INSERT
             ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
@@ -504,28 +504,9 @@ public class BuddyCommand implements CommandExecutor {
             // skin
             npc.addTrait(SkinTrait.class);
             if (skin_data == null) {
-                if (mode.equals(Language.translate("buddy.data.normal"))) {
-                    skin_name = "people";
-                    skin_data = "ewogICJ0aW1lc3RhbXAiIDogMTU4OTcxNjE3NDU3NiwKICAicHJvZmlsZUlkIiA6ICIyM2YxYTU5ZjQ2OWI0M2RkYmRiNTM3YmZlYzEwNDcxZiIsCiAgInByb2ZpbGVOYW1lIiA6ICIyODA3IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzZjZDEyOTRmNjMxNTQ5NWQ0NDAwYmY4NzdhMzkyZDgxODRjZmE4Nzk5MGZhMDgzNDEyODhlNDQxMTUxZTExNjkiCiAgICB9CiAgfQp9";
-                    skin_signature = "D8StUSKrjWWeFB7kjK0Dn50tgOv6jCuJtMHf2zI++PBEEKeqw+AnVOwE81evaDxU6P9Plqz8EoeUFubCKhwU4OFmtdR36lNXNd8rP/U3BCZ0CNmrulY2tnBtnz4cXQY2V7w+5LiTgOQFz5mV2QYQZXFba7ieMxvcOU0f5WiHpVtZkvcTL3Uz7T2ZNjrpip8ReT/4Q8C8ulYYO2Xf5qjkvhl4eegwryMSYhzT2lmIXXmeY5TNvITe8xAVP1QCfrYuAI/ZRGuSb5rFhBCg+Y6U4w/cHw+UhXTJK3GdfYNQiLpxgtN+RQ1eONSNZ9u1lqqoKjT7r4hKv12g1Vgb5BXUYzCzPuLF/92TPAjABQIefnNAcAmoE7gz5UPDBxn1a+mVknynYB4ycqIqrlz5+yJ2zOxgTvyypzYLaO/gcNSD1lVAraCXOfi+dKbj4JAuS5ep3IAkJo7/h3EKNOGGmVYLsTzvU1lHEPCatGopExTZYVK1oTiWgj4begItyN4hyBdzETUCVMfvWZu49TmdawUYXkuCHpMSz6xT5Pe5GyYDEsNx4QeOE3D1iLLcytaAauZ0kmBAI2shTpS0t628Y09dahV81BA8JZQL7kKt6QORxmTPt9vPX//O3vIF9FEDiMl37lp7c67suARAmXbqVa4ASpLbFpkRPfOpN22NH7ugq2Y=";
-                } else if (mode.equals(Language.translate("buddy.data.guard"))) {
-                    skin_name = "guard";
-                    skin_data = "eyJ0aW1lc3RhbXAiOjE1NzM0MjIxNDA3MjAsInByb2ZpbGVJZCI6IjdkYTJhYjNhOTNjYTQ4ZWU4MzA0OGFmYzNiODBlNjhlIiwicHJvZmlsZU5hbWUiOiJHb2xkYXBmZWwiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzRlZDFkZWY0ZDZhMjk4YWQ5YmU1NmEwYTMwMzhjMzVmYjAwMWM1ZTRmZDI2YzgzM2IyNjZkZDEwZDEyYzdmOTAifX19";
-                    skin_signature = "ke4/us8bKdy9NOUZ8o1l46cC0ATNE0cVpiUzD5HspK8vCfX/3/5l4ugMovyd9VfwU0e5e6il0gPMteYYLueoxiu44WaicMSim13u0MwP4wAABoDuwafajVi6WOUK7IuBe8ahtSDcddPtTEfrOtUIFiDx0ERLpijQoxQEwIlrZgtjmIjdCSv5cQJ/LI5gzi51RZMhV1FiISvnANTrCl/YVmLd0WkOtE6nCLV4ppky3VI2JMMYonS58BCVsP/LsVncDINcxWMWbEy7he8sDnP3ANkcWi15Wo+hhlDWgmFE0KqRpryCPpXueQDSYspk8Meus4PidwjO3XdnQcBtAcDe/PfvZvGkL7nG6fTQ2OicQrrRi00y9LZG8OD2kaaRgGRXJrTMR/Lq5gzlaBW0vOM+H4TLCPMafFh32GAEVvXpMvhFJPtVrchPwaThntm5L85kCyJ3DDstsAW9HKOYlrHZGxiGVLDYKiKFXlTWEt4T+Voh7ywcjbLnElqOPsXno7kfFyx95kYLepg8HLHgQB5WTmX067n5AVpz+0Yx1yUugZ7f76vwmKxk4u2oyPg0srOZzm+LxrgqDupvTJ9Sb1VN7tzfGXpKqIcsY5kqhoyL4GgfqZejtvgTnh4+MSL/IJ5ba+j7+MeK0FYxFvkRhgSbm7bBpEvFCdIZKoRF+oENVYY=";
-                } else if (mode.equals(Language.translate("buddy.data.battle"))) {
-                    skin_name = "youhei";
-                    skin_data = "ewogICJ0aW1lc3RhbXAiIDogMTU4OTcxNjM5MTQ1NiwKICAicHJvZmlsZUlkIiA6ICJiNzQ3OWJhZTI5YzQ0YjIzYmE1NjI4MzM3OGYwZTNjNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJTeWxlZXgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFkYTA5MzEwNTMyYjJjY2VmZDY2NDkzMmYxN2RkZDk2YTczNzE4ZDgwYzQxNzNjZjAxMzFlNzkxNjVkY2Y4MyIKICAgIH0KICB9Cn0=";
-                    skin_signature = "F2AIuesRz0T99YzhSn7vXp7EC40jDs9I4eIS72jmu0aGei7s+UasaCE9o0KGmaLnnoihcRCXPFs48f5TIG+DUP54R8a5eMDvgk4ij15HJ/ErbWC+ZYAAP8vaOuh1ysjm+GO6DGvjWISVE/sROw9k/FKqlxXnmpc+jPHigZXIQohraE302Ct/tmdFDl6v1DfzXhaRY/Nx2haYyI1u50SAnT5xgkToTobGhPN+OgRouvVnDcQYJIhUx5dW7f19Zqr9mBOv7HgarCmkstnhryl4UOhbj37pco6IivtM7s4LXSQhebMOy85pa/ewRP+k+4STX5rYJBfKwIrqVjU2I+yZZldEaVC3pZcvsZ+uXkVHpcthFOkgWFiP2UKSR2vHmiugwUt3TlTzMBOYNj8jBQoX0gNdqWU/0uoAszQBl2OrqlZ3QxljMjDzuef0jeJprULgxYM1sT27i6LptU8iGTrT6uWxHJ86o56jNC+yOCPnH0ZhPK5whhodCAyRHy98RyWMIWqrUxa8WTsl7pQSq+95L6A3WWYD4MIENBMKnaH2B21Qfb0PXtjDPUlXAmYdNJBYDtRWahi9RaUw8w4fBocu+K9zMDKjZY0u5zQbiYnT2XnndWOjO3xDEVcqpxHibBGIgrxt6PYvGuFehPifjJxSYBoF8mLV1cI42pilF6QfZR0=";
-                } else if (mode.equals(Language.translate("buddy.data.nijya"))) {
-                    skin_name = "ninjya";
-                    skin_data = "ewogICJ0aW1lc3RhbXAiIDogMTU4OTcxNjMzMTMwMSwKICAicHJvZmlsZUlkIiA6ICJkNjBmMzQ3MzZhMTI0N2EyOWI4MmNjNzE1YjAwNDhkYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJCSl9EYW5pZWwiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGZmYjBiYTBjOTQyZGVmZGNiODlmNTI1NjNlZmE5OWNhMzZkZjAwNGNhMGNjYmE0MWRjMzA3ZmY0YmNkZmZhYSIKICAgIH0KICB9Cn0=";
-                    skin_signature = "NzuvdTO78iHpbWDr5Kj0jHHkF5HceYaa1rQbHeLIwzzMXXzUyfPEc/zOLlZJy4GN4H2FmxM704Z0eRnhjrtdKQ2ayThwdn8NClzsTerzAr5PYSLlGTARBpkE7RcPZug6siUa2SK4QasEBv1w+b15TRyWyGWb9Lm6uNzRXHyGyFVBGhjDSx82oSwty2XVJgy1l9pWHxMb1ER9RuLSYEBwTSk7xff+ek7ywTADhTBjKE26cJtuwtvgEMcbJjPETbwNdrCHAfUA2l2bpnsNu3izLcdxBs9E7aWpweWpXwEBbFzqp0CkO6BidokZCYFfuV+KXBmKz+fTQSqyTEofJtFe/WXFH/X/ZdDpDLxTZi1N5pEruLmK3r8AgxpxxbQ3y93Q/SZzh5yIcZCsx5F/wVRbKeIt5J04oR3Xm+89Ka7XB7aD6g/YSfZQ3+mGuc9e8GY3En1pIrKX96lnEn11oDSVUDenBzTcDxNauvRzym21UjB1I6j0vAtT1PFQWgP2X6mIC5k9ouDX7Be1thjNHAQFqPIWozptPviLv2LfD/AveAsnMZqw2f14P0TgC7nv3eN6S5xiLQS78o7yMCgQR7Dwqh9h7gfDF5nRL1EgoKVWm9pwvfuuWv/UxCcywvNNtd0kn9wL7Db7+Qg8VjaQaaDr3BDOigVWwxHGmObZ+C9SPiA=";
-                } else{
-                    skin_name = "people";
-                    skin_data = "ewogICJ0aW1lc3RhbXAiIDogMTU4OTcxNjE3NDU3NiwKICAicHJvZmlsZUlkIiA6ICIyM2YxYTU5ZjQ2OWI0M2RkYmRiNTM3YmZlYzEwNDcxZiIsCiAgInByb2ZpbGVOYW1lIiA6ICIyODA3IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzZjZDEyOTRmNjMxNTQ5NWQ0NDAwYmY4NzdhMzkyZDgxODRjZmE4Nzk5MGZhMDgzNDEyODhlNDQxMTUxZTExNjkiCiAgICB9CiAgfQp9";
-                    skin_signature = "D8StUSKrjWWeFB7kjK0Dn50tgOv6jCuJtMHf2zI++PBEEKeqw+AnVOwE81evaDxU6P9Plqz8EoeUFubCKhwU4OFmtdR36lNXNd8rP/U3BCZ0CNmrulY2tnBtnz4cXQY2V7w+5LiTgOQFz5mV2QYQZXFba7ieMxvcOU0f5WiHpVtZkvcTL3Uz7T2ZNjrpip8ReT/4Q8C8ulYYO2Xf5qjkvhl4eegwryMSYhzT2lmIXXmeY5TNvITe8xAVP1QCfrYuAI/ZRGuSb5rFhBCg+Y6U4w/cHw+UhXTJK3GdfYNQiLpxgtN+RQ1eONSNZ9u1lqqoKjT7r4hKv12g1Vgb5BXUYzCzPuLF/92TPAjABQIefnNAcAmoE7gz5UPDBxn1a+mVknynYB4ycqIqrlz5+yJ2zOxgTvyypzYLaO/gcNSD1lVAraCXOfi+dKbj4JAuS5ep3IAkJo7/h3EKNOGGmVYLsTzvU1lHEPCatGopExTZYVK1oTiWgj4begItyN4hyBdzETUCVMfvWZu49TmdawUYXkuCHpMSz6xT5Pe5GyYDEsNx4QeOE3D1iLLcytaAauZ0kmBAI2shTpS0t628Y09dahV81BA8JZQL7kKt6QORxmTPt9vPX//O3vIF9FEDiMl37lp7c67suARAmXbqVa4ASpLbFpkRPfOpN22NH7ugq2Y=";
-                }
-                npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
+                skin_name = "guard";
+                skin_data = "eyJ0aW1lc3RhbXAiOjE1NzM0MjIxNDA3MjAsInByb2ZpbGVJZCI6IjdkYTJhYjNhOTNjYTQ4ZWU4MzA0OGFmYzNiODBlNjhlIiwicHJvZmlsZU5hbWUiOiJHb2xkYXBmZWwiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzRlZDFkZWY0ZDZhMjk4YWQ5YmU1NmEwYTMwMzhjMzVmYjAwMWM1ZTRmZDI2YzgzM2IyNjZkZDEwZDEyYzdmOTAifX19";
+                skin_signature = "ke4/us8bKdy9NOUZ8o1l46cC0ATNE0cVpiUzD5HspK8vCfX/3/5l4ugMovyd9VfwU0e5e6il0gPMteYYLueoxiu44WaicMSim13u0MwP4wAABoDuwafajVi6WOUK7IuBe8ahtSDcddPtTEfrOtUIFiDx0ERLpijQoxQEwIlrZgtjmIjdCSv5cQJ/LI5gzi51RZMhV1FiISvnANTrCl/YVmLd0WkOtE6nCLV4ppky3VI2JMMYonS58BCVsP/LsVncDINcxWMWbEy7he8sDnP3ANkcWi15Wo+hhlDWgmFE0KqRpryCPpXueQDSYspk8Meus4PidwjO3XdnQcBtAcDe/PfvZvGkL7nG6fTQ2OicQrrRi00y9LZG8OD2kaaRgGRXJrTMR/Lq5gzlaBW0vOM+H4TLCPMafFh32GAEVvXpMvhFJPtVrchPwaThntm5L85kCyJ3DDstsAW9HKOYlrHZGxiGVLDYKiKFXlTWEt4T+Voh7ywcjbLnElqOPsXno7kfFyx95kYLepg8HLHgQB5WTmX067n5AVpz+0Yx1yUugZ7f76vwmKxk4u2oyPg0srOZzm+LxrgqDupvTJ9Sb1VN7tzfGXpKqIcsY5kqhoyL4GgfqZejtvgTnh4+MSL/IJ5ba+j7+MeK0FYxFvkRhgSbm7bBpEvFCdIZKoRF+oENVYY=";
             } else {
                 if (skin_name != null && skin_data != null && skin_signature != null) {
                     if (skin_name.length() > 0 && skin_data.length() > 0 && skin_signature.length() > 0) {

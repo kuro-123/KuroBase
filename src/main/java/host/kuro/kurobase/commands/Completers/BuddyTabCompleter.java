@@ -4,7 +4,6 @@ import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.PlayerUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -52,9 +51,6 @@ public class BuddyTabCompleter implements TabCompleter {
 
             case 3:
                 switch (args[0].toLowerCase()) {
-                    case "add":
-                        SetInputMode(player, args[args.length-2]);
-                        return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
                     case "url":
                         SetInputURL();
                         return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
@@ -85,8 +81,7 @@ public class BuddyTabCompleter implements TabCompleter {
     }
 
     private void SetInputEntity(Player player, String kbn) {
-        cmds.add("<エンティティを選択>");
-
+        cmds.add("<バディーを選択>");
         String sql_kbn = "";
         switch (kbn) {
             case "ALIVE": sql_kbn = "SQL.SELECT.ALIVE.ENTITY"; break;
@@ -120,51 +115,6 @@ public class BuddyTabCompleter implements TabCompleter {
             cmds.clear();
         }
     }
-
-    private void SetInputModeByName(Player player, String name) {
-        String type = "";
-        try {
-            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
-            ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
-            eargs.add(new DatabaseArgs("c", player.getUniqueId().toString()));
-            eargs.add(new DatabaseArgs("c", name));
-            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, eargs);
-            eargs.clear();
-            eargs = null;
-            if (rs != null) {
-                while(rs.next()){
-                    type = rs.getString("type");
-                    break;
-                }
-            }
-            if (ps != null) {
-                ps.close();
-                ps = null;
-            }
-            if (rs != null) {
-                rs.close();
-                rs = null;
-            }
-        } catch (Exception ex) {
-            ErrorUtils.GetErrorMessage(ex);
-        }
-        if (type.length() > 0) {
-            SetInputMode(player, type);
-        }
-    }
-
-    private void SetInputMode(Player player, String type) {
-        int level = player.getLevel();
-        if (PlayerUtils.GetRank(KuroBase.GetInstance(), player) == PlayerUtils.RANK_NUSHI) {
-            level = 1000;
-        }
-        cmds.add("<タイプを選択>");
-        cmds.add(Language.translate("buddy.list.normal"));
-        cmds.add(Language.translate("buddy.list.guard"));
-        cmds.add(Language.translate("buddy.list.battle"));
-        cmds.add(Language.translate("buddy.list.nijya"));
-    }
-
     private void SetInputURL() {
         cmds.add("<スキンURLを入力>");
     }
