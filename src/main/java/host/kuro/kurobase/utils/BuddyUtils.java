@@ -6,9 +6,15 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.trait.KuroTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 
 import java.sql.PreparedStatement;
@@ -293,5 +299,233 @@ public class BuddyUtils {
         int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.INIT.ENTITY"), args);
         args.clear();
         args = null;
+    }
+
+    public static boolean UpdateEquip(String kbn, int value, String name, NPC npc) {
+        String exec_sql = "";
+        switch (kbn) {
+            case "SWORD":
+                exec_sql = "SQL.UPDATE.SWORD.ENTITY";
+                name = name + ":" + value;
+                npc.getTrait(KuroTrait.class).setSword(name);
+                break;
+            case "HELMET":
+                exec_sql = "SQL.UPDATE.HELMET.ENTITY";
+                name = name + ":" + value;
+                npc.getTrait(KuroTrait.class).setHelmet(name);
+                break;
+            case "CHESTPLATE":
+                exec_sql = "SQL.UPDATE.CHESTPLATE.ENTITY";
+                name = name + ":" + value;
+                npc.getTrait(KuroTrait.class).setChestplate(name);
+                break;
+            case "LEGGINS":
+                exec_sql = "SQL.UPDATE.LEGGINS.ENTITY";
+                name = name + ":" + value;
+                npc.getTrait(KuroTrait.class).setLeggins(name);
+                break;
+            case "BOOTS":
+                exec_sql = "SQL.UPDATE.BOOTS.ENTITY";
+                name = name + ":" + value;
+                npc.getTrait(KuroTrait.class).setBoots(name);
+                break;
+        }
+        // UPDATE
+        ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+        args.add(new DatabaseArgs("c", ""+name));        // name
+        args.add(new DatabaseArgs("c", npc.getUniqueId().toString()));   // uuid
+        int ret = KuroBase.getDB().ExecuteUpdate(Language.translate(exec_sql), args);
+        args.clear();
+        args = null;
+        if (ret == 1) return true;
+        return false;
+    }
+
+    public static boolean Equip(NPC npc, String kbn, String arrayval) {
+        String[] buff = arrayval.split(":");
+        if (buff != null) {
+            if (buff.length == 2) {
+                String name = buff[0];
+                String sval = buff[1];
+                int val = Integer.parseInt(sval);
+                BuddyEquip(npc, name, val, false);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ItemStack SetDulabity(ItemStack stack, int value) {
+        if (value != 0) return stack;
+        ItemMeta im = stack.getItemMeta();
+        Damageable itemdmg = (Damageable)im;
+        itemdmg.setDamage(value);
+        stack.setItemMeta((ItemMeta)itemdmg);
+        return stack;
+    }
+
+    public static boolean BuddyEquip(NPC npc, String display, int value, boolean update) {
+        ItemStack item = null;
+        if (display.equals(Language.translate("shop.item.sword.wood"))) {
+            item = new ItemStack(Material.WOODEN_SWORD, 1);
+            item = SetDulabity(item, value);
+            item.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, item);
+            if (update) UpdateEquip("SWORD", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.sword.chain"))) {
+            item = new ItemStack(Material.STONE_SWORD, 1);
+            item = SetDulabity(item, value);
+            item.addEnchantment(Enchantment.DAMAGE_ALL, 2);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, item);
+            if (update) UpdateEquip("SWORD", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.sword.iron"))) {
+            item = new ItemStack(Material.IRON_SWORD, 1);
+            item = SetDulabity(item, value);
+            item.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, item);
+            if (update) UpdateEquip("SWORD", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.sword.gold"))) {
+            item = new ItemStack(Material.GOLDEN_SWORD, 1);
+            item = SetDulabity(item, value);
+            item.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, item);
+            if (update) UpdateEquip("SWORD", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.sword.dia"))) {
+            item = new ItemStack(Material.DIAMOND_SWORD, 1);
+            item = SetDulabity(item, value);
+            item.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, item);
+            if (update) UpdateEquip("SWORD", value, display, npc);
+
+        } else if (display.equals(Language.translate("shop.item.helmet.wood"))) {
+            item = new ItemStack(Material.LEATHER_HELMET, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, item);
+            if (update) UpdateEquip("HELMET", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.helmet.chain"))) {
+            item = new ItemStack(Material.CHAINMAIL_HELMET, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, item);
+            if (update) UpdateEquip("HELMET", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.helmet.iron"))) {
+            item = new ItemStack(Material.IRON_HELMET, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, item);
+            if (update) UpdateEquip("HELMET", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.helmet.gold"))) {
+            item = new ItemStack(Material.GOLDEN_HELMET, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, item);
+            if (update) UpdateEquip("HELMET", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.helmet.dia"))) {
+            item = new ItemStack(Material.DIAMOND_HELMET, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, item);
+            if (update) UpdateEquip("HELMET", value, display, npc);
+
+        } else if (display.equals(Language.translate("shop.item.chestplate.wood"))) {
+            item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, item);
+            if (update) UpdateEquip("CHESTPLATE", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.chestplate.chain"))) {
+            item = new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, item);
+            if (update) UpdateEquip("CHESTPLATE", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.chestplate.iron"))) {
+            item = new ItemStack(Material.IRON_CHESTPLATE, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, item);
+            if (update) UpdateEquip("CHESTPLATE", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.chestplate.gold"))) {
+            item = new ItemStack(Material.GOLDEN_CHESTPLATE, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, item);
+            if (update) UpdateEquip("CHESTPLATE", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.chestplate.dia"))) {
+            item = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, item);
+            if (update) UpdateEquip("CHESTPLATE", value, display, npc);
+
+        } else if (display.equals(Language.translate("shop.item.leggins.wood"))) {
+            item = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, item);
+            if (update) UpdateEquip("LEGGINS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.leggins.chain"))) {
+            item = new ItemStack(Material.CHAINMAIL_LEGGINGS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, item);
+            if (update) UpdateEquip("LEGGINS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.leggins.iron"))) {
+            item = new ItemStack(Material.IRON_LEGGINGS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, item);
+            if (update) UpdateEquip("LEGGINS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.leggins.gold"))) {
+            item = new ItemStack(Material.GOLDEN_LEGGINGS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, item);
+            if (update) UpdateEquip("LEGGINS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.leggins.dia"))) {
+            item = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, item);
+            if (update) UpdateEquip("LEGGINS", value, display, npc);
+
+        } else if (display.equals(Language.translate("shop.item.boots.wood"))) {
+            item = new ItemStack(Material.LEATHER_BOOTS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, item);
+            if (update) UpdateEquip("BOOTS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.boots.chain"))) {
+            item = new ItemStack(Material.CHAINMAIL_BOOTS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, item);
+            if (update) UpdateEquip("BOOTS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.boots.iron"))) {
+            item = new ItemStack(Material.IRON_BOOTS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, item);
+            if (update) UpdateEquip("BOOTS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.boots.gold"))) {
+            item = new ItemStack(Material.GOLDEN_BOOTS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, item);
+            if (update) UpdateEquip("BOOTS", value, display, npc);
+        } else if (display.equals(Language.translate("shop.item.boots.dia"))) {
+            item = new ItemStack(Material.DIAMOND_BOOTS, 1);
+            item = SetDulabity(item, value);
+            npc.getTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, item);
+            if (update) UpdateEquip("BOOTS", value, display, npc);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public static String GetEquipName(ItemStack stack, String value) {
+        if (stack.getType() == Material.AIR) {
+            return "";
+        }
+        String[] buff = value.split(":");
+        if (buff != null) {
+            if (buff.length == 2) {
+                String name = buff[0];
+                ItemMeta im;
+                Damageable itemdmg;
+                if (stack.hasItemMeta()) {
+                    im = stack.getItemMeta();
+                    itemdmg = (Damageable)im;
+                    int val = itemdmg.getDamage();
+                    return name + ":" + val;
+                } else {
+                    return name + ":0";
+                }
+            }
+        }
+        return "";
     }
 }

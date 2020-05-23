@@ -3,6 +3,7 @@ package host.kuro.kurobase.trait;
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.BuddyUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
@@ -18,9 +19,6 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 
@@ -39,9 +37,11 @@ public class KuroTrait extends Trait {
     private Navigator navi = null;
     private String movemode = "auto";
 
-    private static Team team = null;
-    private static Objective objective = null;
-    private static Score score = null;
+    private String sword = "";
+    private String helmet = "";
+    private String chestplate = "";
+    private String leggins = "";
+    private String boots = "";
 
     // status
     @Persist private boolean protect;
@@ -70,6 +70,16 @@ public class KuroTrait extends Trait {
     }
     // owner
     public Player getOwner() { return this.owner; } public void setOwner(Player player) { this.owner = player; }
+    // sword
+    public String getSword() { return this.sword; } public void setSword(String sword) { this.sword = sword; }
+    // helmet
+    public String getHelmet() { return this.helmet; } public void setHelmet(String helmet) { this.helmet = helmet; }
+    // chestplate
+    public String getChestplate() { return this.chestplate; } public void setChestplate(String chestplate) { this.chestplate = chestplate; }
+    // leggins
+    public String getLeggins() { return this.leggins; } public void setLeggins(String leggins) { this.leggins = leggins; }
+    // boots
+    public String getBoots() { return this.boots; } public void setBoots(String boots) { this.boots = boots; }
     // name
     public void setName(String name) { this.name = name; }
     // movemode
@@ -208,6 +218,7 @@ public class KuroTrait extends Trait {
         // gamemode
         npcplayer.setGameMode(GameMode.SURVIVAL);
         // status
+        npcplayer.setHealth(health);
         UpdateStatus();
     }
 
@@ -330,6 +341,20 @@ public class KuroTrait extends Trait {
         }
     }
 
+    private void UpdateDulabity() {
+        try {
+            if (owner == null) return;
+            if (owner.isDead()) return;
+            sword = BuddyUtils.GetEquipName(npcplayer.getInventory().getItemInMainHand(), sword);
+            helmet = BuddyUtils.GetEquipName(npcplayer.getInventory().getHelmet(), helmet);
+            chestplate = BuddyUtils.GetEquipName(npcplayer.getInventory().getChestplate(), chestplate);
+            leggins = BuddyUtils.GetEquipName(npcplayer.getInventory().getLeggings(), leggins);
+            boots = BuddyUtils.GetEquipName(npcplayer.getInventory().getBoots(), boots);
+
+        } catch (Exception ex) {
+        }
+    }
+
     private void CheckLocation() {
         try {
             if (owner == null) return;
@@ -357,9 +382,15 @@ public class KuroTrait extends Trait {
         closing = true;
         if (npc != null) {
             // UPDATE
+            UpdateDulabity();
             ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
             eargs.add(new DatabaseArgs("d", ""+health)); // hp
             eargs.add(new DatabaseArgs("d", ""+mphealth)); // mp
+            eargs.add(new DatabaseArgs("c", ""+sword)); // sword
+            eargs.add(new DatabaseArgs("c", ""+helmet)); // helmet
+            eargs.add(new DatabaseArgs("c", ""+chestplate)); // chestplate
+            eargs.add(new DatabaseArgs("c", ""+leggins)); // leggins
+            eargs.add(new DatabaseArgs("c", ""+boots)); // boots
             eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid
             int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
             eargs.clear();

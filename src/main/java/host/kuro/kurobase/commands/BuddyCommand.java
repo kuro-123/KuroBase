@@ -439,8 +439,6 @@ public class BuddyCommand implements CommandExecutor {
                 }
             }
             String buddy_name = args[1];
-            String type = "";
-            String mode = "";
             int level = -1;
             int exp = -1;
             double hp = -1.0D;
@@ -449,6 +447,11 @@ public class BuddyCommand implements CommandExecutor {
             String skin_data = "";
             String skin_signature = "";
             String status = "";
+            String sword = "";
+            String helmet = "";
+            String chestplate = "";
+            String leggins = "";
+            String boots = "";
 
             PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.NAME"));
             ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
@@ -459,12 +462,20 @@ public class BuddyCommand implements CommandExecutor {
             eargs = null;
             if (rs != null) {
                 while(rs.next()){
-                    type = rs.getString("type");
-                    mode = rs.getString("mode");
                     level = rs.getInt("level");
                     exp = rs.getInt("exp");
                     hp = rs.getInt("hp");
                     mp = rs.getInt("mp");
+                    sword = rs.getString("sword");
+                    if (sword == null) sword = "";
+                    helmet = rs.getString("helmet");
+                    if (helmet == null) helmet = "";
+                    chestplate = rs.getString("chestplate");
+                    if (chestplate == null) chestplate = "";
+                    leggins = rs.getString("leggins");
+                    if (leggins == null) leggins = "";
+                    boots = rs.getString("boots");
+                    if (boots == null) boots = "";
                     status = rs.getString("status");
                     skin_name = rs.getString("name");
                     skin_data = rs.getString("skin_data");
@@ -504,8 +515,6 @@ public class BuddyCommand implements CommandExecutor {
             // type
             npc.addTrait(BaseTypeTrait.class);
             npc.getTrait(BaseTypeTrait.class).setType("BUDDY");
-            // equip
-            npc.addTrait(Equipment.class);
             // look close
             npc.addTrait(LookClose.class);
             npc.getTrait(LookClose.class).lookClose(true);
@@ -529,11 +538,22 @@ public class BuddyCommand implements CommandExecutor {
             npc.getTrait(KuroTrait.class).setLevel(level);
             npc.getTrait(KuroTrait.class).setExp(exp);
             npc.getTrait(KuroTrait.class).setName(buddy_name);
-            npc.getTrait(KuroTrait.class).setType(type);
-            npc.getTrait(KuroTrait.class).setMode(mode);
             npc.getTrait(KuroTrait.class).setFollow(true);
             npc.getTrait(KuroTrait.class).setGuard(true);
             npc.getTrait(KuroTrait.class).setOwner(player);
+            npc.getTrait(KuroTrait.class).setSword(sword);
+            npc.getTrait(KuroTrait.class).setHelmet(helmet);
+            npc.getTrait(KuroTrait.class).setChestplate(chestplate);
+            npc.getTrait(KuroTrait.class).setLeggins(leggins);
+            npc.getTrait(KuroTrait.class).setBoots(boots);
+
+            // equip
+            npc.addTrait(Equipment.class);
+            if (sword.length() > 0) BuddyUtils.Equip(npc, "SWORD", sword);
+            if (helmet.length() > 0) BuddyUtils.Equip(npc, "HELMET", helmet);
+            if (chestplate.length() > 0) BuddyUtils.Equip(npc, "CHESTPLATE", chestplate);
+            if (leggins.length() > 0) BuddyUtils.Equip(npc, "LEGGINS", leggins);
+            if (boots.length() > 0) BuddyUtils.Equip(npc, "BOOTS", boots);
 
             // UPDATE
             ArrayList<DatabaseArgs> uargs = new ArrayList<DatabaseArgs>();

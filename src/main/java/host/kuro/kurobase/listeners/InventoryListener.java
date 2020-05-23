@@ -9,12 +9,14 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.sql.PreparedStatement;
@@ -57,6 +59,12 @@ public class InventoryListener implements Listener {
         }
 
         if (holder == null) return;
+
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+
+        Location loc = inv.getLocation();
+        if (loc == null) return;
 
         // check area
         try {
