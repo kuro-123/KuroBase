@@ -72,6 +72,7 @@ public class BuddyTabCompleter implements TabCompleter {
         cmds.add("add");
         cmds.add("url");
         cmds.add("list");
+        cmds.add("equip");
         cmds.add("revival");
         cmds.add("del");
     }

@@ -53,6 +53,8 @@ public class KuroTrait extends Trait {
     @Persist private boolean guard = false;
     @Persist private double max_health = 1.0D;
     @Persist private double health = 1.0D;
+    @Persist private double mphealth = 1.0D;
+    @Persist private double max_mphealth = 1.0D;
     @Persist private int level = 0;
     @Persist private int exp = 0;
     @Persist private float range = 8.0F;
@@ -91,6 +93,16 @@ public class KuroTrait extends Trait {
         this.health = health;
         if (npcplayer!=null) npcplayer.setHealth(health);
     }
+    // maxmphealth
+    public double getMaxMpHealth() { return this.max_mphealth; }
+    public void setMaxMpHealth(double max_mphealth) {
+        this.max_mphealth = max_mphealth;
+    }
+    // mphealth
+    public double getMpHealth() { return this.mphealth; }
+    public void setMpHealth(double mphealth) {
+        this.mphealth = mphealth;
+    }
     // follow
     public boolean getFollow() { return this.follow; } public void setFollow(boolean value) { this.follow = value; }
     // guard
@@ -117,6 +129,7 @@ public class KuroTrait extends Trait {
     // status value
     private boolean setStatus(int level, String type, String mode) {
         double max_health = 20.0D;
+        double max_mphealth = 20.0D;
         float range = 8.0F;
         double attack_range = 8.0D;
         double attack_option = 0.0D;
@@ -125,6 +138,7 @@ public class KuroTrait extends Trait {
         float base_speed = 0.8F;
 
         max_health   = 20.0D +((double)(level*level) / 7000.00D);
+        max_mphealth = 20.0D +((double)(level*level) / 7000.00D);
         range        = 8.0F + ((float)(level*level) / 8000.00F);
         attack_range = 1.0D + ((double)(level*level) / 8000.00D) / 4.00D;
         attack_delay_tick = 27 - ((level*level) / 5000);
@@ -134,6 +148,7 @@ public class KuroTrait extends Trait {
 
         // upper check
         if (max_health >= 50.0D) max_health = 50.0D;
+        if (max_mphealth >= 50.0D) max_mphealth = 50.0D;
         if (range >= 30.0F) range = 30.0F;
         if (attack_range >= 16.0D) attack_range = 16.0D;
         if (attack_delay_tick <= 2) attack_delay_tick = 2;
@@ -142,8 +157,7 @@ public class KuroTrait extends Trait {
         if (deffence_option >= 2) deffence_option = 2;
 
         setMaxHealth(max_health);
-        setHealth(max_health);
-
+        setMaxMpHealth(max_mphealth);
         setRange(range);
         setAttackRange(attack_range);
         setAttackOption(attack_option);
@@ -294,6 +308,12 @@ public class KuroTrait extends Trait {
                     }
                     npcplayer.setHealth(health);
                 }
+                if (mphealth < max_mphealth) {
+                    mphealth += 1.0D;
+                    if (mphealth > max_mphealth) {
+                        mphealth = max_mphealth;
+                    }
+                }
                 follow_tick = 0;
             }
         } catch (Exception ex) {
@@ -304,7 +324,6 @@ public class KuroTrait extends Trait {
         try {
             if (owner == null) return;
             if (owner.isDead()) return;
-
             health = npcplayer.getHealth();
             max_health = npcplayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         } catch (Exception ex) {
@@ -339,6 +358,8 @@ public class KuroTrait extends Trait {
         if (npc != null) {
             // UPDATE
             ArrayList<DatabaseArgs> eargs = new ArrayList<DatabaseArgs>();
+            eargs.add(new DatabaseArgs("d", ""+health)); // hp
+            eargs.add(new DatabaseArgs("d", ""+mphealth)); // mp
             eargs.add(new DatabaseArgs("c", npc.getUniqueId().toString())); // uuid
             int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.QUIT.ENTITY"), eargs);
             eargs.clear();

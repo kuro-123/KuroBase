@@ -41,51 +41,70 @@ public class ShopHandler {
         keyword = key;
         shopItems.clear();
 
-        String exec_sql = "SQL.PRICE.SELECT";
-        if (kbn.equals("npc")) {
-            exec_sql = "SQL.PRICE.BUDDY";
-        }
-
-        String name;
+        String name, id;
         int price;
+        PreparedStatement ps;
+        ResultSet rs;
         try {
-            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate(exec_sql));
-            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", "%" + keyword + "%"));
-            args.add(new DatabaseArgs("c", "%" + keyword + "%"));
-            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
-            args.clear();
-            args = null;
+            if (kbn.equals("npc")) {
+                ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.BUDDY"));
+                rs = KuroBase.getDB().ExecuteQuery(ps, null);
+            } else {
+                ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SELECT"));
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", "%" + keyword + "%"));
+                args.add(new DatabaseArgs("c", "%" + keyword + "%"));
+                rs = KuroBase.getDB().ExecuteQuery(ps, args);
+                args.clear();
+                args = null;
+            }
             if (rs != null) {
                 while(rs.next()){
                     name = rs.getString("org_name");
                     price = rs.getInt("price");
+                    id = rs.getString("id");
 
                     Material m;
                     ItemStack stack;
-                    if (name.equals(Language.translate("shop.item.revival"))) {
-                        m = Material.getMaterial("PAPER");
+                    if (id.equals("998")) {
+                        if (name.indexOf("木")>=0) {
+                            m = Material.getMaterial("CHARCOAL");
+                        }
+                        else if (name.indexOf("石")>=0) {
+                            m = Material.getMaterial("COAL");
+                        }
+                        else if (name.indexOf("皮")>=0) {
+                            m = Material.getMaterial("CHARCOAL");
+                        }
+                        else if (name.indexOf("チェーン")>=0) {
+                            m = Material.getMaterial("COAL");
+                        }
+                        else if (name.indexOf("鉄")>=0) {
+                            m = Material.getMaterial("IRON_INGOT");
+                        }
+                        else if (name.indexOf("金")>=0) {
+                            m = Material.getMaterial("GOLD_INGOT");
+                        }
+                        else if (name.indexOf("ダイヤ")>=0) {
+                            m = Material.getMaterial("DIAMOND");
+                        }
+                        else if (name.indexOf("クッキー")>=0) {
+                            m = Material.getMaterial("COOKIE");
+                        }
+                        else if (name.indexOf("パン")>=0) {
+                            m = Material.getMaterial("BREAD");
+                        }
+                        else {
+                            m = Material.getMaterial("PAPER");
+                        }
                         stack = new ItemStack(m, 1);
                         ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName(Language.translate("shop.item.revival"));
-                        stack.setItemMeta(data);
-                    } else if (name.equals(Language.translate("shop.item.buddy"))) {
-                        m = Material.getMaterial("PAPER");
-                        stack = new ItemStack(m, 1);
-                        ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName(Language.translate("shop.item.buddy"));
-                        stack.setItemMeta(data);
-                    } else if (name.equals(Language.translate("shop.item.creative"))) {
-                        m = Material.getMaterial("PAPER");
-                        stack = new ItemStack(m, 1);
-                        ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName(Language.translate("shop.item.creative"));
+                        data.setDisplayName(name);
                         stack.setItemMeta(data);
                     } else {
                         m = Material.matchMaterial(name);
                         stack = new ItemStack(m, 1);
                     }
-
                     int buy = price;
                     int sell = price / 2;
                     ShopItem item = new ShopItem(stack, buy, sell);

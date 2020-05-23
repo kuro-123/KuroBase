@@ -8,6 +8,7 @@ import host.kuro.kurobase.trait.KuroTrait;
 import host.kuro.kurobase.utils.*;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
@@ -249,6 +250,8 @@ public class BuddyCommand implements CommandExecutor {
             eargs.add(new DatabaseArgs("c", mode)); // mode
             eargs.add(new DatabaseArgs("i", "" + 0)); // exp
             eargs.add(new DatabaseArgs("i", "" + 0)); // level
+            eargs.add(new DatabaseArgs("d", "" + 20.00)); // hp
+            eargs.add(new DatabaseArgs("d", "" + 20.00)); // mp
             eargs.add(new DatabaseArgs("i", "" + 0)); // killmob
             eargs.add(new DatabaseArgs("i", "" + 0)); // kill
             eargs.add(new DatabaseArgs("i", "" + 0)); // death
@@ -266,7 +269,6 @@ public class BuddyCommand implements CommandExecutor {
                 SoundUtils.PlaySound(player,"cancel5", false);
                 return false;
             }
-
             int amount = stack.getAmount();
             amount--;
             if (amount <= 0) {
@@ -441,6 +443,8 @@ public class BuddyCommand implements CommandExecutor {
             String mode = "";
             int level = -1;
             int exp = -1;
+            double hp = -1.0D;
+            double mp = -1.0D;
             String skin_name = "";
             String skin_data = "";
             String skin_signature = "";
@@ -459,6 +463,8 @@ public class BuddyCommand implements CommandExecutor {
                     mode = rs.getString("mode");
                     level = rs.getInt("level");
                     exp = rs.getInt("exp");
+                    hp = rs.getInt("hp");
+                    mp = rs.getInt("mp");
                     status = rs.getString("status");
                     skin_name = rs.getString("name");
                     skin_data = rs.getString("skin_data");
@@ -498,6 +504,8 @@ public class BuddyCommand implements CommandExecutor {
             // type
             npc.addTrait(BaseTypeTrait.class);
             npc.getTrait(BaseTypeTrait.class).setType("BUDDY");
+            // equip
+            npc.addTrait(Equipment.class);
             // look close
             npc.addTrait(LookClose.class);
             npc.getTrait(LookClose.class).lookClose(true);
@@ -516,6 +524,8 @@ public class BuddyCommand implements CommandExecutor {
             }
             // kuro
             npc.addTrait(KuroTrait.class);
+            npc.getTrait(KuroTrait.class).setHealth(hp);
+            npc.getTrait(KuroTrait.class).setMpHealth(mp);
             npc.getTrait(KuroTrait.class).setLevel(level);
             npc.getTrait(KuroTrait.class).setExp(exp);
             npc.getTrait(KuroTrait.class).setName(buddy_name);

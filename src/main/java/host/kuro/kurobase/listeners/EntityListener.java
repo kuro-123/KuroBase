@@ -57,19 +57,21 @@ public class EntityListener implements Listener {
                             if (!BuddyUtils.IsNpc(damager)) {
                                 Player dmger = ((Player)damager);
                                 // pvp off
-                                boolean pvp = plugin.GetPvp().get(player);
-                                if (pvp == false) {
-                                    e.setCancelled(true);
-                                    dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
-                                    SoundUtils.PlaySound(dmger,"cancel5", false);
-                                    return;
-                                } else {
-                                    pvp = plugin.GetPvp().get(dmger);
+                                if (plugin.GetPvp().containsKey(player)) {
+                                    boolean pvp = plugin.GetPvp().get(player);
                                     if (pvp == false) {
                                         e.setCancelled(true);
-                                        dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.own"));
+                                        dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
                                         SoundUtils.PlaySound(dmger,"cancel5", false);
                                         return;
+                                    } else {
+                                        pvp = plugin.GetPvp().get(dmger);
+                                        if (pvp == false) {
+                                            e.setCancelled(true);
+                                            dmger.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.own"));
+                                            SoundUtils.PlaySound(dmger,"cancel5", false);
+                                            return;
+                                        }
                                     }
                                 }
                             }
