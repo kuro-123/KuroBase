@@ -215,7 +215,7 @@ public class BuddyUtils {
         try {
             PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.SELECT.ENTITY.BYNAME"));
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-            args.add(new DatabaseArgs("c", name));
+            args.add(new DatabaseArgs("c", name.replace("[ﾊﾞﾃﾞｨｰ] ", "").trim()));
             ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
             args.clear();
             args = null;
@@ -255,7 +255,7 @@ public class BuddyUtils {
             if (level < calc_level) {
                 // level up
                 level = calc_level;
-                PlayerUtils.BroadcastMessage(String.format(ChatColor.AQUA + "[ﾊﾞﾃﾞｨｰ] %s が LevelUp!! -> Lv%d", name, level), false);
+                PlayerUtils.BroadcastMessage(String.format(ChatColor.AQUA + "%s が LevelUp!! -> Lv%d", name, level), false);
                 SoundUtils.BroadcastSound("shine3", false);
                 // update status
                 npc.getTrait(KuroTrait.class).setLevel(level);
