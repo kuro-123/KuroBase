@@ -254,6 +254,13 @@ public class BuddyUtils {
                 // update status
                 npc.getTrait(KuroTrait.class).setLevel(level);
                 npc.getTrait(KuroTrait.class).UpdateStatus();
+
+                // UPDATE ADD SKILLPOINTS
+                ArrayList<DatabaseArgs> largs = new ArrayList<DatabaseArgs>();
+                largs.add(new DatabaseArgs("c", uuid)); // uuid
+                int ret = KuroBase.getDB().ExecuteUpdate(Language.translate("SQL.UPDATE.LEVEL.ENTITY"), largs);
+                largs.clear();
+                largs = null;
             }
             // UPDATE
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
