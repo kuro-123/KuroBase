@@ -7,6 +7,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.*;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -104,9 +105,24 @@ public class BlockListener implements Listener {
                 DataUtils.RefreshChestData(plugin.getDB());
             }
 
+            int val = KuroBase.GetRand().Next(1, 500);
+            if (val == 1) {
+                RandomDrop(player);
+            }
+
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
+    }
+
+    private void RandomDrop(Player player) {
+        int amount = KuroBase.GetRand().Next(1, 3);
+        ItemStack item = new ItemStack(Material.DIAMOND, amount);
+        int x = KuroBase.GetRand().Next(-2, 2);
+        int z = KuroBase.GetRand().Next(-2, 2);
+        player.getWorld().dropItem(player.getLocation().add(x,1,z), item);
+        PlayerUtils.BroadcastMessage(ChatColor.AQUA + String.format("%sさんは採掘中にダイアモンド%d個を発見した！", player.getDisplayName(), amount), true);
+        SoundUtils.BroadcastSound("correct2", false);
     }
 
     @EventHandler
