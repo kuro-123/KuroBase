@@ -7,15 +7,14 @@ import host.kuro.kurobase.utils.BuddyUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.ArrayList;
 
@@ -36,6 +35,67 @@ public class EntityListener implements Listener {
             e.blockList().removeIf(block -> (block.getType() == Material.CHEST || block.getType() == Material.ITEM_FRAME));
         }
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent e) {
+        try {
+            Entity entity = e.getHitEntity();
+            if (entity == null) return;
+            if (!(entity instanceof Player)) return;
+            if (BuddyUtils.IsNpc(entity)) return;
+
+            final Projectile shootobject = e.getEntity();
+            if (shootobject == null) return;
+
+            ProjectileSource source = shootobject.getShooter();
+            if (source == null) return;
+            if (!(source instanceof Player)) return;
+            Player damager = (Player)source;
+            if (plugin.GetPvp().containsKey(damager)) {
+                boolean pvp = plugin.GetPvp().get(damager);
+                if (pvp == false) {
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            if (shootobject != null) {
+                                ProjectileSource source = shootobject.getShooter();
+                                if (source == null) return;
+                                if (!(source instanceof Player)) return;
+                                Player damager = (Player)source;
+                                shootobject.remove();
+                                damager.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
+                                SoundUtils.PlaySound(damager,"cancel5", false);
+                            }
+                        }
+                    },20);
+
+                } else {
+                    Player p = (Player)entity;
+                    if (plugin.GetPvp().containsKey(p)) {
+                        pvp = plugin.GetPvp().get(p);
+                        if (pvp == false) {
+                            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (shootobject != null) {
+                                        ProjectileSource source = shootobject.getShooter();
+                                        if (source == null) return;
+                                        if (!(source instanceof Player)) return;
+                                        Player damager = (Player)source;
+                                        shootobject.remove();
+                                        damager.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.pvp.target"));
+                                        SoundUtils.PlaySound(damager,"cancel5", false);
+                                    }
+                                }
+                            },20);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+        }
     }
 
     @EventHandler
