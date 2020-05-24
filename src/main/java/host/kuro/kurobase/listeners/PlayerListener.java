@@ -9,6 +9,7 @@ import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -607,25 +608,34 @@ public class PlayerListener implements Listener {
 		if (BuddyUtils.IsNpc(player)) return;
 
 		Block block = e.getBlock();
-		// check area
-		AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-		if (area != null) {
-			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-			SoundUtils.PlaySound(player,"cancel5", false);
-			e.setCancelled(true);
-			return;
-		}
-		// owner is ok
-		if (area.owner.length() > 0) {
-			if (area.owner.equals(player.getName())) {
-				return;
+		Material bucket = e.getBucket();
+		if (bucket.toString().contains("LAVA")) {
+			// check area
+			AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+			if (area != null) {
+				if (area.owner.length() > 0) {
+					if (!area.owner.equals(player.getName())) {
+						player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+						SoundUtils.PlaySound(player,"cancel5", false);
+						e.setCancelled(true);
+						return;
+					} else {
+						// owner area is ok
+						return;
+					}
+				}
 			}
-		}
-		int rank = PlayerUtils.GetRank(plugin, player);
-		if (rank < PlayerUtils.RANK_KANRI) {
 			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
 			SoundUtils.PlaySound(player, "cancel5", false);
 			e.setCancelled(true);
+
+		} else {
+			int rank = PlayerUtils.GetRank(plugin, player);
+			if (rank < PlayerUtils.RANK_JYUMIN) {
+				player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
+				SoundUtils.PlaySound(player, "cancel5", false);
+				e.setCancelled(true);
+			}
 		}
 	}
 	@EventHandler
@@ -634,25 +644,34 @@ public class PlayerListener implements Listener {
 		if (BuddyUtils.IsNpc(player)) return;
 
 		Block block = e.getBlock();
-		// check area
-		AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-		if (area != null) {
-			player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-			SoundUtils.PlaySound(player,"cancel5", false);
-			e.setCancelled(true);
-			return;
-		}
-		// owner is ok
-		if (area.owner.length() > 0) {
-			if (area.owner.equals(player.getName())) {
-				return;
+		Material bucket = e.getBucket();
+		if (bucket.toString().contains("LAVA")) {
+			// check area
+			AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+			if (area != null) {
+				if (area.owner.length() > 0) {
+					if (!area.owner.equals(player.getName())) {
+						player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+						SoundUtils.PlaySound(player,"cancel5", false);
+						e.setCancelled(true);
+						return;
+					} else {
+						// owner area is ok
+						return;
+					}
+				}
 			}
-		}
-		int rank = PlayerUtils.GetRank(plugin, player);
-		if (rank < PlayerUtils.RANK_KANRI) {
 			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
 			SoundUtils.PlaySound(player, "cancel5", false);
 			e.setCancelled(true);
+
+		} else {
+			int rank = PlayerUtils.GetRank(plugin, player);
+			if (rank < PlayerUtils.RANK_JYUMIN) {
+				player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
+				SoundUtils.PlaySound(player, "cancel5", false);
+				e.setCancelled(true);
+			}
 		}
 	}
 
