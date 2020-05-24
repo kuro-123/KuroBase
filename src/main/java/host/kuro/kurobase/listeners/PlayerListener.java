@@ -615,6 +615,12 @@ public class PlayerListener implements Listener {
 			e.setCancelled(true);
 			return;
 		}
+		// owner is ok
+		if (area.owner.length() > 0) {
+			if (area.owner.equals(player.getName())) {
+				return;
+			}
+		}
 		int rank = PlayerUtils.GetRank(plugin, player);
 		if (rank < PlayerUtils.RANK_KANRI) {
 			player.sendMessage(ChatColor.YELLOW + Language.translate("plugin.bucket.error"));
@@ -635,6 +641,12 @@ public class PlayerListener implements Listener {
 			SoundUtils.PlaySound(player,"cancel5", false);
 			e.setCancelled(true);
 			return;
+		}
+		// owner is ok
+		if (area.owner.length() > 0) {
+			if (area.owner.equals(player.getName())) {
+				return;
+			}
 		}
 		int rank = PlayerUtils.GetRank(plugin, player);
 		if (rank < PlayerUtils.RANK_KANRI) {
