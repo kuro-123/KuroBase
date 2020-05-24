@@ -4,6 +4,7 @@ import host.kuro.kurobase.commands.*;
 import host.kuro.kurobase.commands.Completers.*;
 import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseManager;
+import host.kuro.kurobase.database.LocData;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.listeners.*;
 import host.kuro.kurobase.shop.GuiShopHandler;
@@ -47,6 +48,8 @@ public class KuroBase extends JavaPlugin {
 
     private static HashMap<Player, String> click_mode = new HashMap<Player, String>();
     public HashMap<Player, String> GetClickMode() { return click_mode; }
+    private static HashMap<Player, LocData> click_loc = new HashMap<Player, LocData>();
+    public HashMap<Player, LocData> GetClickLocation() { return click_loc; }
     private static HashMap<Player, Long> afk_status = new HashMap<Player, Long>();
     public HashMap<Player, Long> GetAfkStatus() { return afk_status; }
     private static HashMap<Player, Long> sound_battle = new HashMap<Player, Long>();

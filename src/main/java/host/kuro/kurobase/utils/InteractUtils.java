@@ -1,19 +1,22 @@
 package host.kuro.kurobase.utils;
 
 import host.kuro.kurobase.KuroBase;
-import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
+import host.kuro.kurobase.database.LocData;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.WorldEditTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class InteractUtils {
@@ -21,8 +24,8 @@ public class InteractUtils {
     private static BlockFace[] allowedBlockFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH, BlockFace.NORTH};
 
     public static void ClickBlockId(KuroBase plugin, PlayerInteractEvent e, Player player, Block block) {
+        StringBuilder sb = new StringBuilder();
         if (block != null) {
-            StringBuilder sb = new StringBuilder();
             sb.append(ChatColor.GREEN);
             sb.append(block.getBlockData().getMaterial().toString() + "  ");
             sb.append(ChatColor.YELLOW);
@@ -35,6 +38,70 @@ public class InteractUtils {
             sb.append(block.getLocation().getBlockZ());
             sb.append(")");
             PlayerUtils.SendActionBar(player, new String(sb));
+        }
+        try {
+            LocData ld;
+            if (!plugin.GetClickLocation().containsKey(player)) {
+                ld = new LocData();
+                ld.loc = block.getLocation();
+                ld.page = 0;
+                plugin.GetClickLocation().put(player, ld);
+            } else {
+                ld = plugin.GetClickLocation().get(player);
+                if (!ld.loc.getWorld().getName().equals(block.getLocation().getWorld().getName()) ||
+                    ld.loc.getBlockX() != block.getLocation().getBlockX() ||
+                    ld.loc.getBlockY() != block.getLocation().getBlockY() ||
+                    ld.loc.getBlockZ() != block.getLocation().getBlockZ()) {
+                    ld.loc = block.getLocation();
+                    ld.page = 0;
+                    plugin.GetClickLocation().put(player, ld);
+                } else {
+                    ld.page++;
+                    plugin.GetClickLocation().put(player, ld);
+                }
+            }
+            StringBuilder sb_view = new StringBuilder();
+            PreparedStatement ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.BLOCK.VIEW"));
+            ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+            args.add(new DatabaseArgs("c", block.getLocation().getWorld().getName()));
+            args.add(new DatabaseArgs("i", ""+block.getLocation().getBlockX()));
+            args.add(new DatabaseArgs("i", ""+block.getLocation().getBlockY()));
+            args.add(new DatabaseArgs("i", ""+block.getLocation().getBlockZ()));
+            args.add(new DatabaseArgs("i", ""+(8*ld.page)));
+            ResultSet rs = KuroBase.getDB().ExecuteQuery(ps, args);
+            args.clear();
+            args = null;
+            if (rs != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日 HH:mm:ss");
+                sb_view.append(new String(sb) + "\n");
+                sb_view.append("ページ:" + (ld.page+1) + "\n");
+                sb_view.append(ChatColor.WHITE);
+                while(rs.next()){
+                    Timestamp logdate = rs.getTimestamp("log_date");
+                    String mname = rs.getString("mname");
+                    String action = rs.getString("action");
+                    if (action.equals("break")) {
+                        action = "整地";
+                    }
+                    else if (action.equals("place")) {
+                        action = "建築";
+                    }
+                    String pname = rs.getString("pname");
+                    String line = String.format("[%s] <%s> [%s] by %s\n", sdf.format(logdate), action, mname, pname);
+                    sb_view.append(line);
+                }
+                player.sendMessage(new String(sb_view));
+            }
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
         e.setCancelled(true);
     }
