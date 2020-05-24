@@ -228,7 +228,7 @@ public class HomeCommand implements CommandExecutor {
             args = null;
             if (rs != null) {
                 while(rs.next()){
-                    ret = new Location(player.getWorld(), rs.getInt("hx"), rs.getInt("hy"), rs.getInt("hz"));
+                    ret = new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("hx"), rs.getInt("hy"), rs.getInt("hz"));
                     break;
                 }
             }

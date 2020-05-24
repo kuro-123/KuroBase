@@ -8,6 +8,7 @@ import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +32,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent e) {
+        if (e.getEntity() instanceof Creeper) {
+            e.blockList().removeIf(block -> (block.getType() == Material.CHEST || block.getType() == Material.ITEM_FRAME));
+        }
         e.setCancelled(true);
     }
 
