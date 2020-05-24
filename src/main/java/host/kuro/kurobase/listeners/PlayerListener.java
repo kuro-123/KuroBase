@@ -563,15 +563,6 @@ public class PlayerListener implements Listener {
 		PlayerUtils.BroadcastActionBar(message);
 		// broadcast sound
 		SoundUtils.BroadcastSound(sound, false);
-		// discord
-		//DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-		//if (dm != null) {
-		//	if (newlevel > oldlevel) {
-		//		dm.SendDiscordYellowMessage(message);
-		//	} else {
-		//		dm.SendDiscordGrayMessage(message);
-		//	}
-		//}
 	}
 
 	@EventHandler
