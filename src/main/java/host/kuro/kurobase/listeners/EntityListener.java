@@ -15,10 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_ATTACK;
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.PROJECTILE;
@@ -128,11 +126,16 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
-        Entity entity = e.getEntity();
-        if (!(entity instanceof Monster)) return;
-        int val = KuroBase.GetRand().Next(1, 20);
-        if (val == 1) {
-            entity.setMetadata("SPECIAL", new FixedMetadataValue(KuroBase.GetInstance(), "SPECIAL"));
+        try {
+            Entity entity = e.getEntity();
+            if (!(entity instanceof Monster)) return;
+            int val = KuroBase.GetRand().Next(1, 20);
+            if (val == 1) {
+                entity.setMetadata("SPECIAL", new FixedMetadataValue(KuroBase.GetInstance(), "SPECIAL"));
+            }
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
         }
     }
 
@@ -459,17 +462,7 @@ public class EntityListener implements Listener {
             } else {
                 player.giveExp(xp);
 
-                String meta = "";
                 if (entity.hasMetadata("SPECIAL")) {
-                    List<MetadataValue> values = entity.getMetadata("SPECIAL");
-                    for (MetadataValue v : values) {
-                        if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
-                            meta = v.asString();
-                            break;
-                        }
-                    }
-                }
-                if (meta.length() > 0) {
                     RandomDrop(player);
                 }
 
@@ -504,7 +497,7 @@ public class EntityListener implements Listener {
     }
 
     private void RandomDrop(Player player) {
-        int amount = KuroBase.GetRand().Next(1, 3);
+        int amount = KuroBase.GetRand().Next(2, 5);
         ItemStack item = new ItemStack(Material.DIAMOND, amount);
         int x = KuroBase.GetRand().Next(-2, 2);
         int z = KuroBase.GetRand().Next(-2, 2);
@@ -514,111 +507,111 @@ public class EntityListener implements Listener {
     }
 
     private boolean ActionSpecialAttack(Player player, Entity entity) {
-        String meta = "";
-        if (entity.hasMetadata("SPECIAL")) {
-            List<MetadataValue> values = entity.getMetadata("SPECIAL");
-            for (MetadataValue v : values) {
-                if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
-                    meta = v.asString();
+        try {
+            boolean meta = false;
+            if (entity.hasMetadata("SPECIAL")) {
+                meta = true;
+            }
+            int ritu = 0;
+            switch (entity.getType()) {
+                case ZOMBIE:
+                    ritu = 5;
+                    if (meta) player.setFireTicks(ritu);
                     break;
-                }
+                case SKELETON:
+                    ritu = 5;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case SPIDER:
+                    ritu = 5;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case CAVE_SPIDER:
+                    ritu = 5;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case CREEPER:
+                    ritu = 7;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case ENDERMAN:
+                    ritu = 7;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case GHAST:
+                    ritu = 7;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case WITHER_SKELETON:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case PIG_ZOMBIE:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case PHANTOM:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case HUSK:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case STRAY:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case EVOKER:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case RAVAGER:
+                    ritu = 8;
+                    if (meta) player.setFireTicks(ritu);
+                    break;
+                case BLAZE:
+                    ritu = 10;
+                    if (meta) {
+                        player.setFireTicks(10);
+                    } else {
+                        if (plugin.GetRand().Next(1, 100) < 15) {
+                            player.setFireTicks(10);
+                        }
+                    }
+                    break;
+                case WITHER:
+                    ritu = 10;
+                    if (meta) {
+                        player.setFireTicks(10);
+                    } else {
+                        if (plugin.GetRand().Next(1, 100) < 20) {
+                            player.setFireTicks(10);
+                        }
+                    }
+                    break;
+                case ENDER_DRAGON:
+                    ritu = 30;
+                    if (meta) {
+                        player.setFireTicks(20);
+                    } else {
+                        if (plugin.GetRand().Next(1, 100) < 30) {
+                            player.setFireTicks(30);
+                        }
+                    }
+                    break;
             }
-        }
-        int ritu = 0;
-        switch (entity.getType()) {
-        case ZOMBIE:
-            ritu = 5;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case SKELETON:
-            ritu = 5;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case SPIDER:
-            ritu = 5;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case CAVE_SPIDER:
-            ritu = 5;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case CREEPER:
-            ritu = 7;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case ENDERMAN:
-            ritu = 7;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case GHAST:
-            ritu = 7;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case WITHER_SKELETON:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case PIG_ZOMBIE:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case PHANTOM:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case HUSK:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case STRAY:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case EVOKER:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case RAVAGER:
-            ritu = 8;
-            if (meta.length() > 0) player.setFireTicks(20);
-            break;
-        case BLAZE:
-            ritu = 10;
-            if (meta.length() > 0) {
-                player.setFireTicks(20);
-            } else {
-                if (plugin.GetRand().Next(1, 100) < 15) {
-                    player.setFireTicks(6);
-                }
+            int value = plugin.GetRand().Next(1, 100);
+            if (meta) {
+                ritu = ritu * 2;
             }
-            break;
-        case WITHER:
-            ritu = 10;
-            if (meta.length() > 0) {
-                player.setFireTicks(20);
-            } else {
-                if (plugin.GetRand().Next(1, 100) < 20) {
-                    player.setFireTicks(10);
-                }
+            if (value < ritu) {
+                return true;
             }
-            break;
-        case ENDER_DRAGON:
-            ritu = 30;
-            if (meta.length() > 0) {
-                player.setFireTicks(20);
-            } else {
-                if (plugin.GetRand().Next(1, 100) < 30) {
-                    player.setFireTicks(20);
-                }
-            }
-            break;
-        }
-        int value = plugin.GetRand().Next(1, 100);
-        if (meta.length() > 0) {
-            ritu = ritu * 2;
-        }
-        if (value < ritu) {
-            return true;
+
+        } catch (Exception ex) {
+            ErrorUtils.GetErrorMessage(ex);
+            return false;
         }
         return false;
     }
