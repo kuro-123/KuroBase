@@ -598,7 +598,24 @@ public class PlayerListener implements Listener {
 
 		AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 		if (area != null) {
+			if (player.getGameMode() == GameMode.SURVIVAL) {
+				if (area.owner.equals(player.getName())) {
+					if (!player.getAllowFlight()) {
+						player.sendMessage(ChatColor.YELLOW + "自分のエリア内では飛行可能です");
+						player.setAllowFlight(true);
+						player.setFlying(true);
+						SoundUtils.BroadcastSound("correct2", false);
+					}
+				}
+			}
 			PlayerUtils.SendActionBar(player, ChatColor.YELLOW + String.format("[ 敷地:%s <by %s> ]", area.name, area.owner));
+		} else {
+			if (player.getGameMode() == GameMode.SURVIVAL) {
+				if (player.getAllowFlight()) {
+					player.setAllowFlight(false);
+					player.setFlying(false);
+				}
+			}
 		}
 	}
 

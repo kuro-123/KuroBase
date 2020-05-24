@@ -73,10 +73,12 @@ public class InventoryListener implements Listener {
                     , holder.getInventory().getLocation().getBlockY()
                     , holder.getInventory().getLocation().getBlockZ());
             if (area != null) {
-                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                event.setCancelled(true);
-                return;
+                if (!area.name.equals("バディー")) {
+                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                    SoundUtils.PlaySound(player,"cancel5", false);
+                    event.setCancelled(true);
+                    return;
+                }
             }
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
