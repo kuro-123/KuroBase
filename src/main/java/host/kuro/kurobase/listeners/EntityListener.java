@@ -497,6 +497,7 @@ public class EntityListener implements Listener {
     }
 
     private void RandomDrop(Player player) {
+        if (KuroBase.GetRand().Next(1, 20) != 1) return;
         int amount = KuroBase.GetRand().Next(2, 5);
         ItemStack item = new ItemStack(Material.DIAMOND, amount);
         int x = KuroBase.GetRand().Next(-2, 2);
