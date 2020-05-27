@@ -22,6 +22,10 @@ public class AiTabCompleter implements TabCompleter {
                 cmds.add("<アクションを選択>");
                 cmds.add("buddymaster");
                 cmds.add("explaner");
+                cmds.add("weaponshop");
+                cmds.add("armorshop");
+                cmds.add("itemshop");
+                cmds.add("specialshop");
                 return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
         }
         return null;

@@ -21,6 +21,7 @@ public class RuleTabCompleter implements TabCompleter {
             case 1:
                 cmds.add("<ルールの種別を選択>");
                 cmds.add("stoptime");
+                cmds.add("firetick");
                 return StringUtil.copyPartialMatches(args[0], cmds, new ArrayList<String>());
             case 2:
                 if (args[0].toLowerCase().equals("stoptime")) {

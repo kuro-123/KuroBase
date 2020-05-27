@@ -17,8 +17,7 @@ import host.kuro.kurodiscord.KuroDiscord;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -84,6 +83,7 @@ public class KuroBase extends JavaPlugin {
     private static TraitInfo citizen_master_trait;
     private static TraitInfo citizen_text_trait;
     private static TraitInfo citizen_explaner_trait;
+    private static TraitInfo citizen_shopmaster_trait;
 
     @Override
     public void onEnable() {
@@ -187,6 +187,10 @@ public class KuroBase extends JavaPlugin {
         getLogger().info(Language.translate("plugin.setup.protectdata"));
         AreaUtils.SetupProtectData();
 
+        for (World w : Bukkit.getWorlds()) {
+            w.setGameRule(GameRule.DO_FIRE_TICK, false);
+        }
+
         // load citizens plugin
         getLogger().info(Language.translate("plugin.setup.citizens"));
         citizen_plugin = (Citizens)getServer().getPluginManager().getPlugin("Citizens");
@@ -280,6 +284,8 @@ public class KuroBase extends JavaPlugin {
             CitizensAPI.getTraitFactory().registerTrait(citizen_text_trait);
             TraitInfo citizen_explaner_trait = TraitInfo.create(ExplanerTrait.class).withName("ExplanerTrait");
             CitizensAPI.getTraitFactory().registerTrait(citizen_explaner_trait);
+            TraitInfo citizen_shopmaster_trait = TraitInfo.create(ShopMasterTrait.class).withName("ShopMasterTrait");
+            CitizensAPI.getTraitFactory().registerTrait(citizen_shopmaster_trait);
         } catch (Exception ex) {
             return false;
         }
@@ -330,6 +336,15 @@ public class KuroBase extends JavaPlugin {
                 ex.printStackTrace();
             } finally {
                 citizen_explaner_trait = null;
+            }
+        }
+        if (citizen_shopmaster_trait != null) {
+            try {
+                CitizensAPI.getTraitFactory().deregisterTrait(citizen_shopmaster_trait);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            } finally {
+                citizen_shopmaster_trait = null;
             }
         }
     }

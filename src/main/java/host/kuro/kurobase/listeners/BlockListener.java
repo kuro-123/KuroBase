@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,11 @@ public class BlockListener implements Listener {
 
     public BlockListener(KuroBase plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onBreak(BlockIgniteEvent e) {
+        e.setCancelled(true);
     }
 
     @EventHandler

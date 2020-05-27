@@ -57,6 +57,20 @@ public class RuleCommand implements CommandExecutor {
                 return true;
             }
         }
+        else if (kind.equals("firetick")) {
+            if (option.equals("on")) {
+                player.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
+                PlayerUtils.BroadcastMessage(ChatColor.YELLOW + player.getDisplayName() + "さんが、" + Language.translate("commands.rule.firetick.on") + " [ " + player.getWorld().getName() + " ]", true);
+                SoundUtils.PlaySound(player,"switch1", false);
+                return true;
+            }
+            else if (option.equals("off")) {
+                player.getWorld().setGameRule(GameRule.DO_FIRE_TICK, true);
+                PlayerUtils.BroadcastMessage(ChatColor.YELLOW + player.getDisplayName() + "さんが、" + Language.translate("commands.rule.firetick.off") + " [ " + player.getWorld().getName() + " ]", true);
+                SoundUtils.PlaySound(player,"switch1", false);
+                return true;
+            }
+        }
         player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.args.error"));
         SoundUtils.PlaySound(player,"cancel5", false);
         return false;

@@ -336,14 +336,14 @@ public class PlayerListener implements Listener {
 			args.add(new DatabaseArgs("c", player.getName())); // name
 			args.add(new DatabaseArgs("i", ""+0)); // rank
 			args.add(new DatabaseArgs("i", ""+0)); // money
-			args.add(new DatabaseArgs("c", e.getAddress().toString())); // ip
-			args.add(new DatabaseArgs("c", e.getHostname())); // host
+			args.add(new DatabaseArgs("c", "")); // ip
+			args.add(new DatabaseArgs("c", "")); // host
 			args.add(new DatabaseArgs("c", e.getRealAddress().toString())); // rip
 			args.add(new DatabaseArgs("c", e.getRealAddress().getHostName())); // rhost
-			args.add(new DatabaseArgs("i", ""+player.getTotalExperience())); // totalexp
-			args.add(new DatabaseArgs("d", ""+player.getExp())); // exp
-			args.add(new DatabaseArgs("i", ""+player.getExpToLevel())); // exptolevel
-			args.add(new DatabaseArgs("i", ""+player.getLevel())); // level
+			args.add(new DatabaseArgs("i", "0")); // totalexp
+			args.add(new DatabaseArgs("d", "0.0")); // exp
+			args.add(new DatabaseArgs("i", "0")); // exptolevel
+			args.add(new DatabaseArgs("i", "0")); // level
 			args.add(new DatabaseArgs("c", ""+player.getLocation().getWorld().getName())); // world
 			args.add(new DatabaseArgs("d", ""+player.getLocation().getX())); // x
 			args.add(new DatabaseArgs("d", ""+player.getLocation().getY())); // y
@@ -364,8 +364,8 @@ public class PlayerListener implements Listener {
 
 			// UPDATE
 			ArrayList<DatabaseArgs> uargs = new ArrayList<DatabaseArgs>();
-			uargs.add(new DatabaseArgs("c", e.getAddress().toString())); // ip
-			uargs.add(new DatabaseArgs("c", e.getHostname())); // host
+			uargs.add(new DatabaseArgs("c", "")); // ip
+			uargs.add(new DatabaseArgs("c", "")); // host
 			uargs.add(new DatabaseArgs("c", e.getRealAddress().toString())); // rip
 			uargs.add(new DatabaseArgs("c", e.getRealAddress().getHostName())); // rhost
 			uargs.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -617,7 +617,7 @@ public class PlayerListener implements Listener {
 
 		Block block = e.getBlock();
 		Material bucket = e.getBucket();
-		if (bucket.toString().contains("LAVA")) {
+		if (bucket.toString().contains("LAVA") || bucket.toString().contains("WATER")) {
 			// check area
 			AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
 			if (area != null) {
@@ -653,7 +653,7 @@ public class PlayerListener implements Listener {
 
 		Block block = e.getBlock();
 		Material bucket = e.getBucket();
-		if (bucket.toString().contains("LAVA")) {
+		if (bucket.toString().contains("LAVA") || bucket.toString().contains("WATER")) {
 			// check area
 			AreaData area = AreaUtils.CheckInsideProtect(null, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
 			if (area != null) {

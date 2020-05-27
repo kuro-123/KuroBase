@@ -33,6 +33,10 @@ public class BuddyUtils {
         if (IsBuddy(entity)) return true;
         if (IsBuddyMaster(entity)) return true;
         if (IsExplaner(entity)) return true;
+        if (IsWeaponMaster(entity)) return true;
+        if (IsArmorMaster(entity)) return true;
+        if (IsItemMaster(entity)) return true;
+        if (IsSpecialMaster(entity)) return true;
         return false;
     }
 
@@ -86,6 +90,78 @@ public class BuddyUtils {
             }
         }
         if (strval.equals("EXPLANER")) return true;
+        return false;
+    }
+
+    public static boolean IsWeaponMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("WEAPONSMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsArmorMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("ARMORMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsItemMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("ITEMMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsSpecialMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("SPECIALMASTER")) return true;
         return false;
     }
 

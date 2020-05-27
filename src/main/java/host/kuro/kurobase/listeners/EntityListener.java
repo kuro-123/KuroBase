@@ -153,6 +153,22 @@ public class EntityListener implements Listener {
                     e.setDroppedExp(0);
                     return;
                 }
+                if (BuddyUtils.IsWeaponMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsArmorMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsItemMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsSpecialMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
                 player = e.getEntity().getKiller();
             }
             if (player == null) return;
