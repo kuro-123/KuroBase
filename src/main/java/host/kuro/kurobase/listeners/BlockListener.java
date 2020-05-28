@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -26,6 +29,17 @@ public class BlockListener implements Listener {
 
     public BlockListener(KuroBase plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPrepareAnvil(PrepareAnvilEvent e) {
+        // check rename
+        HumanEntity entity = e.getView().getPlayer();
+        AnvilInventory inv = e.getInventory();
+        String rename = inv.getRenameText();
+        if (rename.length() > 0) {
+            entity.closeInventory();
+        }
     }
 
     @EventHandler

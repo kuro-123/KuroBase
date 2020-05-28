@@ -97,15 +97,15 @@ public class CitizenListener implements Listener {
         ParticleUtils.CrownParticle(npc.getEntity(), Particle.LAVA, 50); // particle
         SoundUtils.BroadcastSound("don-1", false);
         // message
-        String message = String.format("[ %sさん ] の %s が死亡しました", npc.getTrait(KuroTrait.class).getOwner().getDisplayName(), npc.getName());
-        PlayerUtils.BroadcastMessage(message, false);
-        DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
-        if (dm != null) {
-            dm.SendDiscordRedMessage(message);
-        }
-
         Player owner = npc.getTrait(KuroTrait.class).getOwner();
         if (owner != null) {
+            String message = String.format("[ %sさん ] の %s が死亡しました", owner.getDisplayName(), npc.getName());
+            PlayerUtils.BroadcastMessage(message, false);
+            DiscordMessage dm = KuroBase.getDiscord().getDiscordMessage();
+            if (dm != null) {
+                dm.SendDiscordRedMessage(message);
+            }
+
             int rank = PlayerUtils.GetRank(KuroBase.GetInstance(), owner);
             if (rank == PlayerUtils.RANK_NUSHI) {
                 // UPDATE
