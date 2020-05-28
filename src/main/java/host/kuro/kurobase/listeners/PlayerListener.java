@@ -181,6 +181,7 @@ public class PlayerListener implements Listener {
 		try {
 			Player player = e.getEntity();
 			if (BuddyUtils.IsNpc(player)) return;
+			if (!plugin.GetRank().containsKey(player)) return;
 
 			int drop = e.getDroppedExp();
 			int value = plugin.getConfig().getInt("Game.death", 200);
