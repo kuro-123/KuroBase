@@ -145,6 +145,7 @@ public class EntityListener implements Listener {
         try {
             Entity entity = e.getEntity();
             if (!(entity instanceof Monster || entity instanceof Animals)) return;
+            if (BuddyUtils.IsBuddy(entity)) return;
 
             Player player = null;
             LivingEntity liv = e.getEntity();

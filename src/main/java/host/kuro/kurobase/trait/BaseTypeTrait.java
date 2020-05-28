@@ -26,8 +26,11 @@ public class BaseTypeTrait extends Trait {
 
     @Override
     public void onSpawn() {
-        npc.getEntity().setCustomName(type);
-        npc.getEntity().setCustomNameVisible(false);
-        npc.getEntity().setMetadata(DATA_KEY, new FixedMetadataValue(KuroBase.GetInstance(), type));
+        try {
+            npc.getEntity().setCustomName(type);
+            npc.getEntity().setCustomNameVisible(false);
+            npc.getEntity().setMetadata(DATA_KEY, new FixedMetadataValue(KuroBase.GetInstance(), type));
+        } catch (Exception ex) {
+        }
     }
 }
