@@ -107,7 +107,7 @@ public class BuddyUtils {
                 break;
             }
         }
-        if (strval.equals("WEAPONSMASTER")) return true;
+        if (strval.equals("WEAPONMASTER")) return true;
         return false;
     }
 

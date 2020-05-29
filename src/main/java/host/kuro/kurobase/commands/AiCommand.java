@@ -51,7 +51,7 @@ public class AiCommand implements CommandExecutor {
         switch(args[0].toLowerCase()) {
             case "buddymaster": return ActionBuddyMaster(player, args);
             case "explaner": return ActionExplaner(player, args);
-            case "weaponshop": return ActionShop(player, args, "WEAPONSMASTER");
+            case "weaponshop": return ActionShop(player, args, "WEAPONMASTER");
             case "armorshop": return ActionShop(player, args, "ARMORMASTER");
             case "itemshop": return ActionShop(player, args, "ITEMMASTER");
             case "specialshop": return ActionShop(player, args, "SPECIALMASTER");
@@ -94,9 +94,33 @@ public class AiCommand implements CommandExecutor {
             npc.getTrait(SendTextTrait.class).setText("よお！ @t！ 取引しないか？ 俺を右ｸﾘｯｸしてみな！");
             // skin
             npc.addTrait(SkinTrait.class);
-            skin_name = "master";
-            skin_data = "eyJ0aW1lc3RhbXAiOjE1NjMxMTE1MTcxODcsInByb2ZpbGVJZCI6ImIwZDRiMjhiYzFkNzQ4ODlhZjBlODY2MWNlZTk2YWFiIiwicHJvZmlsZU5hbWUiOiJ4RmFpaUxlUiIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjVlNDY1YzA3YTgyMjI0ODE5MjYxMjE5N2YyNzcxZTcxZDMzMjYzNDViZDc3OTA3MzEzOTllYWUxM2Y2OWNhOCJ9fX0=";
-            skin_signature = "YFbFMaC5/02UGEHV1wYU2Eo6/Cz4ybnAnIjyAbU5tp13G3Nl/X11j52njzNL82O+YrwldxRL7HEn3/K9+VPp9zY7KTg+Hzh2a4ps4AxwDoXUkqmyhVm5r2UDtZkckPJ+pd08KzIzWjM1/CDhCZ2fLPL0MOeeYNt1IO5uR1aEJe2b/46nhKzArwZ3p/vl5lgN1atfETsLnK9Xi6nTdck8J9jzsqvNJpDek87Y1/p6QFPu9gSWVN15tfv/0DbURvK++0CBx0OR93O/ftsS90KpM08fmfjxWde7dTATKmLcnbJY0QpHZyQ3ohe61uHW4cyB1kU0gS3mbJ/eTrMNKHWUYkAh2us+CDkUXbx6oau/GkmR0LyjRER/wyEczDfVbIMvMqE+h0HkdZSblCzkJsIOYBmapom8G7uDT88bKtQZAWzgPpoNyI8BZmImTA9J5YbudUaLnkN8RVANoED1juG4ilAJO6sXHpeURVnoDbkPXyRVo+8gB/2cHGugLSgjZqCt78KMHbo0yFefNPjeQYMSRfXm9IFLNCANK8rfv3K1Sck/Jwc6LaqGuDl7UZZXKEvIjL/B2hc1FUvcC41MXvEyIFB5Fycm0fqClhR9kdlMfl7NLL/W8dA8mooZlrk/CcC4OlGRKFuM+71jOPmU6sSJGWzkUk2qvTcIlSSEYTCF9yU=";
+            switch (kbn) {
+                case "WEAPONMASTER":
+                    skin_name = "weaponmaster";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1ODA2ODc2NTU1ODAsInByb2ZpbGVJZCI6IjU2Njc1YjIyMzJmMDRlZTA4OTE3OWU5YzkyMDZjZmU4IiwicHJvZmlsZU5hbWUiOiJUaGVJbmRyYSIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTdhYzBjM2U1ZDMwNDcwOWI2ODBjZjRkMjEyZDhjZDQ1MjgxMDc4MzNkYjNhZjA5MDM2MDBjYzFmNzZkZDhkZCJ9fX0=";
+                    skin_signature = "SOYZhpJMkVcuyc9IeqXuAORO9iWQUVUy0rn2WMNro+buJ8QE0bA2tCUGHTHKNfRusCLmvYxCTWfAOP/2qr5UPL7prZbmrMUAOGJ8f6PxQ9GXqabIBXNGnf3LwLbEc7k9qkqWY1JOsfJPFOvnXNDxvc01tt61MMbMLPbcvyNqoNNMIuAN5e4o45pmQu02inNnj21OJUYQjqRYMl2kIp0Gk4O2J9xBITRp8P6I9d2Ap9WkBYCc+lCE80ymTjJs3aJoGYFNZiWnGJ2yrvcYxOIPK54NszQYT8qZqn13Sg1mtIyqVwlZ+EUy0Q8R2WH4rL7XWAWWqsj1A08J7cSXtLZmUOFdIZMk/y3fEIB1cVR7qccYRbYmmXP8fv4mJBEqoIjUh3Xqs0NxxI3ZExtbg1O54ZT6bPngLLGl0yR5b4YHrenafDSL8Xw2qQ4oMS22mSerDlpskgEeJOecu9y0kXlGqByLk2cURmh64hJ/CmJrxjJuOl1x+plyYfuVoestebBVpMRUI1HGcCQUSJm9Kuz6zmskVS+/LAjMzjidmwAQmnoxKkS34/6asx2d9g+wIlEZTzZxe0tFv44aCMK3EOUleHFLgK8krNC2EZIa+Vwskq1KUtRb5MQeZjJjruCFgnhkI5mIdEvDNO+SLxxMb8ajIXsQXeZAki2N4OJQ40IE4b4=";
+                    break;
+                case "ARMORMASTER":
+                    skin_name = "armormaster";
+                    skin_data = "ewogICJ0aW1lc3RhbXAiIDogMTU5MDc2MTI1ODc1NSwKICAicHJvZmlsZUlkIiA6ICI3MzgyZGRmYmU0ODU0NTVjODI1ZjkwMGY4OGZkMzJmOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJ4cWwiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmMxYzljNmYwNTkzZDdlYzc3OWM1YWZjYmQ3YmM0ZTg3NWFjNjQzYzhiMGU5NjJjZTFkYWJlNzQ3N2I0ZWI0NCIKICAgIH0KICB9Cn0=";
+                    skin_signature = "tJO7sPCLQ4DpY9R8kt1Dvhbw86VoNgWiPUEcDAiYpqR2DrlqvUB+5rtQlzQYEm77hpHoJ72lmKDc0C0L4EP1bJtWl8o/IztTHrgOCCL5FL8sb5LrHcDit4p/jKqrSVBf30YhHdIidtCGLhKZFXAZxEWxjaJS6v8i4iFsluKKpUkLxVUBWIHJUpbDZ2uG7Jw4AmQXRuh+0L201aoDI39ap6xK0+w2WA1DQAW/gT+A266s8Q53F136TuKakoH+OYsC/OiLb0CBJuBLi3geMfkZ/jLi4uK9l0v8UUlRK6sDRze+3ZwL7fbTy+qQX76mnAuvHzTHF0IgxcrQCngsn/RCDRDuejhF8bcoULtoUlDGsAsWXirI7JPn+u25DiiGWd0vfkXh6woZNmc1AAOSYAQY8tIUw/27xmi/MtLe2LsvAQRtUCoBS3dvYfWOvWX14Bma1wlQFUkeE8GcxrRue8CjQ+y38pzQ/Qu7vkZnH/X4nMzVFf8W2JRMnxEpLj7ByKQy8GlNrj9H3vzgTAdsY7GNBLSWSDHssN778zTjVwbo8ySXXW/5FmYD4jgm1J2vRUVgoddtAevui64OHIeq8PwKbD22QZ8CzVm20NjEFz/9mg6Sr+uDMxCDARZ/RyQ64qnlBt97zN276PHHulrdiFa0LwT3mRNyNJbpL9CUc/RLjoY=";
+                    break;
+                case "ITEMMASTER":
+                    skin_name = "master";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1NjkzMTEwMTU4MTgsInByb2ZpbGVJZCI6Ijc1MTQ0NDgxOTFlNjQ1NDY4Yzk3MzlhNmUzOTU3YmViIiwicHJvZmlsZU5hbWUiOiJUaGFua3NNb2phbmciLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzYzZGNjYmY2MzAxYjA0NGUwMWM1NmIxMDY5NTJmZGNhMTM4MTg1ZjBhNWJiMTE0NDA1ODgyOWRiNzJiMGZhZGMifX19";
+                    skin_signature = "MXwoxcQrlIJofZSmmS590rq+6c0YtgVuPH91ndZxrG8dJ0y2AMKrUb48YWVnm0TMZUtmu98MSRxjST/Gl4l2wLwhSMUpt/J7ZIfIN9qSSssyfnIHNc09HrkD1QE/nlKcb0eBLlOm1dZV4YH17ahsPetBWMbBrp+x1dPQ8rH0K7Z9xyUy1MqkVzOZ4eFwjPoCyI2HrhmRmvrsnZFk6VYOu4to10atdASnFYmPOfDIotD6gagpzr7bKezArzweJ+tbOTW1gQRQ/aX4c7W1v58kAiHyRC42gx5HGdJCgfdTS6SjczfxMNKAoH0PN1p1FQHvatlY05wcWWGZD9CWzQYfFnW0KUA4fR6kvxS5ENPI3P4kb6n1D+60eDF5+VxBxkRDWRWvUa48X9CG4YZu5itoJmvt4KjM4d8ZBXXqQtUpb4WdI57Je5LwzW6a8cBDiGOOyCtkp8pDau4396cB+ZjB4oqV+zlLRLokFP2ONbXfjCYZILmrsWt+qURImpWBivA0ltKurcteav3KzXoMZZCiGahpkXMxCK8NSUUVUwJZDSsWVZNAm4CIyB4iIFk5F4T5WbaiLJI4X2S68Iz13/LeSGfI3u3wVdML3YCXghWNZaEPxn//EFiQG9jC868IsILwWBLbO6LmfsbNSRKN3jeY5xvB+3M1VnIr7OfG13pRM68=";
+                    break;
+                case "SPECIALMASTER":
+                    skin_name = "master";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1Nzg2NzM2NTczNzIsInByb2ZpbGVJZCI6ImVkNTNkZDgxNGY5ZDRhM2NiNGViNjUxZGNiYTc3ZTY2IiwicHJvZmlsZU5hbWUiOiJGb3J5eExPTCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MxZGJhMTgzMzMxYmEyMTc2ODkxYjg3OTc3NzliYzQzMjNkMGIzZDdiNGIwNzU4OTAyMTgxMDE5YmY1MGYyZSJ9fX0=";
+                    skin_signature = "srocU4SDY0WcfnYrsDkJ/n/8NFNPUyqXr5Lrr9vnybKyN2KUNXztL1bOdaGSLaEBeEWwe7leZnXt6RgS4MmWIy9EhWf80h++U0rbHuuJc6cV/IKBVKD6ruc4C0tJ8R8fi9/pkTRhmTP4vDaAKPauYd0f6wZ49eu25RJnCYL11tS56W/2+2rhkGZFUNp7nCOkertuDWA3Q/6nw/D9+A6wgYHLWIdZY/lmv4Ds3Cm1LM/mNxXFnyF7YysYtA7gOQGV2N65zinOr1Yb+8PpxP46YFAtHSG84F+McqnzaHGlxlH0CIrZ3gPU+B6+nmN76XmWMaMgenYH3EEHw/oHPKJv85SqAmXRPw+8W6EA2Jr9OIS4S8bGrjkhdFhcAlJ9pi3uyxxK2YuvV3xS5yCPHAHeC0Ul3LkoK9QsgZ6Y6g8YFAcWZbvyZsjhw+tobSRLZ2mz+GUEgz2lD5DolRp0q/NFn5tUeaeCSggF7ty1AKc6sxjCaSUk6Ije78+zD8FiNM2mRki93Wa3iHiexPakOOapU81pfYuUFgNfYR7eIQndAFnyj2HfXgY9i6lcSyc+68R6346bDiVPXBAKXIwbpkZmi9lIF5U/dIglpmYxItRkbLrEACN5lVK8leX9zHldnRG8pXyCriQVJkMqugJM5NNyuPxwgwAHe7JS0jNCdvwz7vI=";
+                    break;
+                default:
+                    skin_name = "master";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1NjMxMTE1MTcxODcsInByb2ZpbGVJZCI6ImIwZDRiMjhiYzFkNzQ4ODlhZjBlODY2MWNlZTk2YWFiIiwicHJvZmlsZU5hbWUiOiJ4RmFpaUxlUiIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjVlNDY1YzA3YTgyMjI0ODE5MjYxMjE5N2YyNzcxZTcxZDMzMjYzNDViZDc3OTA3MzEzOTllYWUxM2Y2OWNhOCJ9fX0=";
+                    skin_signature = "YFbFMaC5/02UGEHV1wYU2Eo6/Cz4ybnAnIjyAbU5tp13G3Nl/X11j52njzNL82O+YrwldxRL7HEn3/K9+VPp9zY7KTg+Hzh2a4ps4AxwDoXUkqmyhVm5r2UDtZkckPJ+pd08KzIzWjM1/CDhCZ2fLPL0MOeeYNt1IO5uR1aEJe2b/46nhKzArwZ3p/vl5lgN1atfETsLnK9Xi6nTdck8J9jzsqvNJpDek87Y1/p6QFPu9gSWVN15tfv/0DbURvK++0CBx0OR93O/ftsS90KpM08fmfjxWde7dTATKmLcnbJY0QpHZyQ3ohe61uHW4cyB1kU0gS3mbJ/eTrMNKHWUYkAh2us+CDkUXbx6oau/GkmR0LyjRER/wyEczDfVbIMvMqE+h0HkdZSblCzkJsIOYBmapom8G7uDT88bKtQZAWzgPpoNyI8BZmImTA9J5YbudUaLnkN8RVANoED1juG4ilAJO6sXHpeURVnoDbkPXyRVo+8gB/2cHGugLSgjZqCt78KMHbo0yFefNPjeQYMSRfXm9IFLNCANK8rfv3K1Sck/Jwc6LaqGuDl7UZZXKEvIjL/B2hc1FUvcC41MXvEyIFB5Fycm0fqClhR9kdlMfl7NLL/W8dA8mooZlrk/CcC4OlGRKFuM+71jOPmU6sSJGWzkUk2qvTcIlSSEYTCF9yU=";
+                    break;
+            }
             npc.getTrait(SkinTrait.class).setSkinPersistent(skin_name, skin_signature, skin_data);
             // equipent
             //ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
