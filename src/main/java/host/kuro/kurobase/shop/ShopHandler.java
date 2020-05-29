@@ -47,7 +47,23 @@ public class ShopHandler {
         ResultSet rs;
         try {
             if (kbn.equals("npc")) {
-                ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.BUDDY"));
+                if (key.equals("998")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.BUDDY"));
+                }
+                else if (key.equals("997")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.WEAPON"));
+                }
+                else if (key.equals("996")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.ARMOR"));
+                }
+                else if (key.equals("995")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.ITEM"));
+                }
+                else if (key.equals("994")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SPECIAL"));
+                } else {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SELECT"));
+                }
                 rs = KuroBase.getDB().ExecuteQuery(ps, null);
             } else {
                 ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SELECT"));
@@ -66,47 +82,29 @@ public class ShopHandler {
 
                     Material m;
                     ItemStack stack;
-                    if (id.equals("998")) {
-                        if (name.indexOf("木")>=0) {
-                            m = Material.getMaterial("CHARCOAL");
+                    int buy = price;
+                    int sell = price;
+                    if (key.equals("998")) {
+                        if (id.equals(key)) {
+                            m = GetMaterial(name);
+                            stack = new ItemStack(m, 1);
+                            ItemMeta data = stack.getItemMeta();
+                            data.setDisplayName(name);
+                            stack.setItemMeta(data);
+                        } else {
+                            m = Material.matchMaterial(name);
+                            stack = new ItemStack(m, 1);
                         }
-                        else if (name.indexOf("石")>=0) {
-                            m = Material.getMaterial("COAL");
-                        }
-                        else if (name.indexOf("皮")>=0) {
-                            m = Material.getMaterial("CHARCOAL");
-                        }
-                        else if (name.indexOf("チェーン")>=0) {
-                            m = Material.getMaterial("COAL");
-                        }
-                        else if (name.indexOf("鉄")>=0) {
-                            m = Material.getMaterial("IRON_INGOT");
-                        }
-                        else if (name.indexOf("金")>=0) {
-                            m = Material.getMaterial("GOLD_INGOT");
-                        }
-                        else if (name.indexOf("ダイヤ")>=0) {
-                            m = Material.getMaterial("DIAMOND");
-                        }
-                        else if (name.indexOf("クッキー")>=0) {
-                            m = Material.getMaterial("COOKIE");
-                        }
-                        else if (name.indexOf("パン")>=0) {
-                            m = Material.getMaterial("BREAD");
-                        }
-                        else {
-                            m = Material.getMaterial("PAPER");
-                        }
-                        stack = new ItemStack(m, 1);
-                        ItemMeta data = stack.getItemMeta();
-                        data.setDisplayName(name);
-                        stack.setItemMeta(data);
                     } else {
                         m = Material.matchMaterial(name);
                         stack = new ItemStack(m, 1);
+                        if (kbn.equals("npc")) {
+                            buy = (int)((float)price / 0.8F);
+                            sell = (int)((float)price / 1.5F);
+                        } else {
+                            sell = price / 2;
+                        }
                     }
-                    int buy = price;
-                    int sell = price / 2;
                     ShopItem item = new ShopItem(stack, buy, sell);
                     if(item.init()) {
                         shopItems.add(item);
@@ -288,5 +286,40 @@ public class ShopHandler {
 
     public static final ShopItem[] getShopItems() {
         return shopItems.toArray(new ShopItem[shopItems.size()]);
+    }
+
+    private static final Material GetMaterial(String name) {
+        Material m;
+        if (name.indexOf("木")>=0) {
+            m = Material.getMaterial("CHARCOAL");
+        }
+        else if (name.indexOf("石")>=0) {
+            m = Material.getMaterial("COAL");
+        }
+        else if (name.indexOf("皮")>=0) {
+            m = Material.getMaterial("CHARCOAL");
+        }
+        else if (name.indexOf("チェーン")>=0) {
+            m = Material.getMaterial("COAL");
+        }
+        else if (name.indexOf("鉄")>=0) {
+            m = Material.getMaterial("IRON_INGOT");
+        }
+        else if (name.indexOf("金")>=0) {
+            m = Material.getMaterial("GOLD_INGOT");
+        }
+        else if (name.indexOf("ダイヤ")>=0) {
+            m = Material.getMaterial("DIAMOND");
+        }
+        else if (name.indexOf("クッキー")>=0) {
+            m = Material.getMaterial("COOKIE");
+        }
+        else if (name.indexOf("パン")>=0) {
+            m = Material.getMaterial("BREAD");
+        }
+        else {
+            m = Material.getMaterial("PAPER");
+        }
+        return m;
     }
 }

@@ -396,14 +396,11 @@ public class KuroTrait extends Trait {
             eargs.clear();
             eargs = null;
 
-            if (npc.isSpawned()) {
-                try {
-                    npc.getEntity().remove();
-                    KuroBase.GetCitizens().getNPCRegistry().deregister(npc);
-
-                } catch (Exception ex) {
-                    ErrorUtils.GetErrorMessageNonDb(ex);
-                }
+            try {
+                npc.getEntity().remove();
+                KuroBase.GetCitizens().getNPCRegistry().deregister(npc);
+            } catch (Exception ex) {
+                ErrorUtils.GetErrorMessageNonDb(ex);
             }
             owner = null;
         }

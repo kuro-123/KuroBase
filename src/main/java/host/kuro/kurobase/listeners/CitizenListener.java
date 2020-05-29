@@ -66,19 +66,19 @@ public class CitizenListener implements Listener {
         NPC npc = event.getNPC();
         Player player = event.getClicker();
         if (npc.getTrait(BaseTypeTrait.class).getType().equals("BUDDYMASTER")) {
-            ShopHandler.loadShop("", "npc");
+            ShopHandler.loadShop("998", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("WEAPONMASTER")) {
-            ShopHandler.loadShop("", "npc");
+            ShopHandler.loadShop("997", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("ARMORMASTER")) {
-            ShopHandler.loadShop("", "npc");
+            ShopHandler.loadShop("996", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("ITEMMASTER")) {
-            ShopHandler.loadShop("", "npc");
+            ShopHandler.loadShop("995", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("SPECIALMASTER")) {
-            ShopHandler.loadShop("", "npc");
+            ShopHandler.loadShop("994", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("EXPLANER")) {
             npc.getTrait(SendTextTrait.class).SendText(player, false);
