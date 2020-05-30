@@ -42,7 +42,7 @@ public class EntityListener implements Listener {
             if (BuddyUtils.IsNpc(entity)) {
                 return;
             }
-            if (BuddyUtils.IsBuddyMaster(e.getDamager())) {
+            if (BuddyUtils.IsBuddyMaster(e.getDamager()) || BuddyUtils.IsGuard(e.getDamager())) {
                 double damage = e.getDamage();
                 e.setDamage(damage * 100.0D);
                 return;
