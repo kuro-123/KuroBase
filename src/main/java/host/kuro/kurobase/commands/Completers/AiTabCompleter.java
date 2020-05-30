@@ -21,6 +21,7 @@ public class AiTabCompleter implements TabCompleter {
             case 1:
                 cmds.add("<アクションを選択>");
                 cmds.add("buddymaster");
+                cmds.add("guard");
                 cmds.add("explaner");
                 cmds.add("weaponshop");
                 cmds.add("armorshop");

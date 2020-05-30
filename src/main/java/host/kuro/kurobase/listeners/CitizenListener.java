@@ -82,6 +82,8 @@ public class CitizenListener implements Listener {
             GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("EXPLANER")) {
             npc.getTrait(SendTextTrait.class).SendText(player, false);
+        } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("GUARD")) {
+
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("BUDDY")) {
             BuddyItem(npc, player);
         }
