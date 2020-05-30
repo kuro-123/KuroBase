@@ -61,6 +61,12 @@ public class ShopHandler {
                 }
                 else if (key.equals("994")) {
                     ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SPECIAL"));
+                }
+                else if (key.equals("993")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.FOOD"));
+                }
+                else if (key.equals("992")) {
+                    ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.BLOCK"));
                 } else {
                     ps = KuroBase.getDB().getConnection().prepareStatement(Language.translate("SQL.PRICE.SELECT"));
                 }
