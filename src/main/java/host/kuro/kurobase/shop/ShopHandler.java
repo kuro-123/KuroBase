@@ -84,6 +84,15 @@ public class ShopHandler {
                     ItemStack stack;
                     int buy = price;
                     int sell = price;
+                    if (kbn.equals("npc")) {
+                        buy = (int)((float)price / 0.75F);
+                        if (buy < 1) buy = 1;
+                        sell = (int)((float)price / 1.5F);
+                        if (sell < 1) sell = 1;
+                    } else {
+                        buy = price;
+                        sell = price / 2;
+                    }
                     if (key.equals("998")) {
                         if (id.equals(key)) {
                             m = GetMaterial(name);
@@ -98,12 +107,6 @@ public class ShopHandler {
                     } else {
                         m = Material.matchMaterial(name);
                         stack = new ItemStack(m, 1);
-                        if (kbn.equals("npc")) {
-                            buy = (int)((float)price / 0.8F);
-                            sell = (int)((float)price / 1.5F);
-                        } else {
-                            sell = price / 2;
-                        }
                     }
                     ShopItem item = new ShopItem(stack, buy, sell);
                     if(item.init()) {

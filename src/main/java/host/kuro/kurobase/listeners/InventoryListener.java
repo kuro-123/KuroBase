@@ -6,7 +6,6 @@ import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,14 +49,6 @@ public class InventoryListener implements Listener {
         InventoryHolder holder = event.getInventory().getHolder();
         Player player = Player.class.cast(event.getPlayer());
 
-        // check city world
-        if (PlayerUtils.IsCityWorld(plugin, player)) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-            SoundUtils.PlaySound(player, "cancel5", false);
-            event.setCancelled(true);
-            return;
-        }
-
         if (holder == null) return;
 
         Inventory inv = holder.getInventory();
@@ -100,15 +91,6 @@ public class InventoryListener implements Listener {
         } else {
             return;
         }
-
-        // check world
-        if (PlayerUtils.IsCityWorld(plugin, player)) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            event.setCancelled(true);
-            return;
-        }
-
         // click mode
         if (plugin.GetClickMode().containsKey(player)) {
             String click_mode = plugin.GetClickMode().get(player);

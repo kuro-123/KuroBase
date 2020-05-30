@@ -2,10 +2,14 @@ package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.tasks.MinutesTask;
 import host.kuro.kurobase.tasks.WorldEditTask;
-import host.kuro.kurobase.utils.*;
-import org.bukkit.*;
+import host.kuro.kurobase.utils.ErrorUtils;
+import host.kuro.kurobase.utils.InteractUtils;
+import host.kuro.kurobase.utils.SoundUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,15 +41,6 @@ public class SetCommand implements CommandExecutor {
         }
 
         try {
-            // check city world
-            if (!PlayerUtils.IsCityWorld(plugin, player)) {
-                int rank = PlayerUtils.GetRank(plugin, player);
-                if (rank < PlayerUtils.RANK_NUSHI) {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                    SoundUtils.PlaySound(player, "cancel5", false);
-                    return false;
-                }
-            }
             // check creative
             if (player.getGameMode() != GameMode.CREATIVE) {
                 player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative_only"));

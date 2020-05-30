@@ -1,7 +1,9 @@
 package host.kuro.kurobase.commands;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.lang.Language;
+import host.kuro.kurobase.utils.AreaUtils;
 import host.kuro.kurobase.utils.ErrorUtils;
 import host.kuro.kurobase.utils.PlayerUtils;
 import host.kuro.kurobase.utils.SoundUtils;
@@ -29,11 +31,15 @@ public class ChestCommand implements CommandExecutor {
             return false;
         }
         player = (Player)sender;
-        // check survival world
-        if (PlayerUtils.IsCityWorld(plugin, player)) {
-            player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-            SoundUtils.PlaySound(player,"cancel5", false);
-            return false;
+        // check area
+        if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+            // check area
+            AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+            if (area != null) {
+                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                SoundUtils.PlaySound(player, "cancel5", false);
+                return false;
+            }
         }
         // check creative
         if (player.getGameMode() == GameMode.CREATIVE) {

@@ -7,10 +7,7 @@ import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.tasks.SkinTask;
 import host.kuro.kurobase.utils.*;
 import host.kuro.kurodiscord.DiscordMessage;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -123,7 +120,7 @@ public class PlayerListener implements Listener {
 			SoundUtils.BroadcastSound("door-close2", false);
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(ChatColor.GRAY);
+			sb.append(ChatColor.BLUE);
 			sb.append("[ ");
 			sb.append(ChatColor.WHITE);
 			sb.append(player.getDisplayName());
@@ -429,15 +426,13 @@ public class PlayerListener implements Listener {
 			}
 
 			// check gamemode
-			int rank = PlayerUtils.GetRank(plugin, player);
-			if (rank < PlayerUtils.RANK_NUSHI) {
-				if (cmd.toLowerCase().equals("/gamemode")) {
-					if (!PlayerUtils.IsCityWorld(plugin, player)) {
-						player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-						SoundUtils.PlaySound(player, "cancel5", false);
-						e.setCancelled(true);
-						return;
-					}
+			if (cmd.toLowerCase().equals("/gamemode")) {
+				int rank = PlayerUtils.GetRank(plugin, player);
+				if (rank < PlayerUtils.RANK_NUSHI) {
+					player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+					SoundUtils.PlaySound(player, "cancel5", false);
+					e.setCancelled(true);
+					return;
 				}
 			}
 
@@ -491,14 +486,8 @@ public class PlayerListener implements Listener {
 			return;
 		}
 
-		int totalexp = player.getTotalExperience();
-
-		// check world
-		if (PlayerUtils.IsCityWorld(plugin, player)) {
-			return;
-		}
-
 		// UPDATE
+		int totalexp = player.getTotalExperience();
 		ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
 		args.add(new DatabaseArgs("i", ""+totalexp)); // totalexp
 		args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -516,12 +505,6 @@ public class PlayerListener implements Listener {
 		if (BuddyUtils.IsNpc(player)) {
 			return;
 		}
-
-		// check world
-		if (PlayerUtils.IsCityWorld(plugin, player)) {
-			return;
-		}
-
 		ChatColor color;
 		String kbn;
 		String sound;
@@ -740,6 +723,9 @@ public class PlayerListener implements Listener {
 	public void onRespawn(final PlayerRespawnEvent e) {
 		Player player = e.getPlayer();
 		if (BuddyUtils.IsNpc(player)) return;
+
+		e.setRespawnLocation(Bukkit.getWorld("home").getSpawnLocation());
+
 		// force survival
 		PlayerUtils.ForceSurvival(player);
 	}

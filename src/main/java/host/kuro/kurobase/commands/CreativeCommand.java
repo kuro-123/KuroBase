@@ -46,29 +46,36 @@ public class CreativeCommand implements CommandExecutor {
             player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.fail"));
             SoundUtils.PlaySound(player,"cancel5", false);
         } else {
-            // check item
-            ItemStack stack = player.getInventory().getItemInMainHand();
-            if (stack != null) {
-                ItemMeta data = stack.getItemMeta();
-                if (data != null) {
-                    String display = data.getDisplayName();
-                    if (!display.equals(Language.translate("shop.item.creative"))) {
-                        player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.item.error"));
-                        SoundUtils.PlaySound(player,"cancel5", false);
-                        return false;
+            int rank = PlayerUtils.GetRank(plugin, player);
+            if (rank < PlayerUtils.RANK_KANRI) {
+                // check item
+                ItemStack stack = player.getInventory().getItemInMainHand();
+                if (stack != null) {
+                    ItemMeta data = stack.getItemMeta();
+                    if (data != null) {
+                        String display = data.getDisplayName();
+                        if (!display.equals(Language.translate("shop.item.creative"))) {
+                            player.sendMessage(ChatColor.DARK_RED + Language.translate("commands.creative.item.error"));
+                            SoundUtils.PlaySound(player,"cancel5", false);
+                            return false;
+                        }
+                        int amount = stack.getAmount();
+                        amount--;
+                        if (amount <= 0) {
+                            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
+                        } else {
+                            stack.setAmount(amount);
+                            player.getInventory().setItemInMainHand(stack);
+                        }
+                        player.setGameMode(GameMode.CREATIVE);
+                        player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.creative.success"));
+                        SoundUtils.PlaySound(player,"switch1", false);
                     }
-                    int amount = stack.getAmount();
-                    amount--;
-                    if (amount <= 0) {
-                        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR, 1));
-                    } else {
-                        stack.setAmount(amount);
-                        player.getInventory().setItemInMainHand(stack);
-                    }
-                    player.setGameMode(GameMode.CREATIVE);
-                    player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.creative.success"));
-                    SoundUtils.PlaySound(player,"switch1", false);
                 }
+            } else {
+                player.setGameMode(GameMode.CREATIVE);
+                player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.creative.success"));
+                SoundUtils.PlaySound(player,"switch1", false);
             }
         }
         return true;

@@ -6,7 +6,6 @@ import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.*;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
@@ -54,35 +53,8 @@ public class BlockListener implements Listener {
             Player player = e.getPlayer();
             Block block = e.getBlock();
 
-            // check world
-            if (PlayerUtils.IsCityWorld(plugin, player)) {
-                GameMode mode = player.getGameMode();
-                if (mode != GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                    SoundUtils.PlaySound(player,"cancel5", false);
-                    e.setCancelled(true);
-                    return;
-                }
-                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
-                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-                    if (area != null) {
-                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                        SoundUtils.PlaySound(player, "cancel5", false);
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            } else {
-                // UPDATE
-                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
-                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
-                ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.BREAK.UPDATE.PLAYER"), args);
-                args.clear();
-                args = null;
-            }
-
-            // check area
-            if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
+            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                // check area
                 AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
                 if (area != null) {
                     player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
@@ -90,6 +62,12 @@ public class BlockListener implements Listener {
                     e.setCancelled(true);
                     return;
                 }
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLACE.UPDATE.PLAYER"), args);
+                args.clear();
+                args = null;
             }
 
             StringBuilder sb = new StringBuilder();
@@ -124,12 +102,19 @@ public class BlockListener implements Listener {
                 // check chest data
                 DataUtils.RefreshChestData(plugin.getDB());
             }
-
-            int val = KuroBase.GetRand().Next(1, 500);
-            if (val == 1) {
-                RandomDrop(player);
+            if (block.getType() == Material.COAL_ORE ||
+                block.getType() == Material.DIAMOND_ORE ||
+                block.getType() == Material.EMERALD_ORE ||
+                block.getType() == Material.GOLD_ORE ||
+                block.getType() == Material.IRON_ORE ||
+                block.getType() == Material.LAPIS_ORE ||
+                block.getType() == Material.NETHER_QUARTZ_ORE ||
+                block.getType() == Material.REDSTONE_ORE) {
+                int val = KuroBase.GetRand().Next(1, 100);
+                if (val == 1) {
+                    RandomDrop(player);
+                }
             }
-
         } catch (Exception ex) {
             ErrorUtils.GetErrorMessage(ex);
         }
@@ -152,25 +137,15 @@ public class BlockListener implements Listener {
             Player player = e.getPlayer();
             Block block = e.getBlock();
 
-            // check world
-            if (PlayerUtils.IsCityWorld(plugin, player)) {
-                GameMode mode = player.getGameMode();
-                if (mode != GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                    SoundUtils.PlaySound(player,"cancel5", false);
+            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                // check area
+                AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+                if (area != null) {
+                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
+                    SoundUtils.PlaySound(player, "cancel5", false);
                     e.setCancelled(true);
                     return;
                 }
-                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
-                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-                    if (area != null) {
-                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                        SoundUtils.PlaySound(player, "cancel5", false);
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            } else {
                 // UPDATE
                 ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
                 args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
@@ -178,18 +153,6 @@ public class BlockListener implements Listener {
                 args.clear();
                 args = null;
             }
-
-            // check area
-            if (PlayerUtils.IsSurvivalWorld(plugin, player)) {
-                AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-                if (area != null) {
-                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                    SoundUtils.PlaySound(player,"cancel5", false);
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-
             // INSERT
             ArrayList<DatabaseArgs> bargs = new ArrayList<DatabaseArgs>();
             bargs.add(new DatabaseArgs("c", block.getLocation().getWorld().getName())); // world
@@ -215,33 +178,21 @@ public class BlockListener implements Listener {
             Block block = e.getBlock();
             Player player = e.getPlayer();
 
-            // check world
-            if (PlayerUtils.IsCityWorld(plugin, player)) {
-                GameMode mode = player.getGameMode();
-                if (mode != GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
+            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
+                // check area
+                AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
+                if (area != null) {
+                    player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
                     SoundUtils.PlaySound(player, "cancel5", false);
                     e.setCancelled(true);
                     return;
                 }
-                if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
-                    AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-                    if (area != null) {
-                        player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                        SoundUtils.PlaySound(player, "cancel5", false);
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            }
-
-            // check area
-            AreaData area = AreaUtils.CheckInsideProtect(player, player.getLocation().getWorld().getName(), block.getX(), block.getY(), block.getZ());
-            if (area != null) {
-                player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
-                SoundUtils.PlaySound(player,"cancel5", false);
-                e.setCancelled(true);
-                return;
+                // UPDATE
+                ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
+                args.add(new DatabaseArgs("c", player.getUniqueId().toString())); // UUID
+                int ret = plugin.getDB().ExecuteUpdate(Language.translate("SQL.PLACE.UPDATE.PLAYER"), args);
+                args.clear();
+                args = null;
             }
 
             String[] lines = e.getLines();

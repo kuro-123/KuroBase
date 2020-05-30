@@ -5,7 +5,10 @@ import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
 import host.kuro.kurobase.utils.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -83,30 +86,8 @@ public class AreaCommand implements CommandExecutor {
 
         try {
             boolean kanri_throw = false;
-
-            // check survival world
-            if (!PlayerUtils.IsSurvivalWorld(plugin, player)) {
-                if (PlayerUtils.IsCityWorld(plugin, player)) {
-                    if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
-                        player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                        return false;
-                    } else {
-                        kanri_throw = true;
-                    }
-                } else {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                    return false;
-                }
-            } else {
-                int rank = PlayerUtils.GetRank(plugin, player);
-                if (rank == PlayerUtils.RANK_NUSHI) {
-                    kanri_throw = true;
-                }
-                // check creative
-                if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.creative"));
-                    return false;
-                }
+            if (PlayerUtils.GetRank(plugin, player) >= PlayerUtils.RANK_KANRI) {
+                kanri_throw = true;
             }
             // check click mode
             if (plugin.GetClickMode().containsKey(player)) {
@@ -155,7 +136,6 @@ public class AreaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.DARK_GREEN + Language.translate("commands.pay.monerror"));
                 return false;
             }
-
             AreaData area = new AreaData();
             area.world = loc1.getWorld().getName();
             area.name = name;
@@ -166,7 +146,6 @@ public class AreaCommand implements CommandExecutor {
             area.x2 = loc2.getBlockX();
             area.y2 = loc2.getBlockY();
             area.z2 = loc2.getBlockZ();
-
             // INSERT
             ArrayList<DatabaseArgs> args = new ArrayList<DatabaseArgs>();
             args.add(new DatabaseArgs("c", area.world)); // world
@@ -195,10 +174,14 @@ public class AreaCommand implements CommandExecutor {
             Bukkit.getWorld("world").setGameRuleValue("keepInventory", "true");
             // data resetup
             AreaUtils.SetupProtectData();
-
             new Location(player.getWorld(), area.x1, area.y1, area.z1).getBlock().setType(Material.BLUE_TERRACOTTA);
             new Location(player.getWorld(), area.x2, area.y2, area.z2).getBlock().setType(Material.BLUE_TERRACOTTA);
-            String message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました [現在の所持金: %s p]", area.name, StringUtils.numFmt.format(money - price));
+            String message = "";
+            if (!kanri_throw) {
+                message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました [現在の所持金: %s p]", area.name, StringUtils.numFmt.format(money - price));
+            } else {
+                message = String.format(ChatColor.GREEN + "エリア [ %s ] は保護されました", area.name);
+            }
             player.sendMessage(message);
             SoundUtils.PlaySound(player, "kotsudumi1", false);
 

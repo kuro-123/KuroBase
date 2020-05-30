@@ -1,5 +1,6 @@
 package host.kuro.kurobase.utils;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import host.kuro.kurobase.KuroBase;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
@@ -20,9 +22,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
-
-import com.mojang.authlib.*;
-import org.bukkit.inventory.ItemStack;
 
 public class PlayerUtils {
     // rank number
@@ -473,24 +472,14 @@ public class PlayerUtils {
         return ret;
     }
 
-    public static final boolean IsSurvivalWorld(KuroBase plugin, Player player) {
-        String name = plugin.getConfig().getString("Game.creative", "city").toLowerCase();
-        String now = player.getLocation().getWorld().getName().toLowerCase();
-        if (now.equals(name)) {
-            return false;
-        } else if (now.indexOf("nether") >= 0) {
-            return false;
-        } else if (now.indexOf("the_end") >= 0) {
-            return false;
-        }
-        return true;
-    }
-
     public static final boolean IsCityWorld(KuroBase plugin, Player player) {
-        String name = plugin.getConfig().getString("Game.creative", "city").toLowerCase();
+        String name = plugin.getConfig().getString("Game.creative", "city,lobby").toLowerCase();
+        String[] names = name.split(",");
         String now = player.getLocation().getWorld().getName().toLowerCase();
-        if (now.equals(name)) {
-            return true;
+        for(String val: names) {
+            if (now.equals(val)) {
+                return true;
+            }
         }
         return false;
     }

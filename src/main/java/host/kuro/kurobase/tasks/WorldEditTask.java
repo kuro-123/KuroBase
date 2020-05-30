@@ -234,7 +234,7 @@ public class WorldEditTask extends BukkitRunnable {
                         Block pasteblock = blocks.get(num);
                         num++;
                         if (pasteblock.getType().hasGravity()) continue;
-                        Block block = new Location(loc1.getWorld(), start_x+p, start_y+q, start_z+r).getBlock();
+                        Block block = new Location(player.getWorld(), start_x+p, start_y+q, start_z+r).getBlock();
                         if (block.getType() != pasteblock.getType()) {
                             block.setType(pasteblock.getType());
                             make_cnt++;

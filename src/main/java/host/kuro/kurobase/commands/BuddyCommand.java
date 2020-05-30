@@ -55,16 +55,6 @@ public class BuddyCommand implements CommandExecutor {
             SoundUtils.PlaySound(player,"cancel5", false);
             return false;
         }
-
-        // check city world
-        if (PlayerUtils.IsCityWorld(plugin, player)) {
-            int rank = PlayerUtils.GetRank(plugin, player);
-            if (rank < PlayerUtils.RANK_NUSHI) {
-                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                SoundUtils.PlaySound(player, "cancel5", false);
-                return false;
-            }
-        }
         switch(args[0].toLowerCase()) {
             case "list": return ActionList(player);
             case "add": return ActionAdd(player, args);

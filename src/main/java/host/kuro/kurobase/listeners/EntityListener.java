@@ -83,15 +83,6 @@ public class EntityListener implements Listener {
                                 }
                             }
                         }
-                        // check world
-                        if (PlayerUtils.IsCityWorld(plugin, player)) {
-                            if (PlayerUtils.GetRank(plugin, player) < PlayerUtils.RANK_KANRI) {
-                                player.sendMessage(ChatColor.DARK_RED + Language.translate("plugin.error.world"));
-                                SoundUtils.PlaySound(player,"cancel5", false);
-                                e.setCancelled(true);
-                                return;
-                            }
-                        }
                         if (!plugin.GetSoundBattle().containsKey(player)) {
                             SoundUtils.PlaySound(player, "battle", true);
                             plugin.GetSoundBattle().put(player, System.currentTimeMillis());

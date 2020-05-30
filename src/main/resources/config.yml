@@ -39,7 +39,7 @@ Game:
   mode_change: 10800
   death: 200
   survival: world
-  creative: city
+  creative: home,city
   rain: 15
 
 WorldEdit:
