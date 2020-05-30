@@ -579,7 +579,7 @@ public class PlayerListener implements Listener {
 						player.sendMessage(ChatColor.YELLOW + "自分のエリア内では飛行可能です");
 						player.setAllowFlight(true);
 						player.setFlying(true);
-						SoundUtils.BroadcastSound("correct2", false);
+						SoundUtils.PlaySound(player, "correct2", false);
 					}
 				}
 			}

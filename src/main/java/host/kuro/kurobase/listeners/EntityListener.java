@@ -1,12 +1,10 @@
 package host.kuro.kurobase.listeners;
 
 import host.kuro.kurobase.KuroBase;
+import host.kuro.kurobase.database.AreaData;
 import host.kuro.kurobase.database.DatabaseArgs;
 import host.kuro.kurobase.lang.Language;
-import host.kuro.kurobase.utils.BuddyUtils;
-import host.kuro.kurobase.utils.ErrorUtils;
-import host.kuro.kurobase.utils.PlayerUtils;
-import host.kuro.kurobase.utils.SoundUtils;
+import host.kuro.kurobase.utils.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -119,7 +117,15 @@ public class EntityListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent e) {
         try {
             Entity entity = e.getEntity();
-            if (!(entity instanceof Monster)) return;
+            if (!(entity instanceof Monster || entity instanceof Animals)) return;
+
+            // check area
+            AreaData area = AreaUtils.CheckInsideProtect(null, entity.getLocation().getWorld().getName(), entity.getLocation().getBlockX(), entity.getLocation().getBlockY(), entity.getLocation().getBlockZ());
+            if (area != null) {
+                e.setCancelled(true);
+                return;
+            }
+
             int val = KuroBase.GetRand().Next(1, 20);
             if (val == 1) {
                 entity.setMetadata("SPECIAL", new FixedMetadataValue(KuroBase.GetInstance(), "SPECIAL"));
