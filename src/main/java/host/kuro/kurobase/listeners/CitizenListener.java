@@ -80,6 +80,12 @@ public class CitizenListener implements Listener {
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("SPECIALMASTER")) {
             ShopHandler.loadShop("994", "npc");
             GuiHandler.open(player, new GuiShop(player, 0));
+        } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("FOODMASTER")) {
+            ShopHandler.loadShop("993", "npc");
+            GuiHandler.open(player, new GuiShop(player, 0));
+        } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("BLOCKMASTER")) {
+            ShopHandler.loadShop("992", "npc");
+            GuiHandler.open(player, new GuiShop(player, 0));
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("EXPLANER")) {
             npc.getTrait(SendTextTrait.class).SendText(player, false);
         } else if (npc.getTrait(BaseTypeTrait.class).getType().equals("GUARD")) {

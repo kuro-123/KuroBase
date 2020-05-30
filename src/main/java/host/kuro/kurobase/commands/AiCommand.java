@@ -56,6 +56,8 @@ public class AiCommand implements CommandExecutor {
             case "armorshop": return ActionShop(player, args, "ARMORMASTER");
             case "itemshop": return ActionShop(player, args, "ITEMMASTER");
             case "specialshop": return ActionShop(player, args, "SPECIALMASTER");
+            case "foodshop": return ActionShop(player, args, "FOODMASTER");
+            case "blockshop": return ActionShop(player, args, "BLOCKMASTER");
         }
         return true;
     }
@@ -72,6 +74,8 @@ public class AiCommand implements CommandExecutor {
                 case "ARMORMASTER": name = "ｱｰﾏｰﾏｽﾀｰ"; break;
                 case "ITEMMASTER": name = "ｱｲﾃﾑﾏｽﾀｰ"; break;
                 case "SPECIALMASTER": name = "ｽﾍﾟｼｬﾙﾏｽﾀｰ"; break;
+                case "FOODMASTER": name = "ﾌｰﾄﾞﾏｽﾀｰ"; break;
+                case "BLOCKMASTER": name = "ﾌﾞﾛｯｸﾏｽﾀｰ"; break;
             }
 
             // create
@@ -109,12 +113,22 @@ public class AiCommand implements CommandExecutor {
                     skin_signature = "tJO7sPCLQ4DpY9R8kt1Dvhbw86VoNgWiPUEcDAiYpqR2DrlqvUB+5rtQlzQYEm77hpHoJ72lmKDc0C0L4EP1bJtWl8o/IztTHrgOCCL5FL8sb5LrHcDit4p/jKqrSVBf30YhHdIidtCGLhKZFXAZxEWxjaJS6v8i4iFsluKKpUkLxVUBWIHJUpbDZ2uG7Jw4AmQXRuh+0L201aoDI39ap6xK0+w2WA1DQAW/gT+A266s8Q53F136TuKakoH+OYsC/OiLb0CBJuBLi3geMfkZ/jLi4uK9l0v8UUlRK6sDRze+3ZwL7fbTy+qQX76mnAuvHzTHF0IgxcrQCngsn/RCDRDuejhF8bcoULtoUlDGsAsWXirI7JPn+u25DiiGWd0vfkXh6woZNmc1AAOSYAQY8tIUw/27xmi/MtLe2LsvAQRtUCoBS3dvYfWOvWX14Bma1wlQFUkeE8GcxrRue8CjQ+y38pzQ/Qu7vkZnH/X4nMzVFf8W2JRMnxEpLj7ByKQy8GlNrj9H3vzgTAdsY7GNBLSWSDHssN778zTjVwbo8ySXXW/5FmYD4jgm1J2vRUVgoddtAevui64OHIeq8PwKbD22QZ8CzVm20NjEFz/9mg6Sr+uDMxCDARZ/RyQ64qnlBt97zN276PHHulrdiFa0LwT3mRNyNJbpL9CUc/RLjoY=";
                     break;
                 case "ITEMMASTER":
-                    skin_name = "master";
+                    skin_name = "itemmaster";
                     skin_data = "eyJ0aW1lc3RhbXAiOjE1NjkzMTEwMTU4MTgsInByb2ZpbGVJZCI6Ijc1MTQ0NDgxOTFlNjQ1NDY4Yzk3MzlhNmUzOTU3YmViIiwicHJvZmlsZU5hbWUiOiJUaGFua3NNb2phbmciLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzYzZGNjYmY2MzAxYjA0NGUwMWM1NmIxMDY5NTJmZGNhMTM4MTg1ZjBhNWJiMTE0NDA1ODgyOWRiNzJiMGZhZGMifX19";
                     skin_signature = "MXwoxcQrlIJofZSmmS590rq+6c0YtgVuPH91ndZxrG8dJ0y2AMKrUb48YWVnm0TMZUtmu98MSRxjST/Gl4l2wLwhSMUpt/J7ZIfIN9qSSssyfnIHNc09HrkD1QE/nlKcb0eBLlOm1dZV4YH17ahsPetBWMbBrp+x1dPQ8rH0K7Z9xyUy1MqkVzOZ4eFwjPoCyI2HrhmRmvrsnZFk6VYOu4to10atdASnFYmPOfDIotD6gagpzr7bKezArzweJ+tbOTW1gQRQ/aX4c7W1v58kAiHyRC42gx5HGdJCgfdTS6SjczfxMNKAoH0PN1p1FQHvatlY05wcWWGZD9CWzQYfFnW0KUA4fR6kvxS5ENPI3P4kb6n1D+60eDF5+VxBxkRDWRWvUa48X9CG4YZu5itoJmvt4KjM4d8ZBXXqQtUpb4WdI57Je5LwzW6a8cBDiGOOyCtkp8pDau4396cB+ZjB4oqV+zlLRLokFP2ONbXfjCYZILmrsWt+qURImpWBivA0ltKurcteav3KzXoMZZCiGahpkXMxCK8NSUUVUwJZDSsWVZNAm4CIyB4iIFk5F4T5WbaiLJI4X2S68Iz13/LeSGfI3u3wVdML3YCXghWNZaEPxn//EFiQG9jC868IsILwWBLbO6LmfsbNSRKN3jeY5xvB+3M1VnIr7OfG13pRM68=";
                     break;
                 case "SPECIALMASTER":
-                    skin_name = "master";
+                    skin_name = "specialmaster";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1Nzg2NzM2NTczNzIsInByb2ZpbGVJZCI6ImVkNTNkZDgxNGY5ZDRhM2NiNGViNjUxZGNiYTc3ZTY2IiwicHJvZmlsZU5hbWUiOiJGb3J5eExPTCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MxZGJhMTgzMzMxYmEyMTc2ODkxYjg3OTc3NzliYzQzMjNkMGIzZDdiNGIwNzU4OTAyMTgxMDE5YmY1MGYyZSJ9fX0=";
+                    skin_signature = "srocU4SDY0WcfnYrsDkJ/n/8NFNPUyqXr5Lrr9vnybKyN2KUNXztL1bOdaGSLaEBeEWwe7leZnXt6RgS4MmWIy9EhWf80h++U0rbHuuJc6cV/IKBVKD6ruc4C0tJ8R8fi9/pkTRhmTP4vDaAKPauYd0f6wZ49eu25RJnCYL11tS56W/2+2rhkGZFUNp7nCOkertuDWA3Q/6nw/D9+A6wgYHLWIdZY/lmv4Ds3Cm1LM/mNxXFnyF7YysYtA7gOQGV2N65zinOr1Yb+8PpxP46YFAtHSG84F+McqnzaHGlxlH0CIrZ3gPU+B6+nmN76XmWMaMgenYH3EEHw/oHPKJv85SqAmXRPw+8W6EA2Jr9OIS4S8bGrjkhdFhcAlJ9pi3uyxxK2YuvV3xS5yCPHAHeC0Ul3LkoK9QsgZ6Y6g8YFAcWZbvyZsjhw+tobSRLZ2mz+GUEgz2lD5DolRp0q/NFn5tUeaeCSggF7ty1AKc6sxjCaSUk6Ije78+zD8FiNM2mRki93Wa3iHiexPakOOapU81pfYuUFgNfYR7eIQndAFnyj2HfXgY9i6lcSyc+68R6346bDiVPXBAKXIwbpkZmi9lIF5U/dIglpmYxItRkbLrEACN5lVK8leX9zHldnRG8pXyCriQVJkMqugJM5NNyuPxwgwAHe7JS0jNCdvwz7vI=";
+                    break;
+                case "FOODMASTER":
+                    skin_name = "foodmaster";
+                    skin_data = "eyJ0aW1lc3RhbXAiOjE1Nzg2NzM2NTczNzIsInByb2ZpbGVJZCI6ImVkNTNkZDgxNGY5ZDRhM2NiNGViNjUxZGNiYTc3ZTY2IiwicHJvZmlsZU5hbWUiOiJGb3J5eExPTCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MxZGJhMTgzMzMxYmEyMTc2ODkxYjg3OTc3NzliYzQzMjNkMGIzZDdiNGIwNzU4OTAyMTgxMDE5YmY1MGYyZSJ9fX0=";
+                    skin_signature = "srocU4SDY0WcfnYrsDkJ/n/8NFNPUyqXr5Lrr9vnybKyN2KUNXztL1bOdaGSLaEBeEWwe7leZnXt6RgS4MmWIy9EhWf80h++U0rbHuuJc6cV/IKBVKD6ruc4C0tJ8R8fi9/pkTRhmTP4vDaAKPauYd0f6wZ49eu25RJnCYL11tS56W/2+2rhkGZFUNp7nCOkertuDWA3Q/6nw/D9+A6wgYHLWIdZY/lmv4Ds3Cm1LM/mNxXFnyF7YysYtA7gOQGV2N65zinOr1Yb+8PpxP46YFAtHSG84F+McqnzaHGlxlH0CIrZ3gPU+B6+nmN76XmWMaMgenYH3EEHw/oHPKJv85SqAmXRPw+8W6EA2Jr9OIS4S8bGrjkhdFhcAlJ9pi3uyxxK2YuvV3xS5yCPHAHeC0Ul3LkoK9QsgZ6Y6g8YFAcWZbvyZsjhw+tobSRLZ2mz+GUEgz2lD5DolRp0q/NFn5tUeaeCSggF7ty1AKc6sxjCaSUk6Ije78+zD8FiNM2mRki93Wa3iHiexPakOOapU81pfYuUFgNfYR7eIQndAFnyj2HfXgY9i6lcSyc+68R6346bDiVPXBAKXIwbpkZmi9lIF5U/dIglpmYxItRkbLrEACN5lVK8leX9zHldnRG8pXyCriQVJkMqugJM5NNyuPxwgwAHe7JS0jNCdvwz7vI=";
+                    break;
+                case "BLOCKMASTER":
+                    skin_name = "blockmaster";
                     skin_data = "eyJ0aW1lc3RhbXAiOjE1Nzg2NzM2NTczNzIsInByb2ZpbGVJZCI6ImVkNTNkZDgxNGY5ZDRhM2NiNGViNjUxZGNiYTc3ZTY2IiwicHJvZmlsZU5hbWUiOiJGb3J5eExPTCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MxZGJhMTgzMzMxYmEyMTc2ODkxYjg3OTc3NzliYzQzMjNkMGIzZDdiNGIwNzU4OTAyMTgxMDE5YmY1MGYyZSJ9fX0=";
                     skin_signature = "srocU4SDY0WcfnYrsDkJ/n/8NFNPUyqXr5Lrr9vnybKyN2KUNXztL1bOdaGSLaEBeEWwe7leZnXt6RgS4MmWIy9EhWf80h++U0rbHuuJc6cV/IKBVKD6ruc4C0tJ8R8fi9/pkTRhmTP4vDaAKPauYd0f6wZ49eu25RJnCYL11tS56W/2+2rhkGZFUNp7nCOkertuDWA3Q/6nw/D9+A6wgYHLWIdZY/lmv4Ds3Cm1LM/mNxXFnyF7YysYtA7gOQGV2N65zinOr1Yb+8PpxP46YFAtHSG84F+McqnzaHGlxlH0CIrZ3gPU+B6+nmN76XmWMaMgenYH3EEHw/oHPKJv85SqAmXRPw+8W6EA2Jr9OIS4S8bGrjkhdFhcAlJ9pi3uyxxK2YuvV3xS5yCPHAHeC0Ul3LkoK9QsgZ6Y6g8YFAcWZbvyZsjhw+tobSRLZ2mz+GUEgz2lD5DolRp0q/NFn5tUeaeCSggF7ty1AKc6sxjCaSUk6Ije78+zD8FiNM2mRki93Wa3iHiexPakOOapU81pfYuUFgNfYR7eIQndAFnyj2HfXgY9i6lcSyc+68R6346bDiVPXBAKXIwbpkZmi9lIF5U/dIglpmYxItRkbLrEACN5lVK8leX9zHldnRG8pXyCriQVJkMqugJM5NNyuPxwgwAHe7JS0jNCdvwz7vI=";
                     break;
@@ -316,6 +330,7 @@ public class AiCommand implements CommandExecutor {
             npc.getTrait(SendTextTrait.class).setText("最初の1時間ﾌﾟﾚｲは権限が「見習」だけど超えると自動で「住民」になるから安心しなよ♥♥(o￫ܫ￩o)♫");
             npc.getTrait(SendTextTrait.class).setText("ｸﾘｯｸしてﾌﾞﾛｯｸの情報を見たい時は/biよ♥♥(o￫ܫ￩o)♫");
             npc.getTrait(SendTextTrait.class).setText("ﾁｪｽﾄをﾛｯｸしたい時は/chestよ♥♥(o￫ܫ￩o)♫");
+            npc.getTrait(SendTextTrait.class).setText("知ってた？/shopよりNPCの方が取引効率いいのよ♥♥(o￫ܫ￩o)♫");
             npc.getTrait(SendTextTrait.class).setText("cityでは住民なら/cでｸﾘｴになれるよ！建築の手伝いも楽しいと思うよ♥♥(o￫ܫ￩o)♫");
             npc.getTrait(SendTextTrait.class).setText("誰かにお金を払いたい時は/payよ♥♥(o￫ܫ￩o)♫");
             npc.getTrait(SendTextTrait.class).setText("ﾗﾝﾀﾞﾑな数値出して遊びたい時は/randよ♥♥(o￫ܫ￩o)♫");

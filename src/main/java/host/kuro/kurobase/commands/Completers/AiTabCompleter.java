@@ -27,6 +27,8 @@ public class AiTabCompleter implements TabCompleter {
                 cmds.add("armorshop");
                 cmds.add("itemshop");
                 cmds.add("specialshop");
+                cmds.add("foodshop");
+                cmds.add("blockshop");
                 return StringUtil.copyPartialMatches(args[args.length-1], cmds, new ArrayList<String>());
         }
         return null;

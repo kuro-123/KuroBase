@@ -39,7 +39,7 @@ public class EntityListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
         try {
             Entity entity = e.getEntity();
-            if (BuddyUtils.IsBuddy(entity)) {
+            if (BuddyUtils.IsNpc(entity)) {
                 return;
             }
             if (BuddyUtils.IsBuddyMaster(e.getDamager())) {
@@ -164,6 +164,18 @@ public class EntityListener implements Listener {
                     return;
                 }
                 if (BuddyUtils.IsSpecialMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsGuard(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsFoodMaster(liv.getKiller())) {
+                    e.setDroppedExp(0);
+                    return;
+                }
+                if (BuddyUtils.IsBlockMaster(liv.getKiller())) {
                     e.setDroppedExp(0);
                     return;
                 }

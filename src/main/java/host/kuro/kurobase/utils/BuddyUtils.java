@@ -37,6 +37,9 @@ public class BuddyUtils {
         if (IsArmorMaster(entity)) return true;
         if (IsItemMaster(entity)) return true;
         if (IsSpecialMaster(entity)) return true;
+        if (IsGuard(entity)) return true;
+        if (IsFoodMaster(entity)) return true;
+        if (IsBlockMaster(entity)) return true;
         return false;
     }
 
@@ -55,6 +58,24 @@ public class BuddyUtils {
             }
         }
         if (strval.equals("BUDDY")) return true;
+        return false;
+    }
+
+    public static boolean IsGuard(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("GUARD")) return true;
         return false;
     }
 
@@ -162,6 +183,42 @@ public class BuddyUtils {
             }
         }
         if (strval.equals("SPECIALMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsFoodMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("FOODMASTER")) return true;
+        return false;
+    }
+
+    public static boolean IsBlockMaster(Entity entity) {
+        if (entity == null) return false;
+        String name = entity.getCustomName();
+        if (name == null) return false;
+        if (name.length() <= 0) return false;
+        if (!entity.hasMetadata(DATA_KEY)) return false;
+        String strval = "";
+        List<MetadataValue> values = entity.getMetadata(DATA_KEY);
+        for (MetadataValue v : values) {
+            if (v.getOwningPlugin().getName().equals(KuroBase.GetInstance().getName())) {
+                strval = v.asString();
+                break;
+            }
+        }
+        if (strval.equals("BLOCKMASTER")) return true;
         return false;
     }
 
