@@ -78,6 +78,10 @@ commands:
     description: サバイバルになるコマンド
     usage: /survival (/s)
     aliases: [s]
+  spectator:
+    description: スペクテイターになるコマンド
+    usage: /spectator (/sp)
+    aliases: [sp]
   sel:
     description: 選択コマンド（２点選択）
     usage: /sel

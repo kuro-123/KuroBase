@@ -473,7 +473,7 @@ public class PlayerUtils {
     }
 
     public static final boolean IsCityWorld(KuroBase plugin, Player player) {
-        String name = plugin.getConfig().getString("Game.creative", "city,lobby").toLowerCase();
+        String name = plugin.getConfig().getString("Game.creative", "home,city").toLowerCase();
         String[] names = name.split(",");
         String now = player.getLocation().getWorld().getName().toLowerCase();
         for(String val: names) {

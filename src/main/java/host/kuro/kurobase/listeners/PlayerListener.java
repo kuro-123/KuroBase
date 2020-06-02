@@ -65,9 +65,9 @@ public class PlayerListener implements Listener {
 				}
 				// force survival
 			} else {
-				if (rank == PlayerUtils.RANK_MINARAI) {
-					player.setOp(false);
-				}
+				//if (rank == PlayerUtils.RANK_MINARAI) {
+					//player.setOp(false);
+				//}
 			}
 			// force survival
 			GameMode mode = player.getGameMode();
