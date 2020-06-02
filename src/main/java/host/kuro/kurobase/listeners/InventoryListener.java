@@ -64,7 +64,7 @@ public class InventoryListener implements Listener {
                     , holder.getInventory().getLocation().getBlockY()
                     , holder.getInventory().getLocation().getBlockZ());
             if (area != null) {
-                if (!area.name.equals("バディー")) {
+                if (!area.name.equals("バディー") && !area.name.equals("ロビー")) {
                     player.sendMessage(ChatColor.RED + String.format("ここは [ %s さん ] のエリア [ %s ] の敷地内です", area.owner, area.name));
                     SoundUtils.PlaySound(player,"cancel5", false);
                     event.setCancelled(true);
